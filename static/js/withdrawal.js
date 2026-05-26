@@ -24,21 +24,23 @@ function applyPensionTax(monthly) {
   return monthly - taxable * PENSION_TAX_RATE;
 }
 
-const state = { p1: null, p2: null };
+// Fix 1: removed unused p1 field
+const state = { p2: null };
 let activeGender = "male";
 
 function readInputs() {
-  const birthYear   = parseInt(g("birthYear")?.value)      || new Date().getFullYear() - 40;
-  const birthMonth  = parseInt(g("birthMonth")?.value)     || 1;
-  const retAge      = parseInt(g("retirementAge")?.value)  || 67;
-  const payoutYears = parseInt(g("payoutYears")?.value)    || 18;
-  const p2Current   = parseFloat(g("balance")?.value)      || 0;
-  const propPrice   = parseFloat(g("propPrice")?.value)    || 0;
-  const mortBal     = parseFloat(g("mortBalance")?.value)  || 0;
-  const mortMarg    = parseFloat(g("mortBankMargin")?.value) || 0;
-  const mortEur     = parseFloat(g("mortEuribor")?.value)  || 0;
-  const taxRatePct  = parseFloat(g("wdlTaxRate")?.value)   || 25.5;
-  const altRetPct   = parseFloat(g("wdlAltReturn")?.value) || 8.0;
+  // Fix 5: added radix 10 to all parseInt calls
+  const birthYear   = parseInt(g("birthYear")?.value, 10)      || new Date().getFullYear() - 40;
+  const birthMonth  = parseInt(g("birthMonth")?.value, 10)     || 1;
+  const retAge      = parseInt(g("retirementAge")?.value, 10)  || 67;
+  const payoutYears = parseInt(g("payoutYears")?.value, 10)    || 18;
+  const p2Current   = parseFloat(g("balance")?.value)          || 0;
+  const propPrice   = parseFloat(g("propPrice")?.value)        || 0;
+  const mortBal     = parseFloat(g("mortBalance")?.value)      || 0;
+  const mortMarg    = parseFloat(g("mortBankMargin")?.value)   || 0;
+  const mortEur     = parseFloat(g("mortEuribor")?.value)      || 0;
+  const taxRatePct  = parseFloat(g("wdlTaxRate")?.value)       || 25.5;
+  const altRetPct   = parseFloat(g("wdlAltReturn")?.value)     || 8.0;
   const earlyMode   = g("wdlEarlyToggle")?.checked ?? false;
 
   const age        = calcAge(birthYear, birthMonth);
@@ -64,6 +66,7 @@ function computeScenarios(inp, p2) {
 
   const withdrawBase = earlyMode ? p2Current : (p2?.finalBalance ?? 0);
   const netWithdraw  = withdrawBase * (1 - taxRate);
+  // Fix 3: -1: withdrawal assumed at start of final accumulation year
   const investYears  = earlyMode ? Math.max(0, years - 1) : 0;
   const investedFV   = netWithdraw * Math.pow(1 + altReturn, investYears);
   const bMonthly     = investedFV / Math.max(1, payoutYears * 12);
@@ -71,7 +74,8 @@ function computeScenarios(inp, p2) {
 
   const divisorTbl = ANNUITY_DIVISOR[activeGender] || ANNUITY_DIVISOR.male;
   const clampedAge = Math.max(62, Math.min(69, retAge));
-  const divisor    = divisorTbl[clampedAge] || divisorTbl[65];
+  // Fix 2: clampedAge is always in [62..69] so key always exists; no fallback needed
+  const divisor    = divisorTbl[clampedAge];
   const cMonthly   = (p2?.finalBalance ?? 0) / divisor;
   const scC = {
     monthly:      cMonthly,
@@ -82,6 +86,10 @@ function computeScenarios(inp, p2) {
 
   return { scA, scB, scC };
 }
+
+// Fix 4: named constants for recommendation thresholds
+const ANNUITY_BETTER_THRESHOLD = 1.05; // 5% better monthly before annuity preferred
+const EQUITY_CUSHION = 100_000;        // below this equity level, longevity risk matters more
 
 function computeRecommendation(s, inp) {
   const { earlyMode, homeEquity, mortRate, altReturn, payoutYears } = inp;
@@ -110,8 +118,9 @@ function computeRecommendation(s, inp) {
     };
   }
 
-  const annuityIsBetter  = scC.monthlyNet > scA.monthlyNet * 1.05;
-  const hasEquityCushion = homeEquity >= 100_000;
+  // Fix 4: use named constants instead of magic numbers
+  const annuityIsBetter  = scC.monthlyNet > scA.monthlyNet * ANNUITY_BETTER_THRESHOLD;
+  const hasEquityCushion = homeEquity >= EQUITY_CUSHION;
 
   if (annuityIsBetter && !hasEquityCushion) {
     return {
@@ -171,9 +180,19 @@ function recalc() {
   g("wdlCard")?.classList.remove("hidden");
 }
 
+// Fix 6: helper to sync a percent slider to its label
+function wirePercentLabel(inputId, labelId) {
+  const inp = g(inputId);
+  const lbl = g(labelId);
+  if (!inp || !lbl) return;
+  const sync = () => { lbl.textContent = `${parseFloat(inp.value).toFixed(1)} %`; };
+  inp.addEventListener("input", sync);
+  sync();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("pillarResult", ({ detail }) => {
-    if (detail.pillar === 1) state.p1 = detail;
+    // Fix 1: removed unused p1 branch
     if (detail.pillar === 2) state.p2 = detail;
     recalc();
   });
@@ -181,14 +200,9 @@ document.addEventListener("DOMContentLoaded", () => {
   g("genderMale")?.addEventListener("click",   () => { activeGender = "male";   recalc(); });
   g("genderFemale")?.addEventListener("click", () => { activeGender = "female"; recalc(); });
 
-  ["wdlTaxRate", "wdlAltReturn"].forEach(id => {
-    const el = g(id);
-    if (!el) return;
-    ["input", "change"].forEach(evt => el.addEventListener(evt, recalc));
-  });
-  g("wdlEarlyToggle")?.addEventListener("change", recalc);
-
+  // Fix 7: merged two forEach loops into one
   [
+    "wdlTaxRate", "wdlAltReturn",
     "balance", "retirementAge", "birthYear", "birthMonth",
     "payoutYears", "inflation", "propPrice",
     "mortBalance", "mortBankMargin", "mortEuribor",
@@ -198,21 +212,9 @@ document.addEventListener("DOMContentLoaded", () => {
     ["input", "change"].forEach(evt => el.addEventListener(evt, recalc));
   });
 
-  const taxEl  = g("wdlTaxRate");
-  const taxLbl = g("wdlTaxDisplay");
-  if (taxEl && taxLbl) {
-    const sync = () => { taxLbl.textContent = `${parseFloat(taxEl.value).toFixed(1)} %`; };
-    taxEl.addEventListener("input", sync);
-    sync();
-  }
+  g("wdlEarlyToggle")?.addEventListener("change", recalc);
 
-  const retEl  = g("wdlAltReturn");
-  const retLbl = g("wdlAltReturnDisplay");
-  if (retEl && retLbl) {
-    const sync = () => {
-      retLbl.textContent = `${parseFloat(retEl.value).toFixed(1)} %`;
-    };
-    retEl.addEventListener("input", sync);
-    sync();
-  }
+  // Fix 6: deduplicated slider sync using helper
+  wirePercentLabel("wdlTaxRate",   "wdlTaxDisplay");
+  wirePercentLabel("wdlAltReturn", "wdlAltReturnDisplay");
 });
