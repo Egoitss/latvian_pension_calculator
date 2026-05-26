@@ -42,6 +42,15 @@ export const ANNUITY_DIVISOR = {
   female: { 62: 284, 63: 273, 64: 264, 65: 253, 66: 244, 67: 234, 68: 224, 69: 215 },
 };
 
+// Nominal annual appreciation rates per scenario (CAGR).
+// Moderate = historical 2010–2024 average (Arco Real Estate / Latio).
+// Used by property.js; NOT mirrored in data.py (property widget is client-side only).
+export const PROPERTY_SCENARIO_RATES = {
+  positive: { city: 0.090, valmiera: 0.075, rural: 0.040 },
+  moderate: { city: 0.062, valmiera: 0.055, rural: 0.025 },
+  negative: { city: 0.015, valmiera: 0.010, rural: 0.000 },
+};
+
 // Pension plan dataset — matches data.py PLANS list (snake_case keys)
 export const PLANS = [
   // Custom manual entry
