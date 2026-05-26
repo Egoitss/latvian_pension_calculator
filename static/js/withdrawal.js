@@ -24,12 +24,10 @@ function applyPensionTax(monthly) {
   return monthly - taxable * PENSION_TAX_RATE;
 }
 
-// Fix 1: removed unused p1 field
 const state = { p2: null };
 let activeGender = "male";
 
 function readInputs() {
-  // Fix 5: added radix 10 to all parseInt calls
   const birthYear   = parseInt(g("birthYear")?.value, 10)      || new Date().getFullYear() - 40;
   const birthMonth  = parseInt(g("birthMonth")?.value, 10)     || 1;
   const retAge      = parseInt(g("retirementAge")?.value, 10)  || 67;
@@ -66,7 +64,7 @@ function computeScenarios(inp, p2) {
 
   const withdrawBase = earlyMode ? p2Current : (p2?.finalBalance ?? 0);
   const netWithdraw  = withdrawBase * (1 - taxRate);
-  // Fix 3: -1: withdrawal assumed at start of final accumulation year
+  // -1: withdrawal assumed at start of final accumulation year
   const investYears  = earlyMode ? Math.max(0, years - 1) : 0;
   const investedFV   = netWithdraw * Math.pow(1 + altReturn, investYears);
   const bMonthly     = investedFV / Math.max(1, payoutYears * 12);
@@ -74,7 +72,6 @@ function computeScenarios(inp, p2) {
 
   const divisorTbl = ANNUITY_DIVISOR[activeGender] || ANNUITY_DIVISOR.male;
   const clampedAge = Math.max(62, Math.min(69, retAge));
-  // Fix 2: clampedAge is always in [62..69] so key always exists; no fallback needed
   const divisor    = divisorTbl[clampedAge];
   const cMonthly   = (p2?.finalBalance ?? 0) / divisor;
   const scC = {
@@ -87,9 +84,10 @@ function computeScenarios(inp, p2) {
   return { scA, scB, scC };
 }
 
-// Fix 4: named constants for recommendation thresholds
-const ANNUITY_BETTER_THRESHOLD = 1.05; // 5% better monthly before annuity preferred
-const EQUITY_CUSHION = 100_000;        // below this equity level, longevity risk matters more
+// 5% better monthly before annuity is preferred over programmed withdrawal
+const ANNUITY_BETTER_THRESHOLD = 1.05;
+// below this home equity level, longevity risk outweighs inheritance option
+const EQUITY_CUSHION = 100_000;
 
 function computeRecommendation(s, inp) {
   const { earlyMode, homeEquity, mortRate, altReturn, payoutYears } = inp;
@@ -118,7 +116,6 @@ function computeRecommendation(s, inp) {
     };
   }
 
-  // Fix 4: use named constants instead of magic numbers
   const annuityIsBetter  = scC.monthlyNet > scA.monthlyNet * ANNUITY_BETTER_THRESHOLD;
   const hasEquityCushion = homeEquity >= EQUITY_CUSHION;
 
@@ -180,7 +177,6 @@ function recalc() {
   g("wdlCard")?.classList.remove("hidden");
 }
 
-// Fix 6: helper to sync a percent slider to its label
 function wirePercentLabel(inputId, labelId) {
   const inp = g(inputId);
   const lbl = g(labelId);
@@ -192,7 +188,6 @@ function wirePercentLabel(inputId, labelId) {
 
 document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("pillarResult", ({ detail }) => {
-    // Fix 1: removed unused p1 branch
     if (detail.pillar === 2) state.p2 = detail;
     recalc();
   });
@@ -200,7 +195,6 @@ document.addEventListener("DOMContentLoaded", () => {
   g("genderMale")?.addEventListener("click",   () => { activeGender = "male";   recalc(); });
   g("genderFemale")?.addEventListener("click", () => { activeGender = "female"; recalc(); });
 
-  // Fix 7: merged two forEach loops into one
   [
     "wdlTaxRate", "wdlAltReturn",
     "balance", "retirementAge", "birthYear", "birthMonth",
@@ -214,7 +208,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   g("wdlEarlyToggle")?.addEventListener("change", recalc);
 
-  // Fix 6: deduplicated slider sync using helper
   wirePercentLabel("wdlTaxRate",   "wdlTaxDisplay");
   wirePercentLabel("wdlAltReturn", "wdlAltReturnDisplay");
 });
