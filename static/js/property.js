@@ -1,11 +1,12 @@
 // Property value estimator — reads main calculator + loan widget inputs
 // CAGR source: Arco Real Estate / Latio market reviews 2010–2024
+import { PROPERTY_SCENARIO_RATES } from "./data.js";
 
-const APPRECIATION = { city: 0.062, valmiera: 0.055, rural: 0.025 };
-const CRASH_RATE   = 0.60; // Latvia 2007–2010 worst case
+const CRASH_RATE = 0.60; // Latvia 2007–2010 worst case
 
-let locType    = "city";
-let renoTiming = "now";
+let locType        = "city";
+let renoTiming     = "now";
+let activeScenario = "moderate";
 
 function g(id) { return document.getElementById(id); }
 
@@ -46,7 +47,7 @@ function calcRenoMultiplier() {
   const years = parseFloat((g("propRefYears") || {}).value) || 0;
   if (!buy || !reno || !sell || years <= 0) return null;
   // What the base property would have appreciated to without renovation
-  const appreciated = buy * Math.pow(1 + APPRECIATION[locType], years);
+  const appreciated = buy * Math.pow(1 + PROPERTY_SCENARIO_RATES.moderate[locType], years);
   const valueAdded  = sell - appreciated;
   if (valueAdded <= 0 || reno <= 0) return null;
   return valueAdded / reno;
@@ -71,7 +72,7 @@ function recalc() {
     return;
   }
 
-  const rate     = APPRECIATION[locType];
+  const rate     = PROPERTY_SCENARIO_RATES[activeScenario][locType];
   const inflRate = (parseFloat((g("inflation") || {}).value) || 4.16) / 100;
   const p2lBal   = parseFloat((g("balance")   || {}).value) || 0;
   const yRet     = yrsToRetirement();
@@ -158,17 +159,25 @@ function recalc() {
 const PILL_ON  = "rounded-xl border border-slate-900 bg-slate-900 px-2.5 py-1 text-[11px] font-medium text-white transition";
 const PILL_OFF = "rounded-xl border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-medium text-slate-600 transition hover:border-slate-400";
 
+const MODERATE_NOTES = {
+  city:     "~6.2% gadā nominālais (Rīga, 2010–2024 · Arco/Latio)",
+  valmiera: "~5.5% gadā nominālais (Valmiera, 2010–2024 · Arco/Latio; maz jaunu projektu)",
+  rural:    "~2.5% gadā nominālais (lauki, 2010–2024)",
+};
+
+function buildRateNote(scenario, loc) {
+  if (scenario === "moderate") return MODERATE_NOTES[loc];
+  const pct   = (PROPERTY_SCENARIO_RATES[scenario][loc] * 100).toFixed(1);
+  const label = scenario === "positive" ? "pozitīvais scenārijs" : "negatīvais scenārijs";
+  return `~${pct}% gadā (${label})`;
+}
+
 function setLocType(type) {
   locType = type;
   g("propTypeCity").className     = type === "city"     ? PILL_ON : PILL_OFF;
   g("propTypeValmiera").className = type === "valmiera" ? PILL_ON : PILL_OFF;
   g("propTypeRural").className    = type === "rural"    ? PILL_ON : PILL_OFF;
-  const notes = {
-    city:     "~6.2% gadā nominālais (Rīga, 2010–2024 · Arco Real Estate / Latio)",
-    valmiera: "~5.5% gadā nominālais (Valmiera, 2010–2024 · Arco / Latio; rūpn. bāze + maz jaunu projektu)",
-    rural:    "~2.5% gadā nominālais (lauki/mazpilsētas, 2010–2024)",
-  };
-  g("propRateNote").textContent = notes[type];
+  g("propRateNote").textContent = buildRateNote(activeScenario, type);
   recalc();
 }
 
@@ -196,6 +205,11 @@ document.addEventListener("DOMContentLoaded", () => {
   [...ownInputs, ...sharedInputs].forEach(id => {
     const el = g(id);
     if (el) ["input", "change"].forEach(evt => el.addEventListener(evt, recalc));
+  });
+
+  document.addEventListener("scenarioChange", ({ detail }) => {
+    activeScenario = detail.name;
+    setLocType(locType);
   });
 
   // Initialise location type and price from server-side defaults
