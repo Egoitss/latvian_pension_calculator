@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!-- Base template: HTML shell, CDN links, layout blocks -->
+<html lang="lv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pensijas kalkulators</title>
+
+  <!-- Tailwind CSS utility framework (CDN, no build step) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Chart.js for the accumulation line chart -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+  <!-- Annotation plugin for plan-switch vertical reference lines -->
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+
+  <!-- Custom styles (minimal overrides on top of Tailwind) -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+
+  {% block content %}{% endblock %}
+
+  <!-- JS modules loaded after DOM is ready -->
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,35 @@
+/* Minimal custom styles — Tailwind handles the rest */
+
+/* Smooth slider thumb across browsers */
+input[type="range"] {
+  cursor: pointer;
+}
+
+/* Ensure chart canvas fills its container height */
+#projectionChart {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* VSAOI box active state: dark background with white text for descendants */
+#vsaoiBox.active p,
+#vsaoiBox.active #vsaoiStatus {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Copy-link input: prevent resize handle on readonly fields */
+input[readonly] {
+  resize: none;
+  user-select: all;
+}
+
+/* Number inputs: hide browser spin buttons for cleaner look */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}

@@ -1,0 +1,146 @@
+<!-- Loan widgets: mortgage + consumer credit — pure client-side, no server data needed -->
+<div class="space-y-3">
+
+  {% set loans = [
+    {"id": "mort", "title": "Hipotekārais kredīts",  "euribor_hint": true},
+    {"id": "cred", "title": "Patēriņa kredīts",      "euribor_hint": false},
+  ] %}
+  {% for loan in loans %}
+  <div class="rounded-3xl border border-slate-200 bg-white shadow-sm">
+    <div class="p-3">
+
+      <!-- Header: title + P2L toggle -->
+      <div class="flex items-center justify-between">
+        <h3 class="text-sm font-semibold text-slate-700">{{ loan.title }}</h3>
+        <label class="flex cursor-pointer items-center gap-1.5">
+          <span class="text-[10px] text-slate-400">P2L</span>
+          <div class="relative h-5 w-9">
+            <input type="checkbox" id="{{ loan.id }}P2LToggle" class="peer sr-only">
+            <div class="absolute inset-0 rounded-full bg-slate-200 transition
+                        peer-checked:bg-slate-800"></div>
+            <div class="absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white
+                        shadow transition peer-checked:translate-x-4"></div>
+          </div>
+        </label>
+      </div>
+
+      <!-- Row A: balance + end year -->
+      <div class="mt-2 flex gap-2">
+        <div class="flex-1">
+          <div class="mb-1 text-[10px] font-medium text-slate-400">Atlikums (€)</div>
+          <input id="{{ loan.id }}Balance" type="number" step="0.01" min="0"
+                 placeholder="60 000"
+                 {% if defaults[loan.id ~ "_balance"] != "" %}value="{{ defaults[loan.id ~ '_balance'] }}"{% endif %}
+                 class="w-full rounded-2xl border border-slate-200 bg-white px-3 py-1.5
+                        text-sm outline-none transition focus:border-slate-500
+                        focus:ring-2 focus:ring-slate-200" />
+        </div>
+        <div class="flex gap-1.5">
+          <div class="w-14">
+            <div class="mb-1 text-[10px] font-medium text-slate-400">Mēn.</div>
+            <input id="{{ loan.id }}EndMonth" type="number" step="1" min="1" max="12"
+                   placeholder="12"
+                   {% if defaults[loan.id ~ "_end_month"] != "" %}value="{{ defaults[loan.id ~ '_end_month'] }}"{% endif %}
+                   class="w-full rounded-2xl border border-slate-200 bg-white px-2 py-1.5
+                          text-sm outline-none transition focus:border-slate-500
+                          focus:ring-2 focus:ring-slate-200" />
+          </div>
+          <div class="w-20">
+            <div class="mb-1 text-[10px] font-medium text-slate-400">Gads</div>
+            <input id="{{ loan.id }}EndYear" type="number" step="1" min="2026"
+                   placeholder="2040"
+                   {% if defaults[loan.id ~ "_end_year"] != "" %}value="{{ defaults[loan.id ~ '_end_year'] }}"{% endif %}
+                   class="w-full rounded-2xl border border-slate-200 bg-white px-2 py-1.5
+                          text-sm outline-none transition focus:border-slate-500
+                          focus:ring-2 focus:ring-slate-200" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Row B: bank margin + EURIBOR + total rate -->
+      <div class="mt-1.5 flex items-end gap-2">
+        <div class="flex-1">
+          <div class="mb-1 text-[10px] font-medium text-slate-400">Bankas marža (%)</div>
+          <input id="{{ loan.id }}BankMargin" type="number" step="0.001" min="0" max="20"
+                 placeholder="2.0"
+                 {% if defaults[loan.id ~ "_bank_margin"] != "" %}value="{{ defaults[loan.id ~ '_bank_margin'] }}"{% endif %}
+                 class="w-full rounded-2xl border border-slate-200 bg-white px-3 py-1.5
+                        text-sm outline-none transition focus:border-slate-500
+                        focus:ring-2 focus:ring-slate-200" />
+        </div>
+        <div class="flex-1">
+          <div class="mb-1 text-[10px] font-medium text-slate-400">
+            EURIBOR (%)
+            {% if not loan.euribor_hint %}<span class="text-slate-300">→ 0 fiksēts</span>{% endif %}
+          </div>
+          <input id="{{ loan.id }}Euribor" type="number" step="0.001" min="0" max="20"
+                 placeholder="{{ '2.8' if loan.euribor_hint else '0.0' }}"
+                 {% if defaults[loan.id ~ "_euribor"] != "" %}value="{{ defaults[loan.id ~ '_euribor'] }}"{% endif %}
+                 class="w-full rounded-2xl border border-slate-200 bg-white px-3 py-1.5
+                        text-sm outline-none transition focus:border-slate-500
+                        focus:ring-2 focus:ring-slate-200" />
+        </div>
+        <div class="w-20 pb-1.5 text-right">
+          <div class="text-[10px] text-slate-400">Kopā likme</div>
+          <div id="{{ loan.id }}TotalRateDisplay"
+               class="text-sm font-semibold text-slate-700">—</div>
+        </div>
+      </div>
+
+      <!-- Compact summary strip (shown when calculable) -->
+      <div id="{{ loan.id }}Summary" class="mt-2 hidden">
+        <div class="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-xs text-slate-600">
+          <span>
+            <input id="{{ loan.id }}MonthlyPayment" type="number" step="0.01" min="0"
+                   {% if defaults[loan.id ~ "_actual_payment"] != "" %}value="{{ defaults[loan.id ~ '_actual_payment'] }}"{% endif %}
+                   class="w-20 border-b border-dashed border-slate-300 bg-transparent
+                          text-sm font-semibold text-slate-900 outline-none
+                          focus:border-slate-500 [appearance:textfield]" />
+            <span class="text-slate-500">/ mēn.</span>
+          </span>
+          <span class="text-slate-300">·</span>
+          <span id="{{ loan.id }}RemainingTerm" class="font-semibold text-slate-900">—</span>
+          <span class="text-slate-300">·</span>
+          <span><span id="{{ loan.id }}TotalInterest"
+                      class="font-semibold text-slate-900">—</span> procenti</span>
+          <span class="text-slate-300">·</span>
+          <span id="{{ loan.id }}InterestPct" class="font-semibold text-slate-900">—</span>
+        </div>
+        <div class="mt-0.5 text-[11px] text-slate-400">
+          Šomēnes: <span id="{{ loan.id }}MonthBreakdown"
+                         class="font-medium text-slate-600"></span>
+          <span class="mx-1 text-slate-300">·</span>
+          Pāreja: <span id="{{ loan.id }}CrossoverYear"
+                        class="font-medium text-slate-600"></span>
+        </div>
+      </div>
+
+      <!-- P2L section: shown when toggle is on -->
+      <div id="{{ loan.id }}ScenContainer" class="mt-2 hidden">
+        <!-- Scenario type pills -->
+        <div class="flex gap-1.5">
+          <button id="{{ loan.id }}ScenTypeTerm" type="button"
+                  class="rounded-xl border border-slate-900 bg-slate-900 px-3 py-1
+                         text-[11px] font-medium text-white transition">
+            Īsāks termiņš
+          </button>
+          <button id="{{ loan.id }}ScenTypePayment" type="button"
+                  class="rounded-xl border border-slate-200 bg-white px-3 py-1
+                         text-[11px] font-medium text-slate-600 transition
+                         hover:border-slate-400">
+            Mazāks maksājums
+          </button>
+        </div>
+        <!-- Result -->
+        <div id="{{ loan.id }}ScenarioResult"
+             class="mt-1.5 hidden rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-2">
+          <div id="{{ loan.id }}ScenarioText"
+               class="text-xs leading-5 text-emerald-900"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  {% endfor %}
+
+</div>
