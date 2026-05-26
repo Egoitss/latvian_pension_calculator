@@ -1,0 +1,156 @@
+<!-- 2nd-pillar withdrawal assessment — driven by withdrawal.js -->
+<div id="wdlCard"
+     class="hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+  <div class="p-5 space-y-4">
+
+    <!-- Header -->
+    <div class="flex items-start justify-between">
+      <div>
+        <h2 class="text-lg font-semibold">2. līmeņa izmaksas analīze</h2>
+        <p class="text-sm text-slate-500 mt-0.5">
+          Salīdzina trīs izmaksas iespējas, ja likumdošana to atļauj
+        </p>
+      </div>
+      <!-- Early-access toggle -->
+      <label class="flex items-center gap-2 mt-1 cursor-pointer select-none">
+        <span class="text-xs font-medium text-slate-600">Nākamgad</span>
+        <div class="relative">
+          <input id="wdlEarlyToggle" type="checkbox" class="sr-only peer" />
+          <div class="w-9 h-5 bg-slate-200 rounded-full peer
+                      peer-checked:bg-slate-900 transition"></div>
+          <div class="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full
+                      shadow transition peer-checked:translate-x-4"></div>
+        </div>
+        <span class="text-[10px] text-slate-400">
+          (izmaksāt 2027. gadā)
+        </span>
+      </label>
+    </div>
+
+    <!-- Parameters: withdrawal tax rate + alternative investment return -->
+    <div class="grid grid-cols-2 gap-4">
+      <div class="space-y-1">
+        <div class="flex justify-between text-xs">
+          <span class="text-slate-500">Izņemšanas nodoklis</span>
+          <span id="wdlTaxDisplay" class="font-medium text-slate-700">25.5 %</span>
+        </div>
+        <input id="wdlTaxRate" type="range" min="0" max="40" step="0.5"
+               value="25.5" class="w-full accent-slate-900" />
+        <div class="text-[10px] text-slate-400">
+          Pašlaik IIN likme (25.5 %). Iespējama atvieglota likme.
+        </div>
+      </div>
+      <div class="space-y-1">
+        <div class="flex justify-between text-xs">
+          <span class="text-slate-500">Alternatīvas investīcijas</span>
+          <span id="wdlAltReturnDisplay"
+                class="font-medium text-slate-700">8.0 %</span>
+        </div>
+        <input id="wdlAltReturn" type="range" min="0" max="15" step="0.5"
+               value="8.0" class="w-full accent-slate-900" />
+        <div class="text-[10px] text-slate-400">
+          Ja izņem un investē pats (piem., indeksu fonds 8 %).
+        </div>
+      </div>
+    </div>
+
+    <!-- Three scenario tiles -->
+    <div class="grid grid-cols-3 gap-3">
+
+      <!-- Scenario A: Keep in fund -->
+      <div id="wdlCardA"
+           class="rounded-2xl border border-slate-200 px-3 py-3 space-y-2
+                  transition">
+        <div class="text-[10px] font-semibold text-slate-500 uppercase
+                    tracking-wide">
+          A — Saglabāt
+        </div>
+        <div class="space-y-0.5">
+          <div class="text-[10px] text-slate-400">Kapitāls pensijai</div>
+          <div id="wdlACapital"
+               class="text-base font-bold text-slate-900">—</div>
+        </div>
+        <div class="space-y-0.5">
+          <div class="text-[10px] text-slate-400">Mēneša izmaksa</div>
+          <div id="wdlAMonthly"
+               class="text-base font-bold text-emerald-700">—</div>
+        </div>
+        <div class="text-[10px] text-slate-400 leading-4">
+          Programmētā izmaksa. Mantojams neizmantotais atlikums.
+        </div>
+      </div>
+
+      <!-- Scenario B: Withdraw + invest -->
+      <div id="wdlCardB"
+           class="rounded-2xl border border-slate-200 px-3 py-3 space-y-2
+                  transition">
+        <div class="text-[10px] font-semibold text-slate-500 uppercase
+                    tracking-wide">
+          B — Izņemt
+        </div>
+        <div class="space-y-0.5">
+          <div class="text-[10px] text-slate-400">Neto pēc nodokļa</div>
+          <div id="wdlBNet"
+               class="text-base font-bold text-slate-900">—</div>
+        </div>
+        <div class="space-y-0.5">
+          <div class="text-[10px] text-slate-400">
+            Mēneša izmaksa (investēts)
+          </div>
+          <div id="wdlBMonthly"
+               class="text-base font-bold text-amber-700">—</div>
+        </div>
+        <div class="text-[10px] text-slate-400 leading-4">
+          <span id="wdlBFV" class="font-medium text-slate-700">—</span>
+          uzkrāts līdz pensijai.
+        </div>
+      </div>
+
+      <!-- Scenario C: Mūža pensija annuity -->
+      <div id="wdlCardC"
+           class="rounded-2xl border border-slate-200 px-3 py-3 space-y-2
+                  transition">
+        <div class="text-[10px] font-semibold text-slate-500 uppercase
+                    tracking-wide">
+          C — Mūža pensija
+        </div>
+        <div class="space-y-0.5">
+          <div class="text-[10px] text-slate-400">Mēneša izmaksa</div>
+          <div id="wdlCMonthly"
+               class="text-base font-bold text-blue-700">—</div>
+        </div>
+        <div class="space-y-0.5">
+          <div class="text-[10px] text-slate-400">Zaudējumu punkts</div>
+          <div id="wdlCBreakEven"
+               class="text-sm font-semibold text-slate-700">—</div>
+        </div>
+        <div class="text-[10px] text-slate-400 leading-4">
+          Apdrošinātāja polise (ERGO, BTA). Garantēta uz mūžu.
+          Pensijas kapitāla nodošana nav atgūstama.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Recommendation bar -->
+    <div class="rounded-2xl bg-slate-900 px-4 py-3 text-white">
+      <div class="text-[10px] font-semibold uppercase tracking-wide
+                  text-slate-400 mb-1">
+        Ieteikums jūsu situācijai
+      </div>
+      <div id="wdlRecTitle"
+           class="text-sm font-bold mb-1">—</div>
+      <div id="wdlRecBody"
+           class="text-xs text-slate-300 leading-5">—</div>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="text-[10px] text-slate-400 leading-4">
+      Aprēķini ir orientējoši. Mūža pensijas likmes balstītas uz CSP 2023
+      dzīvildzes tabulām ar 10 % apdrošinātāja slodzi (ERGO, BTA tirgus
+      kalibrācija). Faktiskās polises likmes var atšķirties. Šis nav
+      finanšu padoms.
+    </div>
+
+  </div>
+</div>
