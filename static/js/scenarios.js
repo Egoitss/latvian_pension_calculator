@@ -44,6 +44,7 @@ function activateScenario(name) {
     lbl.textContent = SCENARIO_LABELS[name];
     lbl.className = LABEL_COLORS[name];
   }
+  document.dispatchEvent(new CustomEvent("scenarioChange", { detail: { name } }));
 }
 
 const BTN_BASE =
