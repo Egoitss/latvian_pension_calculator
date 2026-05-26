@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Page wrapper -->
+<main class="p-4 md:p-8">
+  <div class="mx-auto max-w-7xl space-y-6">
+
+    <!-- Page header: title, subtitle, disclaimer -->
+    <section class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+      <div>
+        <div class="mb-3 inline-flex rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-700">
+          Pensiju 1. + 2. + 3. līmenis
+        </div>
+        <h1 class="text-3xl font-bold tracking-tight md:text-4xl">
+          Pensijas kalkulators
+        </h1>
+        <p class="mt-2 max-w-3xl text-slate-600">
+          Aptuvens modelis kopējās pensijas aplēsei — valsts NDC uzkrājums
+          (1. līmenis) un privātais fondētais uzkrājums (2. līmenis).
+        </p>
+      </div>
+      <div class="space-y-2">
+        <div class="rounded-2xl bg-white px-4 py-3 text-sm text-slate-600 shadow-sm">
+          Šis nav finanšu padoms. Vēsturiskais ienesīgums negarantē nākotnes rezultātus.
+        </div>
+        <!-- Copy feedback message (shown by ui.js after clipboard action) -->
+        <div id="copyFeedback" class="hidden rounded-2xl px-4 py-2 text-sm font-medium shadow-sm"></div>
+      </div>
+    </section>
+
+    <!-- Two-column layout: controls left, results right -->
+    <section class="grid grid-cols-1 gap-6 lg:grid-cols-[380px_1fr]">
+
+      <!-- Left panel: all form controls -->
+      {% include "_controls.html" %}
+
+      <!-- Right panel: summary → P1 → P2 → P3 → chart → extras -->
+      <div class="space-y-6">
+        {% include "_scenarios.html" %}
+        {% include "_pension1.html" %}
+        {% include "_pension2.html" %}
+        {% include "_pension3.html" %}
+        {% include "_loans.html" %}
+        {% include "_property.html" %}
+        {% include "_withdrawal.html" %}
+        {% include "_chart.html" %}
+      </div>
+
+    </section>
+  </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<!-- Pass server-computed data to JS via hidden elements -->
+<div id="planScheduleData"
+     class="hidden"
+     data-schedule="{{ plan_schedule_json }}"
+     data-apply-ceiling="{{ 'true' if apply_ceiling else 'false' }}">
+</div>
+
+<!-- Embed Jinja constants and defaults as a JS config object -->
+<script>
+  /* Constants and default input values from Python */
+  window.P2L_CONFIG = {
+    vsaoi_ceiling: {{ constants.VSAOI_CEILING }},
+    p2l_rate: {{ constants.P2L_RATE }},
+    tax_free_threshold: {{ constants.PENSION_TAX_FREE_THRESHOLD }},
+    tax_rate: {{ constants.PENSION_TAX_RATE }},
+    defaults: {
+      age: {{ defaults.age }},
+      retirement_age: {{ defaults.retirement_age }},
+      balance: {{ defaults.balance }},
+      gross_monthly: {{ defaults.gross_monthly }},
+      manual_return: {{ defaults.manual_return }},
+      salary_growth: {{ defaults.salary_growth }},
+      inflation: {{ defaults.inflation }},
+      payout_years: {{ defaults.payout_years }},
+    },
+    urls: {
+      latvija_lv: "{{ urls.latvija_lv }}",
+      manapensija: "{{ urls.manapensija }}",
+    },
+  };
+</script>
+
+<!-- JS modules: data and calculation layer -->
+<script src="{{ url_for('static', filename='js/data.js') }}" type="module"></script>
+<script src="{{ url_for('static', filename='js/calc.js') }}" type="module"></script>
+<script src="{{ url_for('static', filename='js/chart.js') }}" type="module"></script>
+<script src="{{ url_for('static', filename='js/scenarios.js') }}" type="module"></script>
+<script src="{{ url_for('static', filename='js/ui.js') }}" type="module"></script>
+<script src="{{ url_for('static', filename='js/pension1.js') }}" type="module"></script>
+<script src="{{ url_for('static', filename='js/pension3.js') }}" type="module"></script>
+<script src="{{ url_for('static', filename='js/loans.js') }}" type="module"></script>
+<script src="{{ url_for('static', filename='js/property.js') }}" type="module"></script>
+<script src="{{ url_for('static', filename='js/withdrawal.js') }}" type="module"></script>
+{% endblock %}
