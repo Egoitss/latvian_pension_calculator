@@ -1,5 +1,7 @@
 # Personal config — NEVER commit
 local_config.py
+.env
+.env.local
 
 # Python artefacts
 __pycache__/
