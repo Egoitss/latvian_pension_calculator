@@ -4,11 +4,13 @@
 
 function g(id) { return document.getElementById(id); }
 
-// Shared state for both cards — updated on every recalc
-const loanState = {
-  mort: { active: false, type: "term", balance: 0, totalRate: 0, months: 0, payment: 0 },
-  cred: { active: false, type: "term", balance: 0, totalRate: 0, months: 0, payment: 0 },
-};
+// Shared state: dynamic — `mort` and `cred` are server-rendered; extra
+// loans are added at runtime via addLoan() and removed via removeLoan().
+const loanState = {};
+
+function emptyLoanRecord() {
+  return { active: false, type: "term", balance: 0, totalRate: 0, months: 0, payment: 0 };
+}
 
 function annuityPayment(balance, annualRate, months) {
   if (months <= 0) return null;
@@ -89,22 +91,22 @@ function scenarioLowerPayment(balance, annualRate, origMonths, p2lAmt) {
     `Termiņš paliek: ${fmtMonths(origMonths)}`;
 }
 
-// Cascade allocation: smallest balance erased first, remainder to larger
+// Cascade allocation across N loans: smallest active balance erased first
 function allocateP2L() {
-  const total = parseFloat((g("balance") || {}).value) || 0;
-  const mA = loanState.mort.active && loanState.mort.balance > 0;
-  const cA = loanState.cred.active && loanState.cred.balance > 0;
-  if (!mA && !cA) return { mort: 0, cred: 0 };
-  if (mA && !cA)  return { mort: total, cred: 0 };
-  if (!mA && cA)  return { mort: 0, cred: total };
-  // Both active: erase smallest first
-  if (loanState.cred.balance <= loanState.mort.balance) {
-    const credAmt = Math.min(total, loanState.cred.balance);
-    return { mort: total - credAmt, cred: credAmt };
-  } else {
-    const mortAmt = Math.min(total, loanState.mort.balance);
-    return { mort: mortAmt, cred: total - mortAmt };
+  const balEl = g("p2lBalance") || g("balance");
+  let remaining = parseFloat((balEl || {}).value) || 0;
+  const result = {};
+  const active = Object.entries(loanState)
+    .filter(([, s]) => s.active && s.balance > 0)
+    .sort(([, a], [, b]) => a.balance - b.balance);
+  Object.keys(loanState).forEach(k => { result[k] = 0; });
+  for (const [prefix, s] of active) {
+    if (remaining <= 0) break;
+    const amt = Math.min(remaining, s.balance);
+    result[prefix] = amt;
+    remaining -= amt;
   }
+  return result;
 }
 
 function renderP2L(prefix, p2lAmt) {
@@ -129,14 +131,15 @@ function renderP2L(prefix, p2lAmt) {
 
 function recalcP2L() {
   const alloc = allocateP2L();
-  renderP2L("mort", alloc.mort);
-  renderP2L("cred", alloc.cred);
+  Object.keys(loanState).forEach(prefix => renderP2L(prefix, alloc[prefix] || 0));
 }
 
 const PILL_ACTIVE   = "rounded-xl border border-slate-900 bg-slate-900 px-3 py-1 text-[11px] font-medium text-white transition";
 const PILL_INACTIVE = "rounded-xl border border-slate-200 bg-white px-3 py-1 text-[11px] font-medium text-slate-600 transition hover:border-slate-400";
 
 function initCard(prefix) {
+  loanState[prefix] = emptyLoanRecord();
+
   const balanceEl    = g(`${prefix}Balance`);
   const endMonthEl   = g(`${prefix}EndMonth`);
   const endYearEl    = g(`${prefix}EndYear`);
@@ -236,6 +239,67 @@ function initCard(prefix) {
   });
 }
 
+// Monotonic counter for dynamic loan prefixes (extra1, extra2, …)
+let extraLoanCounter = 0;
+
+// Wire up an accordion on a freshly inserted card (mirrors accordion.js logic)
+function bindAccordion(card) {
+  const triggerId = card.dataset.accordionTrigger;
+  const trigger = triggerId ? document.getElementById(triggerId) : null;
+  const header = card.querySelector(".accordion-header");
+  if (header) {
+    header.addEventListener("click", (e) => {
+      // Don't toggle accordion when clicking the remove button
+      if (e.target.closest("[data-remove-loan]")) return;
+      card.classList.toggle("is-expanded");
+    });
+  }
+  if (trigger) {
+    const onInput = () => {
+      const v = parseFloat(trigger.value);
+      if (v > 0) card.classList.add("is-expanded");
+    };
+    trigger.addEventListener("input", onInput);
+    trigger.addEventListener("change", onInput);
+  }
+}
+
+// Add a new loan card cloned from #loanCardTemplate
+function addLoan(title) {
+  extraLoanCounter += 1;
+  const prefix = `extra${extraLoanCounter}`;
+  const tpl = g("loanCardTemplate");
+  if (!tpl) return;
+
+  // Substitute the controlled prefix in innerHTML; title is user-supplied
+  // and inserted via textContent after parsing to avoid XSS.
+  const html = tpl.innerHTML.replaceAll("__PREFIX__", prefix);
+  const wrap = document.createElement("div");
+  wrap.innerHTML = html;
+  const card = wrap.firstElementChild;
+  const titleEl = card.querySelector(".accordion-header h3");
+  if (titleEl) titleEl.textContent = title;
+
+  g("extraLoansContainer").appendChild(card);
+  bindAccordion(card);
+  initCard(prefix);
+
+  // Wire remove button (only present on dynamic cards)
+  const removeBtn = card.querySelector("[data-remove-loan]");
+  if (removeBtn) {
+    removeBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      removeLoan(prefix, card);
+    });
+  }
+}
+
+function removeLoan(prefix, card) {
+  delete loanState[prefix];
+  card.remove();
+  recalcP2L();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   initCard("mort");
   initCard("cred");
@@ -244,4 +308,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const el = g(`${prefix}Balance`);
     if (el && el.value) el.dispatchEvent(new Event("input"));
   });
+
+  // "+ Pievienot kredītu" button
+  const addBtn = g("addLoanBtn");
+  if (addBtn) {
+    addBtn.addEventListener("click", () => {
+      const title = prompt("Kredīta nosaukums:", "Cits kredīts");
+      if (title === null) return;
+      addLoan(title.trim() || "Cits kredīts");
+    });
+  }
 });
