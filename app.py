@@ -1,6 +1,8 @@
 import json
+import os
+import time
 from datetime import date as _date
-from flask import Flask, render_template
+from flask import Flask, jsonify, make_response, render_template, request
 from data import (
     PLANS, VSAOI_CEILING, P2L_RATE, DEFAULT_RETURN,
     PENSION_TAX_FREE_THRESHOLD, PENSION_TAX_RATE,
@@ -13,6 +15,20 @@ from calculator import (
 )
 
 app = Flask(__name__)
+
+
+@app.context_processor
+def inject_js_version():
+    js_dir = os.path.join(app.static_folder, 'js')
+    try:
+        max_mtime = max(
+            os.path.getmtime(os.path.join(js_dir, f))
+            for f in os.listdir(js_dir) if f.endswith('.js')
+        )
+        js_v = int(max_mtime)
+    except Exception:
+        js_v = int(time.time())
+    return {"js_v": js_v}
 
 
 def _age_from_birth(birth_year, birth_month):
@@ -67,6 +83,23 @@ try:
 except ImportError:
     pass
 
+# Load personal JS data from local_config if available
+_lc_prices: list = []
+_lc_cost_basis: float = 0.0
+try:
+    from local_config import _DINAMIKA_PRICES as _lc_prices
+except (ImportError, AttributeError):
+    pass
+try:
+    from local_config import P3_COST_BASIS as _lc_cost_basis
+except (ImportError, AttributeError):
+    pass
+
+LOCAL_DATA = {
+    "dinamika_prices": _lc_prices,
+    "p3_cost_basis": _lc_cost_basis,
+}
+
 
 @app.route("/")
 def index():
@@ -116,7 +149,7 @@ def index():
         "manapensija": MANAPENSIJA_STATS_URL,
     }
 
-    return render_template(
+    resp = make_response(render_template(
         "index.html",
         plans=PLANS,
         p3_plans=P3_PLANS,
@@ -126,7 +159,102 @@ def index():
         projection=projection,
         plan_schedule_json=json.dumps(plan_schedule),
         apply_ceiling=apply_ceiling,
+        local_data=LOCAL_DATA,
+    ))
+    resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    return resp
+
+
+_AI_SYSTEM_PROMPT = (
+    "Tu esi pieredzējis Latvijas finanšu konsultants, kas palīdz cilvēkiem "
+    "pieņemt lēmumus par 2. un 3. pensiju līmeņa izmaksu.\n\n"
+    "Tavs uzdevums: novērtēt, vai konkrētajai personai būtu izdevīgāk "
+    "(a) saņemt 2. un 3. līmeņa uzkrājumus kā vienreizēju izmaksu, "
+    "(b) saglabāt kā programmēto pensiju (mēneša izmaksa no fonda), "
+    "vai (c) iegādāties mūža pensijas polisi (annuitāti).\n\n"
+    "Atbildē apsver: vecums, mūža ilgums (CSP statistika), nodokļi "
+    "(25.5% IIN virs 1000 €/mēn 2. līmenim, 25.5% IIN peļņai 3. līmenim), "
+    "alternatīvas investīcijas, mantojuma aspekts, drošības tīkls.\n\n"
+    "Atbildi LATVIEŠU valodā, 4-6 īsas rindkopas, konkrēti, bez juridiskām "
+    "atrunām. NAV finanšu padoms - tikai izglītojoša informācija."
+)
+
+
+def _build_recommend_prompt(d: dict) -> str:
+    """Format calculator state into a structured prompt for the AI."""
+    age = d.get("age", "—")
+    ret_age = d.get("retirementAge", "—")
+    yrs_to_ret = d.get("yearsToRetirement", "—")
+    gender = d.get("gender", "—")
+    scenario = d.get("scenario", "moderate")
+    p1 = d.get("p1", {})
+    p2 = d.get("p2", {})
+    p3 = d.get("p3", {})
+    return (
+        f"Personas dati:\n"
+        f"- Vecums: {age} gadi (dzimums: {gender})\n"
+        f"- Pensionēšanās vecums: {ret_age} (pēc ~{yrs_to_ret} gadiem)\n"
+        f"- Aktīvais scenārijs: {scenario}\n\n"
+        f"1. līmenis (NDC):\n"
+        f"- Pašreizējais kapitāls: {p1.get('capital', 0)} €\n"
+        f"- Prognozētā mēneša pensija: {p1.get('monthly', 0)} €\n\n"
+        f"2. līmenis (fondētais):\n"
+        f"- Pašreizējais atlikums: {p2.get('balance', 0)} €\n"
+        f"- Prognozētais kapitāls pensijai: {p2.get('finalBalance', 0)} €\n"
+        f"- Programmētā mēneša izmaksa: {p2.get('monthlyAfterTax', 0)} €\n\n"
+        f"3. līmenis (brīvprātīgais):\n"
+        f"- Pašreizējais atlikums: {p3.get('balance', 0)} €\n"
+        f"- Prognozētais kapitāls pensijai: {p3.get('finalBalance', 0)} €\n"
+        f"- Mēneša izmaksa (neto): {p3.get('monthlyPayout', 0)} €\n\n"
+        f"Jautājums: kā šai personai izdevīgāk saņemt 2. un 3. līmeņa "
+        f"uzkrājumus pensionējoties?"
     )
+
+
+@app.route("/api/recommend", methods=["POST"])
+def api_recommend():
+    # Lazy import: keep app boot fast even if anthropic isn't installed
+    try:
+        from anthropic import Anthropic
+    except ImportError:
+        return jsonify({"error": "anthropic package not installed"}), 500
+
+    if not os.environ.get("ANTHROPIC_API_KEY"):
+        return jsonify({"error": "ANTHROPIC_API_KEY not set"}), 500
+
+    payload = request.get_json(silent=True) or {}
+    # Temperature clamped 0.0-1.0, default 0.7
+    try:
+        temperature = float(payload.get("temperature", 0.7))
+    except (TypeError, ValueError):
+        temperature = 0.7
+    temperature = max(0.0, min(1.0, temperature))
+
+    prompt = _build_recommend_prompt(payload)
+
+    client = Anthropic()
+    try:
+        msg = client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=800,
+            temperature=temperature,
+            system=_AI_SYSTEM_PROMPT,
+            messages=[{"role": "user", "content": prompt}],
+        )
+    except Exception as exc:
+        return jsonify({"error": str(exc)}), 502
+
+    text = "".join(
+        block.text for block in msg.content if getattr(block, "type", "") == "text"
+    )
+    return jsonify({
+        "text": text,
+        "temperature": temperature,
+        "usage": {
+            "input_tokens": msg.usage.input_tokens,
+            "output_tokens": msg.usage.output_tokens,
+        },
+    })
 
 
 if __name__ == "__main__":

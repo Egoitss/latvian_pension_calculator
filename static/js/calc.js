@@ -298,6 +298,9 @@ export function survivalOverall(gender, currentAge, yearsIntoPension) {
 // Float64Array used for fast native sort.
 export function bootstrapScenarioReturns(numMonths, nSims = 10_000) {
   const pool = DINAMIKA_MONTHLY_RETURNS;
+  if (pool.length === 0) {
+    return { positive: 10.0, moderate: 7.5, negative: 3.0 };
+  }
   const poolLen = pool.length;
   const multipliers = new Float64Array(nSims);
 

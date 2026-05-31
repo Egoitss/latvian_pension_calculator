@@ -164,27 +164,16 @@ export function getP3PlanByName(name) {
   return P3_PLANS.find(p => p.name === name) ?? P3_PLANS[0];
 }
 
-// Historical Dinamika 18-49 NAV prices Feb 2019–May 2026 (source: Swedbank CSV)
-const _DINAMIKA_PRICES = [
-  1.62790, 1.63010, 1.69840, 1.66600, 1.66830, 1.72710, 1.66160,
-  1.73010, 1.71720, 1.82040, 1.82280, 1.88360, 1.92540, 1.58040,
-  1.59900, 1.66570, 1.76190, 1.76170, 1.77210, 1.80060, 1.84390,
-  1.91570, 1.94100, 2.02870, 2.08220, 2.06740, 2.15920, 2.17650,
-  2.19170, 2.27260, 2.32750, 2.35420, 2.31740, 2.45770, 2.47060,
-  2.45000, 2.37830, 2.24510, 2.38520, 2.18160, 2.22300, 2.22210,
-  2.31280, 2.28020, 2.12280, 2.16720, 2.21130, 2.19460, 2.28260,
-  2.24640, 2.21980, 2.24310, 2.33210, 2.32140, 2.34920, 2.37470,
-  2.31260, 2.31570, 2.43730, 2.48130, 2.59490, 2.65100, 2.66190,
-  2.69690, 2.74360, 2.80110, 2.67140, 2.73830, 2.86590, 2.94240,
-  3.01930, 2.94870, 3.04980, 2.80060, 2.52960, 2.74150, 2.85590,
-  2.87310, 2.92760, 2.98120, 3.04250, 3.12500, 3.14910, 3.23930,
-  3.22540, 3.18870, 3.20380, 3.39100,
-];
+// Personal series — injected by Flask via window.LOCAL_DATA.
+// Falls back to [] when no local_config.py is present.
+const _DINAMIKA_PRICES =
+  (window.LOCAL_DATA && window.LOCAL_DATA.dinamikaPrices) || [];
 
-// 87 monthly returns — mirrors data.py DINAMIKA_MONTHLY_RETURNS
+// Monthly returns derived from NAV prices
 export const DINAMIKA_MONTHLY_RETURNS = _DINAMIKA_PRICES.slice(1).map(
   (p, i) => p / _DINAMIKA_PRICES[i] - 1
 );
 
-// P3 cost basis — mirrors data.py P3_COST_BASIS
-export const P3_COST_BASIS = 2_983.17;
+// Historical P3 cost basis before simulation window
+export const P3_COST_BASIS =
+  (window.LOCAL_DATA && window.LOCAL_DATA.p3CostBasis) || 0.0;
