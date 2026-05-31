@@ -350,6 +350,9 @@ def bootstrap_scenario_returns(num_months, n_simulations=10_000, seed=None):
     # Draws num_months returns (with replacement) per simulation, compounds
     # them to a final multiplier, then converts the 10/50/90th percentile
     # multipliers to annualized return rates (%).
+    if not DINAMIKA_MONTHLY_RETURNS:
+        # No historical data available — return fixed fallback annual rates
+        return {"positive": 10.0, "moderate": 7.5, "negative": 3.0}
     import random
     rng = random.Random(seed)
     pool = DINAMIKA_MONTHLY_RETURNS

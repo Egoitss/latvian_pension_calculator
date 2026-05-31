@@ -315,3 +315,11 @@ class TestBootstrapScenarioReturns:
         long_ = bootstrap_scenario_returns(num_months=240, seed=0)
         assert (short["positive"] - short["negative"]) > \
                (long_["positive"] - long_["negative"])
+
+    def test_bootstrap_returns_fallback_when_no_data(self, monkeypatch):
+        # When no price history is available, bootstrap returns fixed rates
+        import calculator as c
+        monkeypatch.setattr(c, "DINAMIKA_MONTHLY_RETURNS", [])
+        result = c.bootstrap_scenario_returns(num_months=12)
+        assert result["positive"] > result["moderate"] > result["negative"]
+        assert result["moderate"] > 0
