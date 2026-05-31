@@ -165,6 +165,16 @@ def index():
     return resp
 
 
+@app.route("/loans")
+def loans():
+    resp = make_response(render_template(
+        "loans.html",
+        defaults=DEFAULTS,
+    ))
+    resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    return resp
+
+
 _AI_SYSTEM_PROMPT = (
     "Tu esi pieredzējis Latvijas finanšu konsultants, kas palīdz cilvēkiem "
     "pieņemt lēmumus par 2. un 3. pensiju līmeņa izmaksu.\n\n"
