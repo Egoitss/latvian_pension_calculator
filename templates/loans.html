@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main class="p-3 md:p-6">
+  <div class="mx-auto max-w-2xl space-y-4">
+
+    <!-- Back link -->
+    <a href="/"
+       class="inline-flex items-center gap-1 text-xs text-slate-400
+              hover:text-slate-700 transition">
+      ← Pensijas kalkulators
+    </a>
+
+    <section>
+      <h1 class="text-xl font-bold tracking-tight text-slate-900">
+        Kredītu kalkulators
+      </h1>
+      <p class="text-[11px] text-slate-400 mt-1">
+        Hipotekārais un patēriņa kredīts · P2L scenāriji
+      </p>
+    </section>
+
+    <!-- P2L balance input for standalone use -->
+    <div class="rounded-3xl border border-slate-200 bg-white shadow-sm p-4">
+      <div class="text-xs font-semibold text-slate-500 mb-2 uppercase
+                  tracking-wider">
+        2. pensiju līmeņa atlikums
+      </div>
+      <div class="flex items-center gap-3">
+        <input id="p2lBalance" type="number" step="0.01" min="0"
+               placeholder="Ievadi savu P2L atlikumu (€)"
+               {% if defaults.balance %}
+               value="{{ defaults.balance }}"
+               {% endif %}
+               class="flex-1 rounded-2xl border border-slate-200 bg-white
+                      px-3 py-2 text-sm outline-none transition
+                      focus:border-slate-500 focus:ring-2
+                      focus:ring-slate-200" />
+        <span class="text-sm text-slate-400">€</span>
+      </div>
+      <p class="mt-1.5 text-[10px] text-slate-400">
+        Izmanto P2L scenārijus zemāk, lai redzētu, kā atlikums ietekmē
+        kredītus.
+      </p>
+    </div>
+
+    <!-- Loans widget -->
+    {% include "_loans.html" %}
+
+  </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  /* Pre-fill P2L balance from ?p2l= query param if present */
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    const v = params.get("p2l");
+    if (v) {
+      const el = document.getElementById("p2lBalance");
+      if (el) { el.value = v; el.dispatchEvent(new Event("input")); }
+    }
+  })();
+</script>
+<script src="{{ url_for('static', filename='js/loans.js',
+                        v=js_v) }}"></script>
+<script src="{{ url_for('static', filename='js/accordion.js',
+                        v=js_v) }}"></script>
+{% endblock %}
