@@ -69,10 +69,20 @@
       {% include "_property.html" %}
     </div>
 
-    {% include "_loans.html" %}
-
     <!-- AI recommendation card — full width, prominent -->
     {% include "_ai_recommend.html" %}
+
+    <!-- Link to standalone loans calculator -->
+    <div class="text-center py-2">
+      <a id="loansPageLink"
+         href="/loans"
+         class="inline-flex items-center gap-1.5 rounded-2xl border
+                border-slate-200 bg-white px-4 py-2 text-sm font-medium
+                text-slate-600 shadow-sm transition hover:border-slate-400
+                hover:text-slate-900">
+        Kredītu kalkulators →
+      </a>
+    </div>
 
     {% include "_chart.html" %}
 
@@ -119,6 +129,22 @@
     dinamikaPrices: {{ local_data.dinamika_prices | tojson }},
     p3CostBasis: {{ local_data.p3_cost_basis | tojson }},
   };
+</script>
+
+<script>
+  /* Keep loans-page link URL in sync with the current P2L balance */
+  document.addEventListener("DOMContentLoaded", function () {
+    const balEl = document.getElementById("balance");
+    const link  = document.getElementById("loansPageLink");
+    if (!balEl || !link) return;
+    function syncLink() {
+      const v = parseFloat(balEl.value);
+      link.href = "/loans" + (v > 0 ? "?p2l=" + v : "");
+    }
+    balEl.addEventListener("input",  syncLink);
+    balEl.addEventListener("change", syncLink);
+    syncLink();
+  });
 </script>
 
 <!-- JS modules: data and calculation layer -->
