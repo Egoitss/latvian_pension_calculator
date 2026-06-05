@@ -95,15 +95,3 @@ local_config.py  Personal overrides — gitignored, never commit
 Returns are sourced from `manapensija.lv`. Update `return_3y`, `return_5y`,
 and `fee_total` in both `data.py` and `static/js/data.js` — they are kept
 in sync manually.
-
-## Personal data
-
-Form values (salary, balances, birth year, etc.) are saved automatically
-in browser localStorage — they never touch the server or appear in git.
-On first visit the form shows empty inputs with gray demo hints; your
-saved values load on every return visit. Clearing browser storage resets
-to demo defaults.
-
-`local_config.py` is only needed to supply historical Dinamika 18-49 NAV
-prices for personalised Monte Carlo simulations. Without it the three
-scenario buttons use fixed fallback rates (10% / 7.5% / 3%).
