@@ -77,12 +77,6 @@ DEFAULTS = {
     "p3_plan_name": "Swedbank Dinamika 18-49",
 }
 
-try:
-    from local_config import OVERRIDES
-    DEFAULTS = {**DEFAULTS, **OVERRIDES}
-except ImportError:
-    pass
-
 # Load personal JS data from local_config if available
 _lc_prices: list = []
 _lc_cost_basis: float = 0.0
