@@ -8,6 +8,7 @@ import {
   survivalToRetirement, survivalOverall,
 } from "./calc.js";
 import { initChart, drawChart } from "./chart.js";
+import { loadInputs, loadGender, saveGender } from "./storage.js";
 
 // Grab an element by id (throws at startup if the id is missing)
 function el(id) { return document.getElementById(id); }
@@ -229,6 +230,7 @@ document.addEventListener("DOMContentLoaded", () => {
     " hover:border-slate-400";
   function setGender(g) {
     gender = g;
+    saveGender(g);
     el("genderMale").className   = g === "men"   ? GENDER_ACTIVE : GENDER_INACTIVE;
     el("genderFemale").className = g === "women" ? GENDER_ACTIVE : GENDER_INACTIVE;
     onInputChange(chart);
@@ -275,8 +277,14 @@ document.addEventListener("DOMContentLoaded", () => {
     drawChart(chart, detail.rows, lastPlanSchedule);
   });
 
-  // Sync retirement age from birth year before first calculation
+  // Restore gender button state from localStorage (no recalc yet)
+  gender = loadGender();
+  el("genderMale").className   = gender === "men"   ? GENDER_ACTIVE : GENDER_INACTIVE;
+  el("genderFemale").className = gender === "women" ? GENDER_ACTIVE : GENDER_INACTIVE;
+  // Compute projected retirement age as a baseline default
   syncRetirementAge();
-  // Run initial update to populate all outputs from default values
+  // Restore saved inputs — runs after syncRetirementAge so saved values win
+  loadInputs();
+  // Run initial calculation with fully restored values
   onInputChange(chart);
 });
