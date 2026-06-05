@@ -15,6 +15,12 @@ let scenarioRates = { positive: null, moderate: null, negative: null };
 let activeScenario = "moderate";
 // Latest result from each pillar widget (keyed p1/p2/p3)
 const pillarState = { p1: null, p2: null, p3: null };
+// Property equity at retirement (0 when no price entered)
+let propEquity = 0;
+let propEquityReal = 0;
+// Year-by-year rows from each pillar (for the combined chart)
+const pillarRows = { p1: null, p2: null, p3: null };
+let propChartRows = [];
 
 const SCENARIO_LABELS = {
   positive: "Pozitīvais scenārijs",
@@ -26,6 +32,12 @@ const LABEL_COLORS = {
   positive: "text-xs font-medium text-emerald-600",
   moderate: "text-xs font-medium text-slate-500",
   negative: "text-xs font-medium text-red-600",
+};
+
+const SUMMARY_BADGE_COLORS = {
+  positive: "inline-flex rounded-full px-2.5 py-1 text-[10px] font-semibold bg-emerald-100 text-emerald-700",
+  moderate: "inline-flex rounded-full px-2.5 py-1 text-[10px] font-semibold bg-slate-100 text-slate-600",
+  negative: "inline-flex rounded-full px-2.5 py-1 text-[10px] font-semibold bg-red-100 text-red-600",
 };
 
 // Write the active return to the shared-state div and fire change so
@@ -44,11 +56,18 @@ function activateScenario(name) {
     lbl.textContent = SCENARIO_LABELS[name];
     lbl.className = LABEL_COLORS[name];
   }
+  const summaryBadge = g("summaryScenarioLabel");
+  if (summaryBadge) {
+    summaryBadge.className = SUMMARY_BADGE_COLORS[name];
+    summaryBadge.textContent =
+      name === "positive" ? "Pozitīvais" :
+      name === "negative" ? "Negatīvais" : "Mērenais";
+  }
   document.dispatchEvent(new CustomEvent("scenarioChange", { detail: { name } }));
 }
 
 const BTN_BASE =
-  "flex-1 rounded-2xl border px-2 py-2 text-sm font-semibold transition";
+  "w-full rounded-2xl border px-2 py-2 text-sm font-semibold transition";
 
 function applyButtonStyles(active) {
   const styles = {
@@ -94,15 +113,23 @@ function updateCombinedDisplay() {
   const { p1, p2, p3 } = pillarState;
   if (!p1 || !p2 || !p3) return;
 
-  // Nominal capital: P1 NDC capital + P2 final balance + P3 net payout
-  const totalCapital = p1.finalCapital + p2.finalBalance + p3.netPayout;
-  // Real capital: inflation-adjusted sum (P3 real balance before tax)
-  const totalReal = p1.realCapital + p2.realBalance + p3.realBalance;
+  // Nominal capital: P1 NDC + P2 + P3 + property equity at retirement
+  const totalCapital =
+    p1.finalCapital + p2.finalBalance + p3.netPayout + propEquity;
+  // Real capital: inflation-adjusted sum including property real value
+  const totalReal =
+    p1.realCapital + p2.realBalance + p3.realBalance + propEquityReal;
 
   if (g("combinedTotal"))
     g("combinedTotal").textContent = fmtEur(totalCapital);
   if (g("combinedRealTotal"))
     g("combinedRealTotal").textContent = `Šodienas naudā: ${fmtEur(totalReal)}`;
+
+  // Capital label — update both card and sticky bar when property is included
+  const capLabel = propEquity > 0 ? "Neto vērtība" : "Kopējais kapitāls";
+  if (g("summaryCapital")) g("summaryCapital").textContent = fmtEur(totalCapital);
+  if (g("summaryCapitalLabel")) g("summaryCapitalLabel").textContent = capLabel;
+  if (g("combinedCapitalLabel")) g("combinedCapitalLabel").textContent = capLabel;
 
   // Monthly payout: P1 NDC + P2 after-tax + P3 monthly
   const monthly     = p1.monthly + p2.monthlyAfterTax + p3.monthlyPayout;
@@ -112,6 +139,10 @@ function updateCombinedDisplay() {
   if (g("combinedRealMonthly"))
     g("combinedRealMonthly").textContent = `Šodienas naudā: ${fmtEur(realMonthly)}`;
 
+  // Sticky bar
+  if (g("summaryMonthly")) g("summaryMonthly").textContent = fmtEur(monthly);
+  if (g("summaryRealMonthly")) g("summaryRealMonthly").textContent = fmtEur(realMonthly);
+
   // P2 investment return (gains €)
   if (g("combinedP2Earnings"))
     g("combinedP2Earnings").textContent = fmtEur(p2.earnings);
@@ -120,10 +151,49 @@ function updateCombinedDisplay() {
   if (g("combinedP3NetGains"))
     g("combinedP3NetGains").textContent = fmtEur(p3.gains * 0.745);
 
-  // Per-pillar capital breakdown
+  // Per-pillar capital breakdown (property column shown only when price entered)
   if (g("breakdownP1")) g("breakdownP1").textContent = fmtEur(p1.finalCapital);
   if (g("breakdownP2")) g("breakdownP2").textContent = fmtEur(p2.finalBalance);
   if (g("breakdownP3")) g("breakdownP3").textContent = fmtEur(p3.netPayout);
+  const propWrapper = g("breakdownPropWrapper");
+  if (propWrapper) {
+    propWrapper.classList.toggle("hidden", propEquity <= 0);
+    if (g("breakdownProp")) g("breakdownProp").textContent = fmtEur(propEquity);
+  }
+}
+
+// Merge all pillar year-series and dispatch to chart.js via ui.js listener
+function updateCombinedChart() {
+  const p2rows = pillarRows.p2;
+  if (!p2rows || p2rows.length === 0) return;
+
+  const infl = (parseFloat(g("inflation")?.value) || 4) / 100;
+  const p1Map   = new Map((pillarRows.p1 || []).map(r => [r.age, r.balance]));
+  const p3Map   = new Map((pillarRows.p3 || []).map(r => [r.age, r.balance]));
+  const propMap = new Map(propChartRows.map(r => [r.age, r.balance]));
+
+  const rows = p2rows.map((row, i) => {
+    const p1   = p1Map.get(row.age)   || 0;
+    const p2   = row.total;
+    const p3   = p3Map.get(row.age)   || 0;
+    const prop = propMap.get(row.age) || 0;
+    // Cumulative sums for fill:'-1' stacked areas
+    const cum1 = p1;
+    const cum2 = p1 + p2;
+    const cum3 = p1 + p2 + p3;
+    const cum4 = p1 + p2 + p3 + prop;
+    const deflator = Math.pow(1 + infl, i) || 1;
+    return {
+      age: row.age,
+      activePlan: row.activePlan,
+      cum1, cum2, cum3, cum4,
+      realTotal: Math.round(cum4 / deflator),
+    };
+  });
+
+  document.dispatchEvent(
+    new CustomEvent("combinedChartData", { detail: { rows } })
+  );
 }
 
 function readRetirementMonths() {
@@ -148,10 +218,20 @@ document.addEventListener("DOMContentLoaded", () => {
   g("btnModerate")?.addEventListener("click", () => activateScenario("moderate"));
   g("btnNegative")?.addEventListener("click", () => activateScenario("negative"));
 
-  document.addEventListener("pillarResult", (evt) => {
-    const { pillar, ...data } = evt.detail;
-    pillarState[`p${pillar}`] = data;
+  document.addEventListener("propertyResult", ({ detail }) => {
+    propEquity     = detail.retEquity     || 0;
+    propEquityReal = detail.retEquityReal || 0;
+    propChartRows  = detail.rows          || [];
     updateCombinedDisplay();
+    updateCombinedChart();
+  });
+
+  document.addEventListener("pillarResult", (evt) => {
+    const { pillar, rows, ...data } = evt.detail;
+    pillarState[`p${pillar}`] = data;
+    if (rows) pillarRows[`p${pillar}`] = rows;
+    updateCombinedDisplay();
+    updateCombinedChart();
   });
 
   // Re-run bootstrap when retirement horizon changes

@@ -14,6 +14,8 @@ function el(id) { return document.getElementById(id); }
 
 // Gender state — toggled by ♂/♀ buttons, used for survival probability
 let gender = "men";
+// Last computed plan schedule — used by the combinedChartData listener
+let lastPlanSchedule = [];
 
 // Compute completed years of age from birth year and month (1-indexed)
 function ageFromBirth(birthYear, birthMonth) {
@@ -49,7 +51,8 @@ function readInputs() {
     switchOnePlanName: el("switchOnePlan").value,
     switchTwoAge:      toNumber(el("switchTwoAge").value, 60),
     switchTwoPlanName: el("switchTwoPlan").value,
-    p2lRate: toNumber(el("p2lRate").value, 6) / 100,
+    p2lRate:         toNumber(el("p2lRate").value, 6) / 100,
+    p2AlreadyEarned: toNumber(el("p2AlreadyEarned")?.value, 0),
   };
 }
 
@@ -57,12 +60,16 @@ function readInputs() {
 function updateVsaoi(applyCeiling) {
   const box = el("vsaoiBox");
   // classList operations are order-independent and idempotent
-  box.classList.toggle("border-slate-900", applyCeiling);
-  box.classList.toggle("bg-slate-900", applyCeiling);
+  box.classList.toggle("border-slate-500", applyCeiling);
+  box.classList.toggle("bg-slate-500", applyCeiling);
   box.classList.toggle("text-white", applyCeiling);
   box.classList.toggle("border-slate-200", !applyCeiling);
   box.classList.toggle("bg-white", !applyCeiling);
   box.classList.toggle("text-slate-700", !applyCeiling);
+  // Description text: readable on both light and mid-grey backgrounds
+  const desc = el("vsaoiDesc");
+  desc.classList.toggle("text-white/70", applyCeiling);
+  desc.classList.toggle("text-slate-500", !applyCeiling);
   el("vsaoiStatus").textContent = applyCeiling
     ? "Ieslēgti automātiski" : "Izslēgti automātiski";
 }
@@ -113,7 +120,7 @@ function onInputChange(chart) {
     age: inputs.age, retirementAge: inputs.retirementAge,
     grossMonthly: inputs.grossMonthly, salaryGrowth: inputs.salaryGrowth,
   });
-  const planSchedule = buildPlanSchedule({
+  lastPlanSchedule = buildPlanSchedule({
     age: inputs.age, retirementAge: inputs.retirementAge,
     selectedPlanName: inputs.selectedPlanName,
     manualReturn: inputs.manualReturn,
@@ -127,8 +134,8 @@ function onInputChange(chart) {
   const scenarioRate = scenarioEl
     ? parseFloat(scenarioEl.dataset.value) : NaN;
   const effectiveSchedule = Number.isFinite(scenarioRate)
-    ? planSchedule.map(e => ({ ...e, planName: "Manuāls pieņēmums" }))
-    : planSchedule;
+    ? lastPlanSchedule.map(e => ({ ...e, planName: "Manuāls pieņēmums" }))
+    : lastPlanSchedule;
   const effectiveManualReturn = Number.isFinite(scenarioRate)
     ? scenarioRate : inputs.manualReturn;
 
@@ -140,16 +147,18 @@ function onInputChange(chart) {
   });
 
   updateVsaoi(applyCeiling);
-  updateAnnualContribution(inputs.grossMonthly, applyCeiling, inputs.p2lRate);
+  // Annual contribution uses the current legal rate (6%), not the slider avg
+  updateAnnualContribution(inputs.grossMonthly, applyCeiling, CONSTANTS.P2L_RATE);
 
   document.dispatchEvent(new CustomEvent("pillarResult", {
     detail: {
       pillar: 2,
       finalBalance:        projection.final.total,
       realBalance:         projection.final.realTotal,
-      earnings:            projection.final.earnings,
+      earnings:            projection.final.earnings + inputs.p2AlreadyEarned,
       monthlyAfterTax:     Math.round(projection.monthlyPayoutAfterTax),
       realMonthlyAfterTax: Math.round(projection.realMonthlyAfterTax),
+      rows:                projection.rows,
     },
   }));
   el("p2FinalBalance").textContent = formatEur(projection.final.total);
@@ -163,11 +172,11 @@ function onInputChange(chart) {
     `~${Math.round(survivalOverall(gender, inputs.age, 10) * 100)}%`;
   el("survivalPct").textContent  =
     `~${Math.round(survivalOverall(gender, inputs.age, inputs.payoutYears) * 100)}%`;
-  drawChart(chart, projection.rows, planSchedule);
 
   const chartPeriodEl = document.getElementById("chartPeriod");
   if (chartPeriodEl) chartPeriodEl.textContent = `${projection.years} gadiem`;
 }
+
 
 // Clipboard helper with textarea fallback for non-secure contexts
 async function copyToClipboard(text) {
@@ -230,7 +239,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // Auto-populate retirement age from projected trend when birth year changes
   function syncRetirementAge() {
     const by = toNumber(el("birthYear").value, new Date().getFullYear() - 30);
-    el("retirementAge").value = projectedRetirementAge(by);
+    const projected = projectedRetirementAge(by);
+    el("retirementAge").value = projected;
+    const noteEl = document.getElementById("projectedRetAge");
+    if (noteEl) noteEl.textContent = projected;
   }
   ["input", "change"].forEach(evt =>
     el("birthYear").addEventListener(evt, syncRetirementAge)
@@ -238,8 +250,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Input ids that trigger full recalculation on change
   const inputIds = [
-    "birthYear", "birthMonth", "retirementAge", "balance", "grossMonthly",
-    "selectedPlan", "manualReturn", "salaryGrowth",
+    "birthYear", "birthMonth", "retirementAge", "balance", "p2AlreadyEarned",
+    "grossMonthly", "selectedPlan", "manualReturn", "salaryGrowth",
     "inflation", "p2lRate", "payoutYears", "enableSwitching",
     "switchOneAge", "switchOnePlan",
     "switchTwoAge", "switchTwoPlan",
@@ -256,6 +268,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const target = document.getElementById(btn.dataset.copy);
       if (target) copyToClipboard(target.value);
     });
+  });
+
+  // Chart redraws when scenarios.js has merged all pillar rows
+  document.addEventListener("combinedChartData", ({ detail }) => {
+    drawChart(chart, detail.rows, lastPlanSchedule);
   });
 
   // Sync retirement age from birth year before first calculation

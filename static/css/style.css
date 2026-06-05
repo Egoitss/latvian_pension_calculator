@@ -24,6 +24,12 @@ input[readonly] {
   user-select: all;
 }
 
+/* Suppress browser-native red outline on :invalid number inputs */
+input[type="number"]:invalid {
+  box-shadow: none;
+  outline: none;
+}
+
 /* Number inputs: hide browser spin buttons for cleaner look */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
@@ -32,4 +38,26 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+/* Accordion: card-level collapse/expand controlled by accordion.js */
+[data-accordion] .accordion-body { display: none; }
+[data-accordion].is-expanded .accordion-body {
+  display: block;
+  animation: acc-fade 0.25s ease;
+}
+[data-accordion] .accordion-chevron {
+  transition: transform 0.2s ease;
+  opacity: 0.5;
+}
+[data-accordion].is-expanded .accordion-chevron {
+  transform: rotate(180deg);
+}
+[data-accordion] .accordion-preview { display: inline; }
+[data-accordion].is-expanded .accordion-preview { display: none; }
+.accordion-header { cursor: pointer; user-select: none; }
+.accordion-header:hover .accordion-chevron { opacity: 1; }
+@keyframes acc-fade {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: none; }
 }

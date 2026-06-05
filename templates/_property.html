@@ -1,30 +1,52 @@
 <!-- Property value estimator — pure client-side, reads main calculator + loan widget values -->
 <div class="rounded-3xl border border-slate-200 bg-white shadow-sm"
-     data-prop-type="{{ defaults.get('prop_type', 'city') }}">
-  <div class="p-3">
+     data-prop-type="{{ defaults.get('prop_type', 'city') }}"
+     data-accordion data-accordion-trigger="propPrice">
 
-    <!-- Header + location type pills -->
-    <div class="flex items-center justify-between">
-      <h3 class="text-sm font-semibold text-slate-700">Nekustamā īpašuma prognoze</h3>
-      <div class="flex flex-wrap gap-1">
-        <button id="propTypeCity"
-                class="rounded-xl border border-slate-900 bg-slate-900 px-2.5 py-1
-                       text-[11px] font-medium text-white transition">
-          Rīga / pilsēta
-        </button>
-        <button id="propTypeValmiera"
-                class="rounded-xl border border-slate-200 bg-white px-2.5 py-1
-                       text-[11px] font-medium text-slate-600 transition
-                       hover:border-slate-400">
-          Valmiera
-        </button>
-        <button id="propTypeRural"
-                class="rounded-xl border border-slate-200 bg-white px-2.5 py-1
-                       text-[11px] font-medium text-slate-600 transition
-                       hover:border-slate-400">
-          Lauki
-        </button>
-      </div>
+  <!-- Accordion header -->
+  <button type="button"
+          class="accordion-header w-full p-3 flex items-center justify-between gap-3 text-left">
+    <div class="flex items-center gap-1.5 min-w-0">
+      <h3 class="text-sm font-semibold text-slate-900">Nekustamā īpašuma prognoze</h3>
+      <span id="propScenarioBadge"
+            class="rounded-full bg-slate-100 px-1.5 py-0.5 text-[10px]
+                   font-medium text-slate-600">
+        Mērenais
+      </span>
+    </div>
+    <div class="flex items-center gap-2 shrink-0">
+      <span class="accordion-preview text-[11px] text-slate-400">
+        Ievadi vērtību →
+      </span>
+      <svg class="accordion-chevron h-4 w-4 text-slate-500" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </div>
+  </button>
+
+  <div class="accordion-body px-3 pb-3">
+
+    <!-- Location type pills -->
+    <div class="flex flex-wrap gap-1 justify-end">
+      <button id="propTypeCity"
+              class="rounded-xl border border-slate-900 bg-slate-900 px-2.5 py-1
+                     text-[11px] font-medium text-white transition">
+        Rīga / pilsēta
+      </button>
+      <button id="propTypeValmiera"
+              class="rounded-xl border border-slate-200 bg-white px-2.5 py-1
+                     text-[11px] font-medium text-slate-600 transition
+                     hover:border-slate-400">
+        Valmiera
+      </button>
+      <button id="propTypeRural"
+              class="rounded-xl border border-slate-200 bg-white px-2.5 py-1
+                     text-[11px] font-medium text-slate-600 transition
+                     hover:border-slate-400">
+        Lauki
+      </button>
     </div>
     <div id="propRateNote" class="mt-0.5 text-[10px] text-slate-400">
       ~6.2% gadā nominālais (Rīga, 2010–2024 · Arco Real Estate / Latio)
@@ -45,145 +67,29 @@
     <!-- Projection results (hidden until price entered) -->
     <div id="propResults" class="mt-2 hidden">
 
-      <!-- Column headers -->
-      <div class="mb-1 grid grid-cols-3 px-1 text-[10px] text-slate-400">
-        <div></div>
-        <div class="text-center">
-          Pēc <input id="propHorizon" type="number" value="10" min="1" max="40" step="1"
-                     class="w-7 border-b border-dashed border-slate-400 bg-transparent
-                            text-center text-[10px] outline-none [appearance:textfield]" /> g.
-        </div>
-        <div id="propRetYearHeader" class="text-center">Pensijai</div>
+      <div class="mb-1.5 flex items-center justify-between px-1 text-[10px] text-slate-400">
+        <span>Prognoze pensijai</span>
+        <span id="propRetYearHeader" class="font-medium text-slate-500"></span>
       </div>
 
-      <!-- Value rows -->
-      <div class="divide-y divide-slate-100 rounded-2xl border border-slate-100 bg-slate-50">
-        <div class="grid grid-cols-3 px-3 py-1.5 text-xs">
-          <div class="text-slate-500">Vērtība</div>
-          <div id="prop10Nominal" class="text-center font-semibold text-slate-800">—</div>
-          <div id="propRetNominal" class="text-center font-semibold text-slate-800">—</div>
+      <div class="grid grid-cols-2 gap-2">
+        <div class="rounded-2xl bg-emerald-50 border border-emerald-100 px-3 py-3 text-center">
+          <div class="text-[10px] text-slate-400 mb-1">Vērtība</div>
+          <div id="propRetNominal" class="text-xl font-bold text-emerald-800">—</div>
         </div>
-        <div class="grid grid-cols-3 px-3 py-1.5 text-xs">
-          <div class="text-slate-400">Šodienas naudā</div>
-          <div id="prop10Real" class="text-center font-medium text-slate-500">—</div>
-          <div id="propRetReal" class="text-center font-medium text-slate-500">—</div>
-        </div>
-        <div class="grid grid-cols-3 px-3 py-1.5 text-xs" id="propMortRow">
-          <div class="text-slate-500">Hipotēka</div>
-          <div id="prop10MortBal" class="text-center font-semibold text-red-600">—</div>
-          <div id="propRetMortBal" class="text-center font-semibold text-red-600">—</div>
-        </div>
-        <div class="grid grid-cols-3 px-3 py-1.5 text-xs">
-          <div class="text-slate-500">Pašu kapitāls</div>
-          <div id="prop10Equity" class="text-center font-bold text-emerald-700">—</div>
-          <div id="propRetEquity" class="text-center font-bold text-emerald-700">—</div>
+        <div class="rounded-2xl bg-slate-50 px-3 py-3 text-center">
+          <div class="text-[10px] text-slate-400 mb-1">Šodienas naudā</div>
+          <div id="propRetReal" class="text-base font-bold text-slate-600">—</div>
         </div>
       </div>
 
-      <!-- Crash scenario -->
-      <div class="mt-1.5">
-        <div class="mb-0.5 px-1 text-[10px] text-red-400">
-          Ja krīze notiek šajā brīdī (−60%, kā 2007–2010):
-        </div>
-        <div class="divide-y divide-red-100 rounded-2xl border border-red-100 bg-red-50">
-          <div class="grid grid-cols-3 px-3 py-1.5 text-xs">
-            <div class="text-red-500">Vērtība</div>
-            <div id="prop10CrashVal" class="text-center font-semibold text-red-700">—</div>
-            <div id="propRetCrashVal" class="text-center font-semibold text-red-700">—</div>
-          </div>
-          <div class="grid grid-cols-3 px-3 py-1.5 text-xs">
-            <div class="text-red-400">Pašu kapitāls</div>
-            <div id="prop10CrashEquity" class="text-center font-semibold text-red-700">—</div>
-            <div id="propRetCrashEquity" class="text-center font-semibold text-red-700">—</div>
-          </div>
-        </div>
+      <div id="propCrashNote"
+           class="mt-1 hidden px-1 text-[10px] text-red-400">
+        ⚠ Ietver 2007–2010 tipa krīzi (−60%) sākotnējā vērtībā.
       </div>
 
     </div>
 
-    <!-- P2L renovation section -->
-    <div class="mt-2 border-t border-slate-100 pt-2">
-
-      <!-- Reference case calibration -->
-      <div class="mb-1 text-[10px] text-slate-400">
-        Renovācijas koeficients no jūsu pieredzes:
-      </div>
-      <div class="flex flex-wrap items-end gap-x-2 gap-y-1">
-        <div>
-          <div class="mb-0.5 text-[10px] text-slate-400">Pirkts (€)</div>
-          <input id="propRefBuy" type="number" value="56000" step="1000" min="0"
-                 class="w-20 rounded-xl border border-slate-200 bg-white px-2 py-1
-                        text-xs outline-none transition focus:border-slate-500" />
-        </div>
-        <div>
-          <div class="mb-0.5 text-[10px] text-slate-400">Renovācija (€)</div>
-          <input id="propRefReno" type="number" value="17000" step="1000" min="0"
-                 class="w-20 rounded-xl border border-slate-200 bg-white px-2 py-1
-                        text-xs outline-none transition focus:border-slate-500" />
-        </div>
-        <div>
-          <div class="mb-0.5 text-[10px] text-slate-400">Pārdots (€)</div>
-          <input id="propRefSell" type="number" value="94000" step="1000" min="0"
-                 class="w-20 rounded-xl border border-slate-200 bg-white px-2 py-1
-                        text-xs outline-none transition focus:border-slate-500" />
-        </div>
-        <div>
-          <div class="mb-0.5 text-[10px] text-slate-400">Turēts (g.)</div>
-          <input id="propRefYears" type="number" value="3" step="0.5" min="0.5" max="30"
-                 class="w-14 rounded-xl border border-slate-200 bg-white px-2 py-1
-                        text-xs outline-none transition focus:border-slate-500" />
-        </div>
-        <div class="pb-1 text-xs font-semibold text-slate-700">
-          → ×<span id="propRefMultiplier">—</span>
-        </div>
-      </div>
-
-      <!-- Renovation timing -->
-      <div class="mt-2 flex items-center gap-2">
-        <span class="text-[10px] text-slate-400">Renovēt:</span>
-        <div class="flex gap-1">
-          <button id="propRenoNow"
-                  class="rounded-xl border border-slate-900 bg-slate-900 px-2.5 py-1
-                         text-[11px] font-medium text-white transition">
-            Tagad
-          </button>
-          <button id="propRenoRetirement"
-                  class="rounded-xl border border-slate-200 bg-white px-2.5 py-1
-                         text-[11px] font-medium text-slate-600 transition
-                         hover:border-slate-400">
-            Pensionējoties
-          </button>
-        </div>
-      </div>
-
-      <!-- P2L renovation results -->
-      <div id="propRenoResults" class="mt-1.5 hidden">
-        <div class="mb-1 text-[10px] text-slate-500">
-          P2L <span id="propP2LBalance" class="font-medium text-slate-700">—</span>
-          × <span id="propRenoMult" class="font-medium text-slate-700">—</span>
-          = +<span id="propRenoBoost" class="font-medium text-slate-700">—</span>
-          pie vērtības
-        </div>
-        <div class="divide-y divide-emerald-100 rounded-2xl border border-emerald-200 bg-emerald-50">
-          <div class="grid grid-cols-3 px-3 py-1.5 text-xs">
-            <div class="text-emerald-700">Ar renovāciju</div>
-            <div id="prop10WithReno" class="text-center font-semibold text-emerald-900">—</div>
-            <div id="propRetWithReno" class="text-center font-semibold text-emerald-900">—</div>
-          </div>
-          <div class="grid grid-cols-3 px-3 py-1.5 text-xs">
-            <div class="text-emerald-600">Papildu peļņa</div>
-            <div id="prop10RenoGain" class="text-center font-semibold text-emerald-700">—</div>
-            <div id="propRetRenoGain" class="text-center font-semibold text-emerald-700">—</div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Risk warning -->
-    <div class="mt-2 text-[10px] text-slate-400">
-      ⚠ 2006–2009: Rīgas dzīvokļi zaudēja −65%. Prognoze neietver burbuļa risku.
-    </div>
 
   </div>
 </div>

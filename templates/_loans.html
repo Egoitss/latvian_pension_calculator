@@ -6,14 +6,31 @@
     {"id": "cred", "title": "Patēriņa kredīts",      "euribor_hint": false},
   ] %}
   {% for loan in loans %}
-  <div class="rounded-3xl border border-slate-200 bg-white shadow-sm">
-    <div class="p-3">
+  <div class="rounded-3xl border border-slate-200 bg-white shadow-sm"
+       data-accordion data-accordion-trigger="{{ loan.id }}Balance">
 
-      <!-- Header: title + P2L toggle -->
-      <div class="flex items-center justify-between">
-        <h3 class="text-sm font-semibold text-slate-700">{{ loan.title }}</h3>
+    <!-- Accordion header (P2L toggle stays accessible but not in header button) -->
+    <button type="button"
+            class="accordion-header w-full p-3 flex items-center justify-between gap-3 text-left">
+      <h3 class="text-sm font-semibold text-slate-900">{{ loan.title }}</h3>
+      <div class="flex items-center gap-2 shrink-0">
+        <span class="accordion-preview text-[11px] text-slate-400">
+          Ievadi atlikumu →
+        </span>
+        <svg class="accordion-chevron h-4 w-4 text-slate-500" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+    </button>
+
+    <div class="accordion-body px-3 pb-3">
+
+      <!-- P2L toggle row -->
+      <div class="flex justify-end -mt-2 mb-1">
         <label class="flex cursor-pointer items-center gap-1.5">
-          <span class="text-[10px] text-slate-400">P2L</span>
+          <span class="text-[10px] text-slate-400">P2L scenārijs</span>
           <div class="relative h-5 w-9">
             <input type="checkbox" id="{{ loan.id }}P2LToggle" class="peer sr-only">
             <div class="absolute inset-0 rounded-full bg-slate-200 transition
@@ -142,5 +159,121 @@
     </div>
   </div>
   {% endfor %}
+
+  <!-- Add additional loan button -->
+  <div id="extraLoansContainer" class="space-y-3"></div>
+
+  <button id="addLoanBtn" type="button"
+          class="w-full rounded-2xl border-2 border-dashed border-slate-300
+                 bg-white px-4 py-3 text-sm font-medium text-slate-500
+                 transition hover:border-emerald-400 hover:text-emerald-700
+                 hover:bg-emerald-50">
+    + Pievienot vēl vienu kredītu
+  </button>
+
+  <!-- Hidden template cloned by loans.js when adding new loans.
+       __PREFIX__ and __TITLE__ are replaced before insertion. -->
+  <template id="loanCardTemplate">
+    <div class="rounded-3xl border border-slate-200 bg-white shadow-sm is-expanded"
+         data-accordion data-accordion-trigger="__PREFIX__Balance">
+      <button type="button"
+              class="accordion-header w-full p-3 flex items-center justify-between gap-3 text-left">
+        <h3 class="text-sm font-semibold text-slate-900">__TITLE__</h3>
+        <div class="flex items-center gap-2 shrink-0">
+          <button type="button" data-remove-loan="__PREFIX__"
+                  class="text-slate-400 hover:text-red-600 text-lg leading-none px-1"
+                  title="Noņemt kredītu">×</button>
+          <svg class="accordion-chevron h-4 w-4 text-slate-500" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </button>
+      <div class="accordion-body px-3 pb-3">
+        <div class="flex justify-end -mt-2 mb-1">
+          <label class="flex cursor-pointer items-center gap-1.5">
+            <span class="text-[10px] text-slate-400">P2L scenārijs</span>
+            <div class="relative h-5 w-9">
+              <input type="checkbox" id="__PREFIX__P2LToggle" class="peer sr-only">
+              <div class="absolute inset-0 rounded-full bg-slate-200 transition peer-checked:bg-slate-800"></div>
+              <div class="absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow transition peer-checked:translate-x-4"></div>
+            </div>
+          </label>
+        </div>
+        <div class="mt-2 flex gap-2">
+          <div class="flex-1">
+            <div class="mb-1 text-[10px] font-medium text-slate-400">Atlikums (€)</div>
+            <input id="__PREFIX__Balance" type="number" step="0.01" min="0" placeholder="10 000"
+                   class="w-full rounded-2xl border border-slate-200 bg-white px-3 py-1.5 text-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200" />
+          </div>
+          <div class="flex gap-1.5">
+            <div class="w-14">
+              <div class="mb-1 text-[10px] font-medium text-slate-400">Mēn.</div>
+              <input id="__PREFIX__EndMonth" type="number" step="1" min="1" max="12" placeholder="12"
+                     class="w-full rounded-2xl border border-slate-200 bg-white px-2 py-1.5 text-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200" />
+            </div>
+            <div class="w-20">
+              <div class="mb-1 text-[10px] font-medium text-slate-400">Gads</div>
+              <input id="__PREFIX__EndYear" type="number" step="1" min="2026" placeholder="2035"
+                     class="w-full rounded-2xl border border-slate-200 bg-white px-2 py-1.5 text-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200" />
+            </div>
+          </div>
+        </div>
+        <div class="mt-1.5 flex items-end gap-2">
+          <div class="flex-1">
+            <div class="mb-1 text-[10px] font-medium text-slate-400">Bankas marža (%)</div>
+            <input id="__PREFIX__BankMargin" type="number" step="0.001" min="0" max="20" placeholder="2.0"
+                   class="w-full rounded-2xl border border-slate-200 bg-white px-3 py-1.5 text-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200" />
+          </div>
+          <div class="flex-1">
+            <div class="mb-1 text-[10px] font-medium text-slate-400">EURIBOR (%)</div>
+            <input id="__PREFIX__Euribor" type="number" step="0.001" min="0" max="20" placeholder="0.0"
+                   class="w-full rounded-2xl border border-slate-200 bg-white px-3 py-1.5 text-sm outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200" />
+          </div>
+          <div class="w-20 pb-1.5 text-right">
+            <div class="text-[10px] text-slate-400">Kopā likme</div>
+            <div id="__PREFIX__TotalRateDisplay" class="text-sm font-semibold text-slate-700">—</div>
+          </div>
+        </div>
+        <div id="__PREFIX__Summary" class="mt-2 hidden">
+          <div class="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-xs text-slate-600">
+            <span>
+              <input id="__PREFIX__MonthlyPayment" type="number" step="0.01" min="0"
+                     class="w-20 border-b border-dashed border-slate-300 bg-transparent text-sm font-semibold text-slate-900 outline-none focus:border-slate-500 [appearance:textfield]" />
+              <span class="text-slate-500">/ mēn.</span>
+            </span>
+            <span class="text-slate-300">·</span>
+            <span id="__PREFIX__RemainingTerm" class="font-semibold text-slate-900">—</span>
+            <span class="text-slate-300">·</span>
+            <span><span id="__PREFIX__TotalInterest" class="font-semibold text-slate-900">—</span> procenti</span>
+            <span class="text-slate-300">·</span>
+            <span id="__PREFIX__InterestPct" class="font-semibold text-slate-900">—</span>
+          </div>
+          <div class="mt-0.5 text-[11px] text-slate-400">
+            Šomēnes: <span id="__PREFIX__MonthBreakdown" class="font-medium text-slate-600"></span>
+            <span class="mx-1 text-slate-300">·</span>
+            Pāreja: <span id="__PREFIX__CrossoverYear" class="font-medium text-slate-600"></span>
+          </div>
+        </div>
+        <div id="__PREFIX__ScenContainer" class="mt-2 hidden">
+          <div class="flex gap-1.5">
+            <button id="__PREFIX__ScenTypeTerm" type="button"
+                    class="rounded-xl border border-slate-900 bg-slate-900 px-3 py-1 text-[11px] font-medium text-white transition">
+              Īsāks termiņš
+            </button>
+            <button id="__PREFIX__ScenTypePayment" type="button"
+                    class="rounded-xl border border-slate-200 bg-white px-3 py-1 text-[11px] font-medium text-slate-600 transition hover:border-slate-400">
+              Mazāks maksājums
+            </button>
+          </div>
+          <div id="__PREFIX__ScenarioResult"
+               class="mt-1.5 hidden rounded-2xl border border-emerald-200 bg-emerald-50 px-3 py-2">
+            <div id="__PREFIX__ScenarioText" class="text-xs leading-5 text-emerald-900"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
 
 </div>

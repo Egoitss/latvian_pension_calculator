@@ -1,19 +1,29 @@
 <!-- Accumulation line chart: contributions, earnings, and total over time -->
-<div class="rounded-3xl border border-slate-200 bg-white shadow-sm">
-  <div class="p-5">
+<div class="rounded-3xl border border-slate-200 bg-white shadow-sm is-expanded"
+     data-accordion>
 
-    <!-- Chart heading and period summary -->
-    <div class="mb-4 flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
-      <div>
-        <h2 class="text-lg font-semibold">Uzkrājuma sadalījums laikā</h2>
-        <p class="text-sm text-slate-500">
-          Iemaksas, ieguldījumu peļņa un kopējais 2. līmeņa uzkrājums.
-        </p>
-      </div>
-      <div class="text-sm text-slate-500">
-        Periods: {{ projection.years }} gadi
-      </div>
+  <!-- Accordion header -->
+  <button type="button"
+          class="accordion-header w-full p-4 flex items-center justify-between gap-3 text-left">
+    <div class="min-w-0">
+      <h2 class="text-sm font-semibold text-slate-900">Uzkrājuma sadalījums laikā</h2>
+      <p class="text-[11px] text-slate-500 mt-0.5">
+        1. + 2. + 3. līmenis + nekustamais īpašums · šodienas naudā
+      </p>
     </div>
+    <div class="flex items-center gap-2 shrink-0">
+      <span class="text-[11px] text-slate-500">
+        Periods: {{ projection.years }} gadi
+      </span>
+      <svg class="accordion-chevron h-4 w-4 text-slate-500" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </div>
+  </button>
+
+  <div class="accordion-body px-4 pb-4">
 
     <!-- Canvas target for Chart.js — chart.js reads this id -->
     <div class="h-[390px] w-full">

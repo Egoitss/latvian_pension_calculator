@@ -37,13 +37,15 @@ function calculateP1Projection({
   const reval = revaluationRate / 100;
   const years = Math.max(0, safeRet - safeAge);
 
+  const rows = [];
   for (let i = 0; i < years; i++) {
     // Revalue at year start, then credit this year's contributions
     capital *= (1 + reval);
     capital += Math.min(annualGross, VSAOI_CEILING) * P1_RATE;
     annualGross *= (1 + growth);
+    rows.push({ age: safeAge + i + 1, balance: Math.round(capital) });
   }
-  return { finalCapital: Math.round(capital), years };
+  return { finalCapital: Math.round(capital), years, rows };
 }
 
 // Show insurance record eligibility status below the stāžs inputs
@@ -92,7 +94,7 @@ function recalc() {
   const annualP1 = Math.min(annualGross, VSAOI_CEILING) * P1_RATE;
   g("p1AnnualContrib").textContent = fmtEur(annualP1);
 
-  const { finalCapital, years } = calculateP1Projection({
+  const { finalCapital, years, rows } = calculateP1Projection({
     age, retirementAge: retAge, currentCapital: capital,
     grossMonthly: gross, salaryGrowth: salGrowth,
     revaluationRate: revalRate,
@@ -119,6 +121,7 @@ function recalc() {
       realCapital,
       monthly:     Math.round(monthly),
       realMonthly: Math.round(realMonthly),
+      rows,
     },
   }));
 }

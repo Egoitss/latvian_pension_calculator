@@ -13,11 +13,15 @@ Run locally for personal use. UI is in Latvian.
 # Install dependencies
 pip install -r requirements.txt
 
-# Start the development server (opens at http://localhost:5000)
+# Start the development server
 python3 app.py
+# Note: macOS AirPlay occupies port 5000 — app.py runs on 5001
 
 # Run tests
 python3 -m pytest tests/ -v
+
+# Run a single test
+python3 -m pytest tests/test_calculator.py::test_name -v
 ```
 
 ## Key domain constants (`data.py`)
@@ -30,14 +34,21 @@ python3 -m pytest tests/ -v
 | `PENSION_TAX_RATE` | 25.5% | Tax on payout above threshold |
 | `DEFAULT_RETURN` | 8% | Fallback annual return |
 
+## Personal config override
+
+Copy `local_config.example.py` → `local_config.py` (gitignored — NEVER commit).
+`app.py` merges `OVERRIDES` dict into `DEFAULTS` at startup. Also holds
+`_DINAMIKA_PRICES` (Swedbank NAV history for Monte Carlo) and `P3_COST_BASIS`.
+**Committed files must use imaginary demo values only.**
+
 ## Architecture
 
 ```
-data.py          constants + PLANS list + get_plan_by_name()
+data.py          constants + PLANS list + P3_PLANS + get_plan_by_name()
 calculator.py    pure Python functions (no Flask) — testable
-app.py           single GET / route; renders index.html with defaults
-templates/       Jinja partials included by index.html
-static/js/       ES modules: data.js → calc.js ← chart.js ← ui.js
+app.py           GET / and GET /loans routes; merges local_config at import
+templates/       Jinja partials included by index.html and loans.html
+static/js/       ES modules loaded at bottom of each page template
 tests/           pytest suite mirroring calculator.py logic
 ```
 
@@ -45,14 +56,26 @@ tests/           pytest suite mirroring calculator.py logic
 JS takes over on load — all live interactivity (sliders, plan switching) runs
 entirely client-side with no server round-trips.
 
+**JS inter-module communication** uses CustomEvents on `document`:
+- `scenarioChange` — scenarios.js → property.js, pension3.js (active scenario)
+- `pillarResult` — ui.js/pension1.js/pension3.js → scenarios.js (per-pillar totals)
+- `propertyResult` — property.js → scenarios.js (equity at retirement)
+
 ## JS module responsibilities
 
 | File | Role |
 |---|---|
 | `data.js` | PLANS array + CONSTANTS — mirrors `data.py` |
-| `calc.js` | Pure functions: projection, VSAOI ceiling, schedule |
+| `calc.js` | Pure functions: projection, VSAOI ceiling, schedule, bootstrap |
 | `chart.js` | Chart.js wrapper; `initChart` / `drawChart` |
-| `ui.js` | DOM wiring, event listeners, `onInputChange` orchestrator |
+| `ui.js` | DOM wiring, event listeners, `onInputChange` orchestrator (P2L) |
+| `scenarios.js` | Monte Carlo bootstrap (10k runs), scenario buttons, combined totals |
+| `pension1.js` | P1 NDC (1st pillar) live recalculation |
+| `pension3.js` | P3 voluntary pension live recalculation |
+| `property.js` | Property value estimator; reads shared inputs |
+| `loans.js` | Shared loan widget (mortgage + credit); used on `/loans` page too |
+| `accordion.js` | Generic accordion: expand on click or when trigger input has value |
+| `ai_recommend.js` | AI recommendation card (calls backend `/ai_recommend`) |
 
 ## Updating plan data
 

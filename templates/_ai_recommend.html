@@ -1,0 +1,87 @@
+<!-- AI-powered withdrawal recommendation card (P2 + P3 strategy) -->
+<div class="rounded-3xl border border-slate-200 bg-white shadow-sm"
+     data-accordion>
+
+  <!-- Accordion header -->
+  <button type="button"
+          class="accordion-header w-full p-4 flex items-center justify-between gap-3 text-left">
+    <div class="min-w-0 flex items-center gap-2">
+      <!-- Sparkle icon -->
+      <svg class="h-4 w-4 text-emerald-600 shrink-0" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5 10.1 10.9 5.5 9l4.6-1.4z"/>
+        <path d="M19 3v4M21 5h-4M19 17v4M21 19h-4"/>
+      </svg>
+      <div>
+        <h2 class="text-sm font-semibold text-slate-900">
+          AI rekomendācija — 2. un 3. līmeņa izmaksa
+        </h2>
+        <p class="text-[11px] text-slate-500 mt-0.5">
+          Vai izņemt, saņemt programmēto pensiju vai pirkt mūža pensiju?
+        </p>
+      </div>
+    </div>
+    <svg class="accordion-chevron h-4 w-4 text-slate-500 shrink-0" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </button>
+
+  <div class="accordion-body px-4 pb-4 space-y-3">
+
+    <!-- Temperature control + invoke button row -->
+    <div class="flex flex-wrap items-end gap-3">
+      <div class="flex-1 min-w-[180px] space-y-1">
+        <div class="flex justify-between text-xs">
+          <span class="text-slate-500">
+            Radošums (temperatūra)
+            <span class="text-slate-300 ml-1" title="0 = stingri faktisks, 1 = brīvāks">?</span>
+          </span>
+          <span id="aiTempDisplay" class="font-semibold text-slate-900">0.7</span>
+        </div>
+        <input id="aiTemperature" type="range" min="0" max="1" step="0.1"
+               value="0.7" class="w-full accent-emerald-600" />
+        <div class="text-[10px] text-slate-400">
+          0 = konservatīvs · 1 = radošs
+        </div>
+      </div>
+      <button id="aiGenerateBtn" type="button"
+              class="rounded-2xl bg-emerald-600 px-4 py-2 text-sm font-semibold
+                     text-white shadow-sm transition hover:bg-emerald-700
+                     disabled:opacity-50 disabled:cursor-not-allowed">
+        Saņemt rekomendāciju
+      </button>
+    </div>
+
+    <!-- Loading indicator -->
+    <div id="aiLoading"
+         class="hidden flex items-center gap-2 text-xs text-slate-500">
+      <svg class="h-4 w-4 animate-spin text-emerald-600" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10" opacity="0.25"/>
+        <path d="M22 12a10 10 0 0 1-10 10" stroke-linecap="round"/>
+      </svg>
+      <span>AI domā… (Claude Sonnet 4.6)</span>
+    </div>
+
+    <!-- AI response output -->
+    <div id="aiOutput"
+         class="hidden rounded-2xl bg-slate-50 border border-slate-200 p-4
+                text-sm leading-6 text-slate-700 whitespace-pre-wrap"></div>
+
+    <!-- Error display -->
+    <div id="aiError"
+         class="hidden rounded-2xl bg-red-50 border border-red-200 p-3
+                text-xs leading-5 text-red-700"></div>
+
+    <!-- Footer: usage + caveat -->
+    <div class="text-[10px] text-slate-400 leading-4">
+      <span id="aiUsage" class="hidden"></span>
+      Šis NAV finanšu padoms — tikai izglītojoša informācija. Konsultējies ar
+      sertificētu finanšu plānotāju pirms pieņem lēmumu.
+    </div>
+
+  </div>
+</div>

@@ -51,6 +51,7 @@ function calcProjection({
   const r = planReturn / 100;
   const infl = inflation / 100;
   let totalOwnContrib = 0;
+  const rows = [];
 
   for (let i = 0; i < years; i++) {
     const annualContrib = monthly * 12;
@@ -58,6 +59,7 @@ function calcProjection({
     balance = balance * (1 + r) + annualContrib;
     totalOwnContrib += annualContrib;
     monthly *= (1 + growth);
+    rows.push({ age: safeAge + i + 1, balance: Math.round(balance) });
   }
 
   const totalInvested = currentBalance + totalOwnContrib;
@@ -74,6 +76,7 @@ function calcProjection({
     taxOnGains: Math.round(taxOnGains),
     netPayout: Math.round(balance - taxOnGains),
     years,
+    rows,
   };
 }
 
@@ -147,6 +150,7 @@ function recalc() {
       netPayout,
       monthlyPayout,
       realMonthlyPayout,
+      rows: result.rows,
     },
   }));
 }

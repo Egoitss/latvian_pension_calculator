@@ -18,8 +18,8 @@
         <div id="summaryRealMonthly" class="text-xl font-semibold text-emerald-600 leading-tight">—</div>
       </div>
       <div class="min-w-0 hidden sm:block">
-        <div class="text-[9px] text-slate-400 uppercase tracking-wide">Kopējais kapitāls</div>
-        <div id="summaryCapital" class="text-sm font-medium text-slate-400 leading-tight">—</div>
+        <div id="summaryCapitalLabel" class="text-[9px] text-slate-400 uppercase tracking-wide">Kopējais kapitāls</div>
+        <div id="summaryCapital" class="text-xl font-semibold text-slate-600 leading-tight">—</div>
       </div>
       <div class="ml-auto shrink-0">
         <span id="summaryScenarioLabel"
@@ -40,22 +40,22 @@
 <main class="p-3 md:p-6">
   <div class="mx-auto max-w-4xl space-y-4">
 
-    <!-- Page header: compact title + disclaimer -->
-    <section class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-      <div>
-        <h1 class="text-xl font-bold tracking-tight text-slate-900">
-          Pensijas kalkulators
-          <span class="ml-2 inline-flex rounded-full bg-slate-100 px-2.5 py-0.5
-                       text-xs font-semibold text-slate-500 align-middle">
-            1. + 2. + 3. līmenis
-          </span>
-        </h1>
+    <!-- Page header: compact title + disclaimer tooltip -->
+    <div class="flex items-center gap-2">
+      <h1 class="text-sm font-semibold text-slate-700">Pensijas kalkulators</h1>
+      <div class="relative group">
+        <span class="cursor-default select-none text-[11px] text-slate-400">ⓘ</span>
+        <div class="pointer-events-none absolute top-full left-0 mt-1.5
+                    w-64 rounded-2xl bg-slate-900 px-3 py-2.5 text-[11px]
+                    leading-relaxed text-white shadow-lg z-20
+                    invisible opacity-0
+                    group-hover:visible group-hover:opacity-100
+                    transition-opacity duration-150">
+          Aptuvens modelis. Nav finanšu padoms. Vēsturiskais ienesīgums
+          negarantē nākotnes rezultātus.
+        </div>
       </div>
-      <p class="text-[11px] text-slate-400 max-w-md">
-        Aptuvens modelis · Nav finanšu padoms · Vēsturiskais ienesīgums
-        negarantē nākotnes rezultātus.
-      </p>
-    </section>
+    </div>
 
     <!-- Unified single-column flow: controls → scenarios → hero → pillars → loans → AI → chart -->
     {% include "_controls.html" %}
@@ -63,16 +63,16 @@
     {% include "_pension1.html" %}
     {% include "_pension2.html" %}
 
-    <!-- Secondary cards: pair up on md+ widths, stack on mobile -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="space-y-4">
       {% include "_pension3.html" %}
       {% include "_property.html" %}
     </div>
 
-    <!-- AI recommendation card — full width, prominent -->
+    {# AI recommendation card — commented out; template kept in _ai_recommend.html
     {% include "_ai_recommend.html" %}
+    #}
 
-    <!-- Link to standalone loans calculator -->
+    {# Kredītu kalkulators link — commented out; /loans page still exists
     <div class="text-center py-2">
       <a id="loansPageLink"
          href="/loans"
@@ -83,6 +83,7 @@
         Kredītu kalkulators →
       </a>
     </div>
+    #}
 
     {% include "_chart.html" %}
 
@@ -131,8 +132,8 @@
   };
 </script>
 
+{# loans-page link sync script — kept here, uncomment with the link above
 <script>
-  /* Keep loans-page link URL in sync with the current P2L balance */
   document.addEventListener("DOMContentLoaded", function () {
     const balEl = document.getElementById("balance");
     const link  = document.getElementById("loansPageLink");
@@ -146,6 +147,7 @@
     syncLink();
   });
 </script>
+#}
 
 <!-- JS modules: data and calculation layer -->
 <script src="{{ url_for('static', filename='js/data.js', v=js_v) }}" type="module"></script>
@@ -157,6 +159,6 @@
 <script src="{{ url_for('static', filename='js/pension3.js', v=js_v) }}" type="module"></script>
 <script src="{{ url_for('static', filename='js/loans.js', v=js_v) }}" type="module"></script>
 <script src="{{ url_for('static', filename='js/property.js', v=js_v) }}" type="module"></script>
-<script src="{{ url_for('static', filename='js/ai_recommend.js', v=js_v) }}" type="module"></script>
+{# <script src="{{ url_for('static', filename='js/ai_recommend.js', v=js_v) }}" type="module"></script> #}
 <script src="{{ url_for('static', filename='js/accordion.js', v=js_v) }}" type="module"></script>
 {% endblock %}

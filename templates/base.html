@@ -6,7 +6,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pensijas kalkulators</title>
 
+  <!-- Inter typeface -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+
   <!-- Tailwind CSS utility framework (CDN, no build step) -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ["Inter", "system-ui", "sans-serif"] },
+        },
+      },
+    };
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Chart.js for the accumulation line chart -->
@@ -18,7 +33,7 @@
   <!-- Custom styles (minimal overrides on top of Tailwind) -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
 </head>
-<body class="min-h-screen bg-slate-50 text-slate-900">
+<body class="min-h-screen bg-slate-50 text-slate-900 font-sans antialiased">
 
   {% block content %}{% endblock %}
 
