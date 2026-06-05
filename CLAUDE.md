@@ -29,17 +29,17 @@ python3 -m pytest tests/test_calculator.py::test_name -v
 | Constant | Value | Meaning |
 |---|---|---|
 | `VSAOI_CEILING` | 105 300 EUR | Annual gross cap for P2L contributions |
-| `P2L_RATE` | 5% | Employee contribution rate |
+| `P2L_RATE` | 6% | Employee contribution rate (current legal rate since 2021) |
 | `PENSION_TAX_FREE_THRESHOLD` | 1 000 EUR/month | Tax-exempt payout amount |
 | `PENSION_TAX_RATE` | 25.5% | Tax on payout above threshold |
 | `DEFAULT_RETURN` | 8% | Fallback annual return |
 
-## Personal config override
+## Personal data
 
-Copy `local_config.example.py` → `local_config.py` (gitignored — NEVER commit).
-`app.py` merges `OVERRIDES` dict into `DEFAULTS` at startup. Also holds
-`_DINAMIKA_PRICES` (Swedbank NAV history for Monte Carlo) and `P3_COST_BASIS`.
-**Committed files must use imaginary demo values only.**
+Personal form values (balance, salary, birth year) live **only in browser localStorage** —
+never on the server. `storage.js` owns all save/load logic. Flask `DEFAULTS` holds
+demo values only; `OVERRIDES` was removed — do NOT re-add it.
+`local_config.py` (gitignored) is only for `_DINAMIKA_PRICES` + `P3_COST_BASIS` (Monte Carlo).
 
 ## Architecture
 
@@ -52,9 +52,9 @@ static/js/       ES modules loaded at bottom of each page template
 tests/           pytest suite mirroring calculator.py logic
 ```
 
-**Data flow:** Flask renders the page with server-computed defaults baked in.
-JS takes over on load — all live interactivity (sliders, plan switching) runs
-entirely client-side with no server round-trips.
+**Data flow:** Flask renders the page with demo defaults. On load, `storage.js`
+`loadInputs()` restores personal values from localStorage before the first calculation.
+All live interactivity runs client-side with no server round-trips.
 
 **JS inter-module communication** uses CustomEvents on `document`:
 - `scenarioChange` — scenarios.js → property.js, pension3.js (active scenario)
@@ -76,6 +76,19 @@ entirely client-side with no server round-trips.
 | `loans.js` | Shared loan widget (mortgage + credit); used on `/loans` page too |
 | `accordion.js` | Generic accordion: expand on click or when trigger input has value |
 | `ai_recommend.js` | AI recommendation card (calls backend `/ai_recommend`) |
+| `storage.js` | localStorage persistence for all form inputs, gender, propType |
+
+## Input persistence (storage.js)
+
+All tracked inputs save/restore via `static/js/storage.js`. Key: `pensija_v1`.
+Bump the version string if input IDs change (invalidates old stored data).
+`balance`, `grossMonthly`, `birthYear` use `placeholder=` not `value=` in templates.
+`ui.js` init order: `loadGender()` → `syncRetirementAge(false)` → `loadInputs()` → `onInputChange()`.
+To add a new persisted input: add its ID + `"value"` (or `"checked"`) to the `INPUTS` map in `storage.js`.
+
+## GitHub remote
+
+`origin` → `https://github.com/Egoitss/latvian_pension_calculator.git`
 
 ## Updating plan data
 
