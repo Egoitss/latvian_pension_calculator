@@ -1,6 +1,7 @@
 // Property value estimator — reads main calculator inputs
 // CAGR source: Arco Real Estate / Latio market reviews 2010–2024
 import { PROPERTY_SCENARIO_RATES } from "./data.js";
+import { savePropType, loadPropType } from "./storage.js";
 
 const CRASH_RATE = 0.60; // Latvia 2007–2010 worst case
 
@@ -110,6 +111,7 @@ function buildRateNote(scenario, loc) {
 
 function setLocType(type) {
   locType = type;
+  savePropType(type);
   g("propTypeCity").className     = type === "city"     ? PILL_ON : PILL_OFF;
   g("propTypeValmiera").className = type === "valmiera" ? PILL_ON : PILL_OFF;
   g("propTypeRural").className    = type === "rural"    ? PILL_ON : PILL_OFF;
@@ -136,8 +138,8 @@ document.addEventListener("DOMContentLoaded", () => {
     setLocType(locType);
   });
 
-  // Initialise location type and price from server-side defaults
+  // Restore location type from localStorage; fall back to server default
   const card = document.querySelector("[data-prop-type]");
-  if (card) setLocType(card.dataset.propType);
-  else recalc();
+  const savedType = loadPropType();
+  setLocType(savedType || (card ? card.dataset.propType : "city"));
 });
