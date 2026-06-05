@@ -239,11 +239,13 @@ document.addEventListener("DOMContentLoaded", () => {
   el("genderFemale").addEventListener("click", () => setGender("women"));
 
   // Auto-populate retirement age from projected trend when birth year changes
-  function syncRetirementAge() {
+  function syncRetirementAge(save = true) {
     const by = toNumber(el("birthYear").value, new Date().getFullYear() - 30);
     const projected = projectedRetirementAge(by);
     el("retirementAge").value = projected;
-    el("retirementAge").dispatchEvent(new Event("change", { bubbles: true }));
+    if (save) {
+      el("retirementAge").dispatchEvent(new Event("change", { bubbles: true }));
+    }
     const noteEl = document.getElementById("projectedRetAge");
     if (noteEl) noteEl.textContent = projected;
   }
@@ -282,8 +284,8 @@ document.addEventListener("DOMContentLoaded", () => {
   gender = loadGender();
   el("genderMale").className   = gender === "men"   ? GENDER_ACTIVE : GENDER_INACTIVE;
   el("genderFemale").className = gender === "women" ? GENDER_ACTIVE : GENDER_INACTIVE;
-  // Compute projected retirement age as a baseline default
-  syncRetirementAge();
+  // Compute projected retirement age — skip event dispatch, loadInputs follows
+  syncRetirementAge(false);
   // Restore saved inputs — runs after syncRetirementAge so saved values win
   loadInputs();
   // Run initial calculation with fully restored values

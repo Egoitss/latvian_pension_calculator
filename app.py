@@ -65,7 +65,7 @@ DEFAULTS = {
     "p2l_start_salary": "",
     "p2l_actual_contributions": "",
     "p2l_rate": 6.0,
-    # 1st-pillar NDC inputs — override in local_config.py with personal values
+    # 1st-pillar NDC inputs — set via browser localStorage, empty by default
     "p1_capital": "",
     "p1_record_years": "",
     "p1_record_months": "",
