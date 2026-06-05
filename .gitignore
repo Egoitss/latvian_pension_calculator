@@ -1,5 +1,8 @@
 # Personal config — NEVER commit
 local_config.py
+
+# Claude Code project instructions — personal dev tool
+CLAUDE.md
 .env
 .env.local
 
