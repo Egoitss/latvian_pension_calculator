@@ -243,6 +243,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const by = toNumber(el("birthYear").value, new Date().getFullYear() - 30);
     const projected = projectedRetirementAge(by);
     el("retirementAge").value = projected;
+    el("retirementAge").dispatchEvent(new Event("change", { bubbles: true }));
     const noteEl = document.getElementById("projectedRetAge");
     if (noteEl) noteEl.textContent = projected;
   }

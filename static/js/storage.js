@@ -7,6 +7,7 @@
 const INPUTS = {
   birthYear:        "value",
   birthMonth:       "value",
+  retirementAge:    "value",
   balance:          "value",
   p2AlreadyEarned:  "value",
   grossMonthly:     "value",
@@ -70,8 +71,10 @@ export function saveGender(gender) {
   try { localStorage.setItem(GENDER_KEY, gender); } catch (_) {}
 }
 export function loadGender() {
-  try { return localStorage.getItem(GENDER_KEY) || "men"; }
-  catch (_) { return "men"; }
+  try {
+    const v = localStorage.getItem(GENDER_KEY);
+    return (v === "men" || v === "women") ? v : "men";
+  } catch (_) { return "men"; }
 }
 
 export function savePropType(type) {
