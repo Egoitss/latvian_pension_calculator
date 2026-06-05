@@ -29,21 +29,22 @@ python3 app.py          # opens on http://localhost:5001
 
 ## Personal data setup
 
-Copy the example config and fill in your real values:
+Form values (salary, balance, birth year, etc.) are saved automatically in
+your browser's localStorage — they never touch the server or appear in git.
+On first visit the form shows empty inputs with gray demo hints; your saved
+values load on every return visit. Clearing browser storage resets to demo
+defaults.
+
+If you want to run personalised Monte Carlo simulations, copy the example
+config:
 
 ```bash
 cp local_config.example.py local_config.py
-# edit local_config.py — it is gitignored and will never be committed
 ```
 
-`local_config.py` accepts overrides for every input (birth year, balances,
-salary, loan details, property price) plus optional personal data:
-
-- `_DINAMIKA_PRICES` — monthly Swedbank Dinamika NAV sequence for Monte Carlo
-- `P3_COST_BASIS` — P3 contributions made before the simulation window
-
-`app.py` merges `OVERRIDES` into `DEFAULTS` at startup. Committed files use
-demo values only.
+and supply historical Dinamika 18-49 NAV prices in `_DINAMIKA_PRICES`.
+Without it the three scenario buttons use fixed fallback rates
+(10% / 7.5% / 3%).
 
 ## Running tests
 
@@ -95,8 +96,14 @@ Returns are sourced from `manapensija.lv`. Update `return_3y`, `return_5y`,
 and `fee_total` in both `data.py` and `static/js/data.js` — they are kept
 in sync manually.
 
-## Security note
+## Personal data
 
-`local_config.py` contains personal financial data and is listed in
-`.gitignore`. Never force-add it or override `.gitignore`. All values in
-committed files are imaginary demo figures.
+Form values (salary, balances, birth year, etc.) are saved automatically
+in browser localStorage — they never touch the server or appear in git.
+On first visit the form shows empty inputs with gray demo hints; your
+saved values load on every return visit. Clearing browser storage resets
+to demo defaults.
+
+`local_config.py` is only needed to supply historical Dinamika 18-49 NAV
+prices for personalised Monte Carlo simulations. Without it the three
+scenario buttons use fixed fallback rates (10% / 7.5% / 3%).
