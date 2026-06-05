@@ -7,7 +7,6 @@
 const INPUTS = {
   birthYear:        "value",
   birthMonth:       "value",
-  retirementAge:    "value",
   balance:          "value",
   p2AlreadyEarned:  "value",
   grossMonthly:     "value",
@@ -33,6 +32,7 @@ const INPUTS = {
   propPrice:        "value",
 };
 
+// Bump version string to invalidate stored data when input IDs change.
 const KEY          = "pensija_v1";
 const GENDER_KEY   = "pensija_gender";
 const PROPTYPE_KEY = "pensija_proptype";
@@ -66,8 +66,8 @@ export function loadInputs() {
   }
 }
 
-export function saveGender(g) {
-  try { localStorage.setItem(GENDER_KEY, g); } catch (_) {}
+export function saveGender(gender) {
+  try { localStorage.setItem(GENDER_KEY, gender); } catch (_) {}
 }
 export function loadGender() {
   try { return localStorage.getItem(GENDER_KEY) || "men"; }
