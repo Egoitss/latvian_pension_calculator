@@ -91,8 +91,8 @@
                      focus:ring-slate-200">
         {% for plan in plans %}
           {% if plan.get("benchmark") %}
-            {% set return_label = "Ilgtermiņa vidējais: " ~ "%.2f"|format(plan.assumption_return) ~ "%" %}
-            {% set fee_label = " • Tirgus indekss" %}
+            {% set return_label = "Long-term average: " ~ "%.2f"|format(plan.assumption_return) ~ "%" %}
+            {% set fee_label = " • Market index" %}
           {% else %}
             {% set return_label = "5Y: " ~ "%.2f"|format(plan.return_5y) ~ "%" %}
             {% set fee_str = "%.2f"|format(plan.fee_total) ~ "%" if plan.fee_total is defined else "no data" %}
@@ -106,7 +106,7 @@
       </select>
     </div>
 
-    <!-- Manual return slider — visible only when "Manuāls pieņēmums" selected -->
+    <!-- Manual return slider — visible only when "Manual assumption" selected -->
     <div id="manualReturnField" class="space-y-1 hidden">
       <div class="flex justify-between text-xs">
         <span class="text-slate-500">Manual annual return</span>

@@ -16,7 +16,7 @@ from calculator import (
 )
 
 # Default schedule used by simple projection tests
-SIMPLE_SCHEDULE = [{"starts_at_age": 0, "plan_name": "Manuāls pieņēmums"}]
+SIMPLE_SCHEDULE = [{"starts_at_age": 0, "plan_name": "Manual assumption"}]
 
 
 class TestGetAnnualReturn:
