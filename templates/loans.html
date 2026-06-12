@@ -8,15 +8,15 @@
     <a href="/"
        class="inline-flex items-center gap-1 text-xs text-slate-400
               hover:text-slate-700 transition">
-      ← Pensijas kalkulators
+      ← Pension Scenario Simulator
     </a>
 
     <section>
       <h1 class="text-xl font-bold tracking-tight text-slate-900">
-        Kredītu kalkulators
+        Loan Calculator
       </h1>
       <p class="text-[11px] text-slate-400 mt-1">
-        Hipotekārais un patēriņa kredīts · P2L scenāriji
+        Mortgage and consumer loan · P2L scenarios
       </p>
     </section>
 
@@ -24,11 +24,11 @@
     <div class="rounded-3xl border border-slate-200 bg-white shadow-sm p-4">
       <div class="text-xs font-semibold text-slate-500 mb-2 uppercase
                   tracking-wider">
-        2. pensiju līmeņa atlikums
+        2nd-pillar balance
       </div>
       <div class="flex items-center gap-3">
-        <input id="p2lBalance" type="number" step="0.01" min="0"
-               placeholder="Ievadi savu P2L atlikumu (€)"
+        <input id="p2lBalance" type="number" step="1" min="0"
+               placeholder="Enter your P2L balance (€)"
                {% if defaults.balance %}
                placeholder="{{ defaults.balance }}"
                {% endif %}
@@ -39,8 +39,8 @@
         <span class="text-sm text-slate-400">€</span>
       </div>
       <p class="mt-1.5 text-[10px] text-slate-400">
-        Izmanto P2L scenārijus zemāk, lai redzētu, kā atlikums ietekmē
-        kredītus.
+        Use the P2L scenarios below to see how the balance affects
+        your loans.
       </p>
     </div>
 

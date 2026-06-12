@@ -54,12 +54,12 @@ function updateEligibilityHint(totalMonths) {
   if (!hint) return;
   const years = Math.floor(totalMonths / 12);
   const months = totalMonths % 12;
-  const label = months > 0 ? `${years} g. ${months} mēn.` : `${years} g.`;
+  const label = months > 0 ? `${years} yrs ${months} mo.` : `${years} yrs`;
   if (totalMonths >= 20 * 12) {
-    hint.textContent = `Stāžs: ${label} ✓ (min. 20 g.)`;
+    hint.textContent = `Service record: ${label} ✓ (min. 20 yrs)`;
     hint.className = "text-[10px] text-emerald-600";
   } else if (totalMonths > 0) {
-    hint.textContent = `Stāžs: ${label} — nepietiek (min. 20 g.)`;
+    hint.textContent = `Service record: ${label} — insufficient (min. 20 yrs)`;
     hint.className = "text-[10px] text-amber-600";
   } else {
     hint.textContent = "";
@@ -67,7 +67,7 @@ function updateEligibilityHint(totalMonths) {
 }
 
 function recalc() {
-  const capital = parseFloat(g("p1Capital")?.value) || 0;
+  const capital = Math.round(parseFloat(g("p1Capital")?.value) || 0);
 
   // Always update eligibility hint regardless of capital
   const recordYears  = parseInt(g("p1RecordYears")?.value)  || 0;
@@ -108,7 +108,7 @@ function recalc() {
   g("p1FinalCapital").textContent = fmtEur(finalCapital);
   g("p1Monthly").textContent      = fmtEur(monthly);
   g("p1RealMonthly").textContent  = fmtEur(realMonthly);
-  g("p1GDisplay").textContent     = `G = ${gCoef.toFixed(2)} g.`;
+  g("p1GDisplay").textContent     = `G = ${gCoef.toFixed(2)} yrs`;
   g("p1Results").classList.remove("hidden");
 
   const realCapital = realDiscount > 0
@@ -127,6 +127,12 @@ function recalc() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  const cap = g("p1Capital");
+  if (cap) cap.addEventListener("blur", () => {
+    const v = parseFloat(cap.value);
+    if (!isNaN(v)) cap.value = Math.round(v);
+  });
+
   const ownInputs = ["p1Capital", "p1RecordYears", "p1RecordMonths", "p1RevalRate"];
   const sharedInputs = [
     "birthYear", "birthMonth", "retirementAge",

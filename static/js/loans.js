@@ -39,7 +39,7 @@ function fmtMonths(months) {
   const total = Math.round(months);
   const y = Math.floor(total / 12);
   const m = total % 12;
-  return m > 0 ? `${y} g. ${m} mēn.` : `${y} g.`;
+  return m > 0 ? `${y} yr ${m} mo.` : `${y} yr`;
 }
 
 function fmtEur(v) {
@@ -57,7 +57,7 @@ function fmtEurDec(v) {
 function scenarioShorterTerm(balance, annualRate, payment, p2lAmt, origMonths) {
   const newBalance = balance - p2lAmt;
   if (newBalance <= 0) {
-    return `Izmantojot P2L (${fmtEur(p2lAmt)}): kredīts tiktu dzēsts pilnībā.`;
+    return `Using P2L (${fmtEur(p2lAmt)}): loan would be fully paid off.`;
   }
   const r = annualRate / 100 / 12;
   let newMonths;
@@ -65,30 +65,30 @@ function scenarioShorterTerm(balance, annualRate, payment, p2lAmt, origMonths) {
     newMonths = newBalance / payment;
   } else {
     const inner = 1 - (newBalance * r / payment);
-    if (inner <= 0) return "Nevar aprēķināt — maksājums pārāk mazs.";
+    if (inner <= 0) return "Cannot calculate — payment too low.";
     newMonths = -Math.log(inner) / Math.log(1 + r);
   }
   const savedMonths   = origMonths - newMonths;
   const origInterest  = payment * origMonths - balance;
   const newInterest   = payment * newMonths  - newBalance;
   const savedInterest = origInterest - newInterest;
-  return `Izmantojot P2L (${fmtEur(p2lAmt)}):\n` +
-    `Atmaksāt par ${fmtMonths(savedMonths)} ātrāk → kopā ${fmtMonths(newMonths)}\n` +
-    `Ietaupīt procentos: ${fmtEur(savedInterest)}`;
+  return `Using P2L (${fmtEur(p2lAmt)}):\n` +
+    `Pay off ${fmtMonths(savedMonths)} sooner → total ${fmtMonths(newMonths)}\n` +
+    `Interest saved: ${fmtEur(savedInterest)}`;
 }
 
 function scenarioLowerPayment(balance, annualRate, origMonths, p2lAmt) {
   const newBalance = balance - p2lAmt;
   if (newBalance <= 0) {
-    return `Izmantojot P2L (${fmtEur(p2lAmt)}): kredīts tiktu dzēsts pilnībā.`;
+    return `Using P2L (${fmtEur(p2lAmt)}): loan would be fully paid off.`;
   }
   const newPayment  = annuityPayment(newBalance, annualRate, origMonths);
-  if (!newPayment) return "Nevar aprēķināt.";
+  if (!newPayment) return "Cannot calculate.";
   const origPayment = annuityPayment(balance, annualRate, origMonths);
   const saved       = origPayment - newPayment;
-  return `Izmantojot P2L (${fmtEur(p2lAmt)}):\n` +
-    `Ikmēneša maksājums: ${fmtEurDec(newPayment)} (ietaupot ${fmtEurDec(saved)}/mēn.)\n` +
-    `Termiņš paliek: ${fmtMonths(origMonths)}`;
+  return `Using P2L (${fmtEur(p2lAmt)}):\n` +
+    `Monthly payment: ${fmtEurDec(newPayment)} (saving ${fmtEurDec(saved)}/mo.)\n` +
+    `Term unchanged: ${fmtMonths(origMonths)}`;
 }
 
 // Cascade allocation across N loans: smallest active balance erased first
@@ -212,9 +212,9 @@ function initCard(prefix) {
     const monthInterest = r > 0 ? balance * r : 0;
     const monthPrincipal = payment - monthInterest;
     g(`${prefix}MonthBreakdown`).textContent =
-      `${fmtEurDec(monthInterest)} % + ${fmtEurDec(monthPrincipal)} pam.`;
+      `${fmtEurDec(monthInterest)} int. + ${fmtEurDec(monthPrincipal)} prin.`;
     const cy = r > 0 ? crossoverYear(balance, totalRate, payment) : null;
-    g(`${prefix}CrossoverYear`).textContent = cy ? `${cy}. g.` : "nekad";
+    g(`${prefix}CrossoverYear`).textContent = cy ? `${cy}` : "never";
 
     summaryEl.classList.remove("hidden");
     recalcP2L();
@@ -313,9 +313,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const addBtn = g("addLoanBtn");
   if (addBtn) {
     addBtn.addEventListener("click", () => {
-      const title = prompt("Kredīta nosaukums:", "Cits kredīts");
+      const title = prompt("Loan name:", "Other loan");
       if (title === null) return;
-      addLoan(title.trim() || "Cits kredīts");
+      addLoan(title.trim() || "Other loan");
     });
   }
 });

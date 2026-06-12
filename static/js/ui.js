@@ -72,7 +72,7 @@ function updateVsaoi(applyCeiling) {
   desc.classList.toggle("text-white/70", applyCeiling);
   desc.classList.toggle("text-slate-500", !applyCeiling);
   el("vsaoiStatus").textContent = applyCeiling
-    ? "Ieslēgti automātiski" : "Izslēgti automātiski";
+    ? "Applied automatically" : "Not applied automatically";
 }
 
 // Update the current annual contribution display beneath the VSAOI box
@@ -106,10 +106,10 @@ function onInputChange(chart) {
   // Retirement year display
   const bYear  = toNumber(el("birthYear").value,  new Date().getFullYear() - 30);
   const bMonth = toNumber(el("birthMonth").value, 1);
-  const MONTHS_LV = ["janvārī","februārī","martā","aprīlī","maijā","jūnijā",
-                     "jūlijā","augustā","septembrī","oktobrī","novembrī","decembrī"];
+  const MONTHS_EN = ["January","February","March","April","May","June",
+                     "July","August","September","October","November","December"];
   el("retirementYearDisplay").textContent =
-    `${MONTHS_LV[bMonth - 1]}, ${bYear + inputs.retirementAge}. g.`;
+    `${MONTHS_EN[bMonth - 1]}, ${bYear + inputs.retirementAge}`;
 
   // Slider display labels
   el("manualReturnDisplay").textContent = formatPct(inputs.manualReturn);
@@ -135,7 +135,7 @@ function onInputChange(chart) {
   const scenarioRate = scenarioEl
     ? parseFloat(scenarioEl.dataset.value) : NaN;
   const effectiveSchedule = Number.isFinite(scenarioRate)
-    ? lastPlanSchedule.map(e => ({ ...e, planName: "Manuāls pieņēmums" }))
+    ? lastPlanSchedule.map(e => ({ ...e, planName: "Manual assumption" }))
     : lastPlanSchedule;
   const effectiveManualReturn = Number.isFinite(scenarioRate)
     ? scenarioRate : inputs.manualReturn;
@@ -175,7 +175,7 @@ function onInputChange(chart) {
     `~${Math.round(survivalOverall(gender, inputs.age, inputs.payoutYears) * 100)}%`;
 
   const chartPeriodEl = document.getElementById("chartPeriod");
-  if (chartPeriodEl) chartPeriodEl.textContent = `${projection.years} gadiem`;
+  if (chartPeriodEl) chartPeriodEl.textContent = `${projection.years} years`;
 }
 
 
@@ -201,17 +201,17 @@ async function copyToClipboard(text) {
     } catch (_) { /* ignore */ }
   }
 
-  // Show Latvian feedback message
+  // Show copy feedback message
   const feedback = el("copyFeedback");
   feedback.classList.remove("hidden", "bg-emerald-50", "text-emerald-700",
                              "bg-amber-50", "text-amber-700");
   if (copied) {
     feedback.classList.add("bg-emerald-50", "text-emerald-700");
-    feedback.textContent = "Saite nokopēta";
+    feedback.textContent = "Link copied";
   } else {
     feedback.classList.add("bg-amber-50", "text-amber-700");
     feedback.textContent =
-      "Kopēšana nav atļauta šajā skatā — iezīmē saiti un nokopē manuāli";
+      "Copying not allowed in this context — select the link and copy manually";
   }
   setTimeout(() => feedback.classList.add("hidden"), copied ? 1800 : 3500);
 }
@@ -280,7 +280,25 @@ document.addEventListener("DOMContentLoaded", () => {
     drawChart(chart, detail.rows, lastPlanSchedule);
   });
 
-  // Restore gender button state from localStorage (no recalc yet)
+  // Round euro-amount inputs to whole numbers on blur
+  const EURO_INPUTS = [
+    "balance", "p2AlreadyEarned",
+    "p3Balance", "p3Monthly",
+    "p1Capital",
+    "mortBalance", "mortActualPayment",
+    "credBalance", "credActualPayment",
+    "p2lBalance",
+  ];
+  EURO_INPUTS.forEach(id => {
+    const inp = document.getElementById(id);
+    if (!inp) return;
+    inp.addEventListener("blur", () => {
+      const v = parseFloat(inp.value);
+      if (!isNaN(v)) inp.value = Math.round(v);
+    });
+  });
+
+  // Restore gender button state from sessionStorage (no recalc yet)
   gender = loadGender();
   el("genderMale").className   = gender === "men"   ? GENDER_ACTIVE : GENDER_INACTIVE;
   el("genderFemale").className = gender === "women" ? GENDER_ACTIVE : GENDER_INACTIVE;

@@ -83,15 +83,15 @@ const PILL_ON  = "rounded-xl border border-slate-900 bg-slate-900 px-2.5 py-1 te
 const PILL_OFF = "rounded-xl border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-medium text-slate-600 transition hover:border-slate-400";
 
 const MODERATE_NOTES = {
-  city:     "~6.2% gadā nominālais (Rīga, 2010–2024 · Arco/Latio)",
-  valmiera: "~5.5% gadā nominālais (Valmiera, 2010–2024 · Arco/Latio; maz jaunu projektu)",
-  rural:    "~2.5% gadā nominālais (lauki, 2010–2024)",
+  city:     "~6.2% per year nominal (Riga, 2010–2024 · Arco/Latio)",
+  valmiera: "~5.5% per year nominal (Valmiera, 2010–2024 · Arco/Latio; few new projects)",
+  rural:    "~2.5% per year nominal (rural, 2010–2024)",
 };
 
 const SCENARIO_BADGE = {
-  positive: { cls: "bg-emerald-100 text-emerald-700", label: "Pozitīvais" },
-  moderate: { cls: "bg-slate-100 text-slate-600",     label: "Mērenais"   },
-  negative: { cls: "bg-red-100 text-red-600",         label: "Negatīvais" },
+  positive: { cls: "bg-emerald-100 text-emerald-700", label: "Positive" },
+  moderate: { cls: "bg-slate-100 text-slate-600",     label: "Moderate" },
+  negative: { cls: "bg-red-100 text-red-600",         label: "Negative" },
 };
 
 function updateScenarioBadge() {
@@ -105,8 +105,8 @@ function updateScenarioBadge() {
 function buildRateNote(scenario, loc) {
   if (scenario === "moderate") return MODERATE_NOTES[loc];
   const pct   = (PROPERTY_SCENARIO_RATES[scenario][loc] * 100).toFixed(1);
-  const label = scenario === "positive" ? "pozitīvais scenārijs" : "negatīvais scenārijs";
-  return `~${pct}% gadā (${label})`;
+  const label = scenario === "positive" ? "positive scenario" : "negative scenario";
+  return `~${pct}% per year (${label})`;
 }
 
 function setLocType(type) {
