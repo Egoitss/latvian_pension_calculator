@@ -6,26 +6,26 @@
 <header class="sticky top-0 z-50 border-b border-slate-100 bg-white/95 backdrop-blur-sm">
   <div class="mx-auto max-w-4xl px-4 md:px-6 py-2 flex items-center gap-3 md:gap-6">
     <span class="shrink-0 text-[10px] font-semibold tracking-widest text-slate-300 uppercase">
-      Outcome
+      {{ t("Outcome") }}
     </span>
     <div class="flex flex-1 items-center gap-5 md:gap-8 min-w-0">
       <div class="min-w-0">
-        <div class="text-[9px] text-slate-400 uppercase tracking-wide">Monthly at retirement</div>
+        <div class="text-[9px] text-slate-400 uppercase tracking-wide">{{ t("Monthly at retirement") }}</div>
         <div id="summaryMonthly" class="text-xl font-semibold text-slate-600 leading-tight">—</div>
       </div>
       <div class="min-w-0">
-        <div class="text-[9px] text-slate-400 uppercase tracking-wide">In today's money</div>
+        <div class="text-[9px] text-slate-400 uppercase tracking-wide">{{ t("In today's money") }}</div>
         <div id="summaryRealMonthly" class="text-xl font-semibold text-emerald-600 leading-tight">—</div>
       </div>
       <div class="min-w-0 hidden sm:block">
-        <div id="summaryCapitalLabel" class="text-[9px] text-slate-400 uppercase tracking-wide">Total savings</div>
+        <div id="summaryCapitalLabel" class="text-[9px] text-slate-400 uppercase tracking-wide">{{ t("Total savings") }}</div>
         <div id="summaryCapital" class="text-xl font-semibold text-slate-600 leading-tight">—</div>
       </div>
       <div class="ml-auto shrink-0">
         <span id="summaryScenarioLabel"
               class="inline-flex rounded-full px-2.5 py-1 text-[10px] font-medium
                      bg-slate-100 text-slate-500">
-          Moderate
+          {{ t("Moderate") }}
         </span>
       </div>
     </div>
@@ -42,7 +42,7 @@
 
     <!-- Page header: compact title + disclaimer tooltip -->
     <div class="flex items-center gap-2">
-      <h1 class="text-sm font-semibold text-slate-700">Pension Scenario Simulator</h1>
+      <h1 class="text-sm font-semibold text-slate-700">{{ t("Pension Scenario Simulator") }}</h1>
       <div class="relative group">
         <span class="cursor-default select-none text-[11px] text-slate-400">ⓘ</span>
         <div class="pointer-events-none absolute top-full left-0 mt-1.5
@@ -51,8 +51,7 @@
                     invisible opacity-0
                     group-hover:visible group-hover:opacity-100
                     transition-opacity duration-150">
-          Simulation model — not financial advice. Adjust the assumptions
-          to see how they affect your retirement outcome.
+          {{ t("Simulation model — not financial advice. Adjust the assumptions to see how they affect your retirement outcome.") }}
         </div>
       </div>
     </div>

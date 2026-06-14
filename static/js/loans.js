@@ -39,7 +39,7 @@ function fmtMonths(months) {
   const total = Math.round(months);
   const y = Math.floor(total / 12);
   const m = total % 12;
-  return m > 0 ? `${y} yr ${m} mo.` : `${y} yr`;
+  return m > 0 ? `${y} ${t("yr")} ${m} ${t("mo.")}` : `${y} ${t("yr")}`;
 }
 
 function fmtEur(v) {
@@ -57,7 +57,7 @@ function fmtEurDec(v) {
 function scenarioShorterTerm(balance, annualRate, payment, p2lAmt, origMonths) {
   const newBalance = balance - p2lAmt;
   if (newBalance <= 0) {
-    return `Using P2L (${fmtEur(p2lAmt)}): loan would be fully paid off.`;
+    return `${t("Using P2L")} (${fmtEur(p2lAmt)}): ${t("loan would be fully paid off.")}`;
   }
   const r = annualRate / 100 / 12;
   let newMonths;
@@ -65,30 +65,30 @@ function scenarioShorterTerm(balance, annualRate, payment, p2lAmt, origMonths) {
     newMonths = newBalance / payment;
   } else {
     const inner = 1 - (newBalance * r / payment);
-    if (inner <= 0) return "Cannot calculate — payment too low.";
+    if (inner <= 0) return t("Cannot calculate — payment too low.");
     newMonths = -Math.log(inner) / Math.log(1 + r);
   }
   const savedMonths   = origMonths - newMonths;
   const origInterest  = payment * origMonths - balance;
   const newInterest   = payment * newMonths  - newBalance;
   const savedInterest = origInterest - newInterest;
-  return `Using P2L (${fmtEur(p2lAmt)}):\n` +
-    `Pay off ${fmtMonths(savedMonths)} sooner → total ${fmtMonths(newMonths)}\n` +
-    `Interest saved: ${fmtEur(savedInterest)}`;
+  return `${t("Using P2L")} (${fmtEur(p2lAmt)}):\n` +
+    `${t("Pay off")} ${fmtMonths(savedMonths)} ${t("sooner → total")} ${fmtMonths(newMonths)}\n` +
+    `${t("Interest saved:")} ${fmtEur(savedInterest)}`;
 }
 
 function scenarioLowerPayment(balance, annualRate, origMonths, p2lAmt) {
   const newBalance = balance - p2lAmt;
   if (newBalance <= 0) {
-    return `Using P2L (${fmtEur(p2lAmt)}): loan would be fully paid off.`;
+    return `${t("Using P2L")} (${fmtEur(p2lAmt)}): ${t("loan would be fully paid off.")}`;
   }
   const newPayment  = annuityPayment(newBalance, annualRate, origMonths);
-  if (!newPayment) return "Cannot calculate.";
+  if (!newPayment) return t("Cannot calculate.");
   const origPayment = annuityPayment(balance, annualRate, origMonths);
   const saved       = origPayment - newPayment;
-  return `Using P2L (${fmtEur(p2lAmt)}):\n` +
-    `Monthly payment: ${fmtEurDec(newPayment)} (saving ${fmtEurDec(saved)}/mo.)\n` +
-    `Term unchanged: ${fmtMonths(origMonths)}`;
+  return `${t("Using P2L")} (${fmtEur(p2lAmt)}):\n` +
+    `${t("Monthly payment:")} ${fmtEurDec(newPayment)} (${t("saving")} ${fmtEurDec(saved)}/${t("mo.")})\n` +
+    `${t("Term unchanged:")} ${fmtMonths(origMonths)}`;
 }
 
 // Cascade allocation across N loans: smallest active balance erased first
@@ -212,9 +212,9 @@ function initCard(prefix) {
     const monthInterest = r > 0 ? balance * r : 0;
     const monthPrincipal = payment - monthInterest;
     g(`${prefix}MonthBreakdown`).textContent =
-      `${fmtEurDec(monthInterest)} int. + ${fmtEurDec(monthPrincipal)} prin.`;
+      `${fmtEurDec(monthInterest)} ${t("int.")} + ${fmtEurDec(monthPrincipal)} ${t("prin.")}`;
     const cy = r > 0 ? crossoverYear(balance, totalRate, payment) : null;
-    g(`${prefix}CrossoverYear`).textContent = cy ? `${cy}` : "never";
+    g(`${prefix}CrossoverYear`).textContent = cy ? `${cy}` : t("never");
 
     summaryEl.classList.remove("hidden");
     recalcP2L();
@@ -313,9 +313,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const addBtn = g("addLoanBtn");
   if (addBtn) {
     addBtn.addEventListener("click", () => {
-      const title = prompt("Loan name:", "Other loan");
+      const title = prompt(t("Loan name:"), t("Other loan"));
       if (title === null) return;
-      addLoan(title.trim() || "Other loan");
+      addLoan(title.trim() || t("Other loan"));
     });
   }
 });

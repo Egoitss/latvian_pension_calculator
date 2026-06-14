@@ -103,15 +103,15 @@ async function generateRecommendation() {
     const data = await resp.json();
     if (!resp.ok) throw new Error(data.error || `HTTP ${resp.status}`);
 
-    output.textContent = data.text || "(empty response)";
+    output.textContent = data.text || t("(empty response)");
     output.classList.remove("hidden");
     if (data.usage) {
       usage.textContent =
-        `${data.usage.input_tokens} input + ${data.usage.output_tokens} output tokens · `;
+        `${data.usage.input_tokens} ${t("input +")} ${data.usage.output_tokens} ${t("output tokens")} · `;
       usage.classList.remove("hidden");
     }
   } catch (err) {
-    error.textContent = `Error: ${err.message}`;
+    error.textContent = `${t("Error:")} ${err.message}`;
     error.classList.remove("hidden");
   } finally {
     btn.disabled = false;

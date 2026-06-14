@@ -2,7 +2,10 @@ import json
 import os
 import time
 from datetime import date as _date
-from flask import Flask, jsonify, make_response, render_template, request
+from flask import (
+    Flask, jsonify, make_response, redirect,
+    render_template, request, url_for,
+)
 from data import (
     PLANS, VSAOI_CEILING, P2L_RATE, DEFAULT_RETURN,
     PENSION_TAX_FREE_THRESHOLD, PENSION_TAX_RATE,
@@ -13,8 +16,36 @@ from calculator import (
     build_plan_schedule, should_apply_vsaoi_ceiling,
     calculate_projection,
 )
+from i18n import (
+    lang_from_path, make_t, js_catalog,
+)
 
 app = Flask(__name__)
+
+
+def _alt_path(path: str, lang: str) -> str:
+    # Path to the same page in the other language (for the switcher).
+    if lang == "lv":
+        return path[3:] or "/"          # strip leading "/lv"
+    return "/lv" + ("" if path == "/" else path)
+
+
+@app.context_processor
+def inject_i18n():
+    # Expose t(), lang, the alt-language path and the JS override map
+    # to every template, derived from the current request path.
+    lang = lang_from_path(request.path)
+    return {
+        "t": make_t(lang),
+        "lang": lang,
+        "alt_path": _alt_path(request.path, lang),
+        "js_i18n": js_catalog(lang),
+    }
+
+
+@app.route('/favicon.ico')
+def favicon():
+    return redirect(url_for('static', filename='favicon.svg'), 301)
 
 
 @app.context_processor
@@ -96,6 +127,7 @@ LOCAL_DATA = {
 
 
 @app.route("/")
+@app.route("/lv")
 def index():
     # Compute the initial projection using default inputs
     d = DEFAULTS
@@ -160,6 +192,7 @@ def index():
 
 
 @app.route("/loans")
+@app.route("/lv/loans")
 def loans():
     resp = make_response(render_template(
         "loans.html",

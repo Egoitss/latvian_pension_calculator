@@ -1,0 +1,190 @@
+/* oats-theme.css — OATS design system overlay for pension calculator.
+   Loaded after Tailwind CDN so every rule here takes precedence.
+   JS modules use element IDs, not CSS classes — safe to change all classes. */
+
+/* ── Design tokens ──────────────────────────────────────────────── */
+:root {
+  --ob:  #9D2235; --ob-d: #7A1A29; --ob-t: #FBECEE;
+  --oi:  #0A0A0B; --oi2: #2D3138; --om:   #6E7681;
+  --obg: #FCFCFD; --op:  #FFFFFF;
+  --ol:  #E3E4E8; --ol2: #EDEEF1;
+}
+
+/* ── Typography ─────────────────────────────────────────────────── */
+body {
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  background: var(--obg);
+  color: var(--oi);
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Space Grotesk", sans-serif;
+  letter-spacing: -.02em;
+}
+input, select, label, th, code,
+[class*="font-mono"],
+[class*="tracking-wide"],
+[class*="tracking-widest"] {
+  font-family: "IBM Plex Mono", monospace;
+}
+
+/* ── Border-radius reset — OATS is sharp ────────────────────────── */
+[class*="rounded"] { border-radius: 0 !important; }
+
+/* ── Emerald → OATS red ─────────────────────────────────────────── */
+.text-emerald-600, .text-emerald-500,
+.text-emerald-400 { color: var(--ob) !important; }
+.text-emerald-800 { color: var(--ob-d) !important; }
+.bg-emerald-600   { background-color: var(--ob) !important; }
+.bg-emerald-50, .bg-emerald-100 {
+  background-color: var(--ob-t) !important;
+}
+.border-emerald-400,
+.border-l-emerald-400 { border-color: var(--ob) !important; }
+
+/* ── Amber crisis rows — keep amber but soften ──────────────────── */
+.bg-amber-50  { background-color: #FEFCE8 !important; }
+.text-amber-800, .text-amber-900 { color: #92400E !important; }
+.bg-amber-200 { background-color: #FDE68A !important; }
+
+/* ── Slate palette → OATS ink / muted / line ────────────────────── */
+body.bg-slate-50,
+.bg-slate-50      { background-color: var(--obg) !important; }
+.bg-white,
+.bg-white\/95     { background-color: var(--op) !important; }
+.bg-slate-100     { background-color: var(--ol2) !important; }
+.border-slate-200 { border-color: var(--ol) !important; }
+.border-slate-100 { border-color: var(--ol2) !important; }
+.text-slate-900,
+.text-slate-800   { color: var(--oi) !important; }
+.text-slate-700,
+.text-slate-600   { color: var(--oi2) !important; }
+.text-slate-500,
+.text-slate-400   { color: var(--om) !important; }
+.text-slate-300   { color: var(--ol) !important; }
+
+/* ── Sticky summary bar ─────────────────────────────────────────── */
+/* Sits below the OATS nav (60 px); OATS border, no glass blur */
+header.sticky {
+  background: var(--obg) !important;
+  border-bottom: 1px solid var(--ol) !important;
+  backdrop-filter: none !important;
+  top: 60px !important;
+}
+/* Real-money figure in OATS red */
+#summaryRealMonthly { color: var(--ob) !important; }
+
+/* ── Accordion cards ────────────────────────────────────────────── */
+[data-accordion] {
+  border: 1px solid var(--ol) !important;
+  background: var(--op) !important;
+  box-shadow: none !important;
+}
+
+/* ── Inputs & selects ───────────────────────────────────────────── */
+input, select {
+  border-color: var(--ol) !important;
+  background: var(--op) !important;
+}
+input:focus, select:focus {
+  border-color: var(--oi2) !important;
+  box-shadow: none !important;
+  --tw-ring-shadow: none !important;
+  outline: none;
+}
+
+/* ── Table heads ────────────────────────────────────────────────── */
+thead th {
+  font-family: "IBM Plex Mono", monospace !important;
+  font-size: 10.5px !important;
+  letter-spacing: .12em !important;
+  text-transform: uppercase !important;
+}
+
+/* ── Scenario badge ─────────────────────────────────────────────── */
+#summaryScenarioLabel {
+  border: 1px solid var(--ol);
+  background: var(--ob-t);
+  color: var(--ob);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  border-radius: 0 !important;
+  padding: 4px 10px;
+}
+
+/* ── OATS nav (custom, not Tailwind overrides) ──────────────────── */
+.oats-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 48px;
+  border-bottom: 1px solid var(--ol);
+  background: var(--obg);
+  position: sticky;
+  top: 0;
+  z-index: 60;
+}
+.oats-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--oi);
+  text-decoration: none;
+}
+.oats-logo-mark {
+  color: var(--ob);
+  width: 32px;
+  height: 32px;
+  flex: none;
+  display: block;
+}
+.oats-crumb {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ob);
+}
+.oats-back {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 12px;
+  color: var(--om);
+  text-decoration: none;
+  letter-spacing: .03em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.oats-back:hover { color: var(--oi); }
+
+/* Language switcher (EN/LV) — mirrors HOME_PAGE .c-lang */
+.oats-lang {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  margin-left: auto;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 12px;
+  font-weight: 500;
+}
+.oats-lang a,
+.oats-lang span {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  padding: 4px 7px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--om);
+}
+.oats-lang a:hover { color: var(--oi); }
+.oats-lang .is-active {
+  color: var(--oi);
+  background: rgba(0, 0, 0, .06);
+}
+.oats-flag { border-radius: 2px; display: block; }

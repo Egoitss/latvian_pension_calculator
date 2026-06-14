@@ -72,7 +72,7 @@ function updateVsaoi(applyCeiling) {
   desc.classList.toggle("text-white/70", applyCeiling);
   desc.classList.toggle("text-slate-500", !applyCeiling);
   el("vsaoiStatus").textContent = applyCeiling
-    ? "Applied automatically" : "Not applied automatically";
+    ? t("Applied automatically") : t("Not applied automatically");
 }
 
 // Update the current annual contribution display beneath the VSAOI box
@@ -106,8 +106,9 @@ function onInputChange(chart) {
   // Retirement year display
   const bYear  = toNumber(el("birthYear").value,  new Date().getFullYear() - 30);
   const bMonth = toNumber(el("birthMonth").value, 1);
-  const MONTHS_EN = ["January","February","March","April","May","June",
-                     "July","August","September","October","November","December"];
+  const MONTHS_EN = [t("January"),t("February"),t("March"),t("April"),t("May"),
+                     t("June"),t("July"),t("August"),t("September"),t("October"),
+                     t("November"),t("December")];
   el("retirementYearDisplay").textContent =
     `${MONTHS_EN[bMonth - 1]}, ${bYear + inputs.retirementAge}`;
 
@@ -135,7 +136,7 @@ function onInputChange(chart) {
   const scenarioRate = scenarioEl
     ? parseFloat(scenarioEl.dataset.value) : NaN;
   const effectiveSchedule = Number.isFinite(scenarioRate)
-    ? lastPlanSchedule.map(e => ({ ...e, planName: "Manual assumption" }))
+    ? lastPlanSchedule.map(e => ({ ...e, planName: t("Manual assumption") }))
     : lastPlanSchedule;
   const effectiveManualReturn = Number.isFinite(scenarioRate)
     ? scenarioRate : inputs.manualReturn;
@@ -175,7 +176,7 @@ function onInputChange(chart) {
     `~${Math.round(survivalOverall(gender, inputs.age, inputs.payoutYears) * 100)}%`;
 
   const chartPeriodEl = document.getElementById("chartPeriod");
-  if (chartPeriodEl) chartPeriodEl.textContent = `${projection.years} years`;
+  if (chartPeriodEl) chartPeriodEl.textContent = `${projection.years} ${t("years")}`;
 }
 
 
@@ -207,11 +208,11 @@ async function copyToClipboard(text) {
                              "bg-amber-50", "text-amber-700");
   if (copied) {
     feedback.classList.add("bg-emerald-50", "text-emerald-700");
-    feedback.textContent = "Link copied";
+    feedback.textContent = t("Link copied");
   } else {
     feedback.classList.add("bg-amber-50", "text-amber-700");
     feedback.textContent =
-      "Copying not allowed in this context — select the link and copy manually";
+      t("Copying not allowed in this context — select the link and copy manually");
   }
   setTimeout(() => feedback.classList.add("hidden"), copied ? 1800 : 3500);
 }

@@ -23,9 +23,9 @@ const pillarRows = { p1: null, p2: null, p3: null };
 let propChartRows = [];
 
 const SCENARIO_LABELS = {
-  positive: "Positive scenario",
-  moderate: "Moderate scenario",
-  negative: "Negative scenario",
+  positive: t("Positive scenario"),
+  moderate: t("Moderate scenario"),
+  negative: t("Negative scenario"),
 };
 
 const LABEL_COLORS = {
@@ -60,8 +60,8 @@ function activateScenario(name) {
   if (summaryBadge) {
     summaryBadge.className = SUMMARY_BADGE_COLORS[name];
     summaryBadge.textContent =
-      name === "positive" ? "Positive" :
-      name === "negative" ? "Negative" : "Moderate";
+      name === "positive" ? t("Positive") :
+      name === "negative" ? t("Negative") : t("Moderate");
   }
   document.dispatchEvent(new CustomEvent("scenarioChange", { detail: { name } }));
 }
@@ -96,7 +96,7 @@ function applyButtonStyles(active) {
 function updateRateLabels() {
   const note = g("bootstrapNote");
   if (!scenarioRates.moderate) {
-    if (note) note.textContent = "Running Monte Carlo…";
+    if (note) note.textContent = t("Running Monte Carlo…");
     return;
   }
   if (g("rateLabelPositive"))
@@ -106,7 +106,7 @@ function updateRateLabels() {
   if (g("rateLabelNegative"))
     g("rateLabelNegative").textContent  = `${scenarioRates.negative.toFixed(2)}%`;
   if (note) note.textContent =
-    "10,000 simulations · Dinamika 18-49 Feb 2019–May 2026";
+    t("10,000 simulations · Dinamika 18-49 Feb 2019–May 2026");
 }
 
 function updateCombinedDisplay() {
@@ -123,10 +123,10 @@ function updateCombinedDisplay() {
   if (g("combinedTotal"))
     g("combinedTotal").textContent = fmtEur(totalCapital);
   if (g("combinedRealTotal"))
-    g("combinedRealTotal").textContent = `In today's money: ${fmtEur(totalReal)}`;
+    g("combinedRealTotal").textContent = `${t("In today's money:")} ${fmtEur(totalReal)}`;
 
   // Capital label — update both card and sticky bar when property is included
-  const capLabel = propEquity > 0 ? "Net value" : "Total capital";
+  const capLabel = propEquity > 0 ? t("Net value") : t("Total capital");
   if (g("summaryCapital")) g("summaryCapital").textContent = fmtEur(totalCapital);
   if (g("summaryCapitalLabel")) g("summaryCapitalLabel").textContent = capLabel;
   if (g("combinedCapitalLabel")) g("combinedCapitalLabel").textContent = capLabel;
@@ -137,7 +137,7 @@ function updateCombinedDisplay() {
   if (g("combinedMonthly"))
     g("combinedMonthly").textContent = fmtEur(monthly);
   if (g("combinedRealMonthly"))
-    g("combinedRealMonthly").textContent = `In today's money: ${fmtEur(realMonthly)}`;
+    g("combinedRealMonthly").textContent = `${t("In today's money:")} ${fmtEur(realMonthly)}`;
 
   // Sticky bar
   if (g("summaryMonthly")) g("summaryMonthly").textContent = fmtEur(monthly);

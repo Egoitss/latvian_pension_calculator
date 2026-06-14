@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- Base template: HTML shell, CDN links, layout blocks -->
-<html lang="en">
+<html lang="{{ lang }}">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -55,18 +55,28 @@
       </svg>
       OATS SIA
     </a>
-    <span class="oats-crumb">[ Pension Scenario Simulator ]</span>
+    <span class="oats-crumb">[ {{ t("Pension Scenario Simulator") }} ]</span>
+    {# Language switch (EN/LV) — links to the same page in the other
+       language. Active language is a static span. #}
+    {% include "_lang.html" %}
     {# Return to wherever the visitor came from (file://, localhost,
        or live domain). Falls back to the hardcoded URL only when
        opened with no history (direct load / fresh tab). #}
     <a class="oats-back" href="http://localhost:8000/home.html"
        onclick="if (history.length > 1) {
                   history.back(); return false; }">
-      ← Portfolio
+      ← {{ t("Portfolio") }}
     </a>
   </nav>
 
   {% block content %}{% endblock %}
+
+  <!-- i18n bridge to JS: current language + LV override map -->
+  <script>
+    window.LANG = "{{ lang }}";
+    window.I18N = {{ js_i18n | tojson }};
+  </script>
+  <script src="{{ url_for('static', filename='js/i18n.js', v=js_v) }}"></script>
 
   <!-- JS modules loaded after DOM is ready -->
   {% block scripts %}{% endblock %}

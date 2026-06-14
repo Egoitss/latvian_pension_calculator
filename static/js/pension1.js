@@ -54,12 +54,12 @@ function updateEligibilityHint(totalMonths) {
   if (!hint) return;
   const years = Math.floor(totalMonths / 12);
   const months = totalMonths % 12;
-  const label = months > 0 ? `${years} yrs ${months} mo.` : `${years} yrs`;
+  const label = months > 0 ? `${years} ${t("yrs")} ${months} ${t("mo.")}` : `${years} ${t("yrs")}`;
   if (totalMonths >= 20 * 12) {
-    hint.textContent = `Service record: ${label} ✓ (min. 20 yrs)`;
+    hint.textContent = `${t("Service record:")} ${label} ✓ (${t("min. 20 yrs")})`;
     hint.className = "text-[10px] text-emerald-600";
   } else if (totalMonths > 0) {
-    hint.textContent = `Service record: ${label} — insufficient (min. 20 yrs)`;
+    hint.textContent = `${t("Service record:")} ${label} — ${t("insufficient (min. 20 yrs)")}`;
     hint.className = "text-[10px] text-amber-600";
   } else {
     hint.textContent = "";
@@ -108,7 +108,7 @@ function recalc() {
   g("p1FinalCapital").textContent = fmtEur(finalCapital);
   g("p1Monthly").textContent      = fmtEur(monthly);
   g("p1RealMonthly").textContent  = fmtEur(realMonthly);
-  g("p1GDisplay").textContent     = `G = ${gCoef.toFixed(2)} yrs`;
+  g("p1GDisplay").textContent     = `G = ${gCoef.toFixed(2)} ${t("yrs")}`;
   g("p1Results").classList.remove("hidden");
 
   const realCapital = realDiscount > 0
