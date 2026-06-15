@@ -1,294 +1,239 @@
-AI recommendation — 2nd and 3rd pillar withdrawal: AI ieteikums, 2. un 3.
-  pīlāra izņemšana
-Lump sum, programmed pension, or lifetime annuity?: Vienreizējs maksājums,
-  ieprogrammēta pensija vai mūža rente?
+AI recommendation — 2nd and 3rd pillar withdrawal: AI rekomendācija — 2. un 3. līmeņa izmaksa
+Lump sum, programmed pension, or lifetime annuity?: Vai izņemt, saņemt programmēto pensiju vai pirkt mūža pensiju?
 Creativity (temperature): Radošums (temperatūra)
-0 = strictly factual, 1 = more creative: 0 = stingri fakts, 1 = radošāks
+0 = strictly factual, 1 = more creative: 0 = stingri faktisks, 1 = brīvāks
 0 = conservative · 1 = creative: 0 = konservatīvs · 1 = radošs
-Get recommendation: Saņemiet ieteikumu
+Get recommendation: Saņemt rekomendāciju
 AI is thinking… (Claude Sonnet 4.6): AI domā… (Claude Sonnet 4.6)
-? This is NOT financial advice — for educational purposes only. Consult a
-  certified financial planner before making any decision.
-: Šis NAV finanšu padoms, tikai izglītojošiem nolūkiem. Pirms jebkāda lēmuma
-  pieņemšanas konsultējieties ar sertificētu finanšu plānotāju.
-How your savings grow: Kā pieaug jūsu ietaupījumi
-All sources over time — in today's purchasing power: Visi avoti laika gaitā,
-  mūsdienu pirktspējā
+? This is NOT financial advice — for educational purposes only. Consult a certified financial planner before making any decision.
+: Šis NAV finanšu padoms — tikai izglītojoša informācija. Konsultējies ar sertificētu finanšu plānotāju pirms pieņem lēmumu.
+How your savings grow: Uzkrājuma sadalījums laikā
+All sources over time — in today's purchasing power: 1. + 2. + 3. līmenis + nekustamais īpašums · šodienas naudā
 'Period:': 'Periods:'
-years: gadiem
-Estimated fees: Paredzamās maksas
-? Approximate maximum total fees to retirement age for plans where the publicly
-  available total fee rate is included in the calculator. When plan switching
-  is enabled, the fee calculation currently uses the starting plan's fee rate
-  as a simplified assumption.
-: Aptuvenās maksimālās kopējās maksas līdz pensijas vecumam plāniem, kuros
-  kalkulatorā ir iekļauta publiski pieejamā kopējā maksas likme. Ja plānu
-  maiņa ir iespējota, maksas aprēķinos pašlaik tiek izmantota sākuma plāna
-  maksas likme kā vienkāršots pieņēmums.
-? This amount is not additionally deducted from the calculator's final result,
-  because the historical return is already reported net of fees.
-: Šī summa netiek papildus atņemta no kalkulatora gala rezultāta, jo vēsturiskā
-  atdeve jau tiek uzrādīta bez maksas.
-Assumptions: Pieņēmumi
-Change anything — results update instantly: Mainiet jebko, rezultāti tiek
-  nekavējoties atjaunināti
-Birth month and year: Dzimšanas mēnesis un gads
+years: gadi
+Estimated fees: Aptuvenās komisijas
+? Approximate maximum total fees to retirement age for plans where the publicly available total fee rate is included in the calculator. When plan switching is enabled, the fee calculation currently uses the starting plan's fee rate as a simplified assumption.
+: Aptuvens maksimālais komisiju apjoms līdz pensijas vecumam plāniem, kuriem kalkulatorā ir pievienota publiski pieejamā kopējā komisijas likme. Ja ieslēgta plānu maiņa, komisiju aprēķins pagaidām izmanto sākuma plāna komisijas likmi kā vienkāršotu pieņēmumu.
+? This amount is not additionally deducted from the calculator's final result, because the historical return is already reported net of fees.
+: Šī summa netiek papildus atņemta no kalkulatora gala rezultāta, jo vēsturiskais ienesīgums jau ir norādīts pēc komisijām.
+Assumptions: Tavi dati
+Change anything — results update instantly: Personīgie parametri visam aprēķinam
+Birth month and year: Dzimšanas gads un mēnesis
 'Age:': 'Vecums:'
-Retirement age: Pensijas vecums
-'Retiring:': 'Došanās pensijā:'
-'LV statutory: 65 (2025) · trend +~1 yr/decade · Your generation: ~': 'LV
-  likumā noteiktais: 65 (2025) · tendence +~1 gads/desmitgade · Jūsu paaudze:
-  ~'
-Gross monthly salary: Bruto mēnešalga
-/ month: / mēnesī
+Retirement age: Pensionēšanās vecums
+'Retiring:': 'Pensijā:'
+'LV statutory: 65 (2025) · trend +~1 yr/decade · Your generation: ~': 'LV likumīgais: 65 g. (2025) · tendence +~1 g./10 g. · Tavai paaudzei: ~'
+Gross monthly salary: Bruto alga mēnesī
+/ month: / mēnesi
 Payout period: Izmaksas periods
 payout years: izmaksas gadi
 'Latvian statistics (CSP, 2023):': 'Latvijas statistika (CSP, 2023):'
-'Reach retirement:': 'Sasniedziet pensiju:'
-'+5 yrs:': '+5 gadi:'
-'+10 yrs:': '+10 gadi:'
+'Reach retirement:': 'Sasniegt pensiju:'
+'+5 yrs:': '+5 g.:'
+'+10 yrs:': '+10 g.:'
 'End of payout:': 'Izmaksas beigas:'
 Gender: Dzimums
 Male: Vīrietis
 Female: Sieviete
-Annual salary growth: Gada algas pieaugums
-'Latvia nominal salary growth 2001–2024: €226 → €1,685 = 9.1% per year (CSP stat.gov.lv)': 'Latvia
-  nominālās algas pieaugums 2001.–2024. gadā: €226 → €1685 = 9,1% gadā (CSP
-  stat.gov.lv)'
+Annual salary growth: Algas pieaugums gadā
+'Latvia nominal salary growth 2001–2024: €226 → €1,685 = 9.1% per year (CSP stat.gov.lv)': 'Latvijas nominālais algas pieaugums 2001.–2024. g.: 226 € → 1 685 € = 9,1% gadā (CSP stat.gov.lv)'
 Inflation: Inflācija
-'Latvia avg 2001–2024: ~4.0% (CSP/Eurostat) · ECB long-term target 2% · used for purchasing-power calculations': 'Latvia
-  vid. 2001–2024: ~4,0% (CSP/Eurostat) · ECB ilgtermiņa mērķis 2% · izmantots
-  pirktspējas aprēķiniem'
-Mortgage: Hipotēka
+'Latvia avg 2001–2024: ~4.0% (CSP/Eurostat) · ECB long-term target 2% · used for purchasing-power calculations': Latvijā 2001.–2024. g. vidēji ~4,0% (CSP/Eurostat) · ECB ilgtermiņa mērķis 2% · pirktspējas aprēķinam
+Mortgage: Hipotekārais kredīts
 Consumer loan: Patēriņa kredīts
-Enter balance: Ievadiet atlikumu
+Enter balance: Ievadi atlikumu
 P2L scenario: P2L scenārijs
 Balance (€): Atlikums (€)
-Month: Mēnesis
-Year: gads
-Bank margin (%): Bankas peļņa (%)
+Month: Mēn.
+Year: Gads
+Bank margin (%): Bankas marža (%)
 EURIBOR (%): EURIBOR (%)
 0 fixed: 0 fiksēts
-Total rate: Kopējā likme
-interest: interesi
+Total rate: Kopā likme
+interest: procenti
 'This month:': 'Šomēnes:'
-'Crossover:': 'Crossover:'
+'Crossover:': 'Pāreja:'
 Shorter term: Īsāks termiņš
 Lower payment: Mazāks maksājums
-Add another loan: Pievienojiet citu aizdevumu
-Remove loan: Noņemt aizdevumu
-Total contributions: Kopējās iemaksas
-Estimated fees **: Paredzamās maksas**
-Savings: Ietaupījumi
-Investment earnings: Investīciju peļņa
-Monthly payout *: Ikmēneša izmaksa*
+Add another loan: Pievienot vēl vienu kredītu
+Remove loan: Noņemt kredītu
+Total contributions: Iemaksas kopā
+Estimated fees **: Aptuvenās komisijas **
+Savings: Uzkrājums
+Investment earnings: Ieguldījumu peļņa
+Monthly payout *: Ikmēneša izmaksa *
 Scenario: Scenārijs
 Total: Kopā
-Today's money: Šodienas nauda
+Today's money: Šodienas naudā
 Amount: Summa
-After tax: Pēc nodokļu nomaksas
-Your base scenario: Jūsu pamata scenārijs
-With current assumptions: Ar pašreizējiem pieņēmumiem
-Dot-com crash: Dot-com avārija
-'Trough: March 2002': 'Sile: 2002. gada marts'
+After tax: Pēc nodokļiem
+Your base scenario: Parastā prognoze
+With current assumptions: Aprēķināts
+Dot-com crash: Dot-com sabrukums
+'Trough: March 2002': 'Zemākais punkts: 2002. g. marts'
 Housing market crisis: Mājokļu tirgus krīze
-'Trough: March 2009': 'Sile: 2009. gada marts'
-With actual historical return: Ar faktisku vēsturisku atdevi
-Enter your historical data analysis: Ievadiet savu vēsturisko datu analīzi
-State pension: Valsts pensija
-The safety net · NDC savings from payroll contributions: Drošības tīkls ·
-  NDC ietaupījumi no algu iemaksām
-Enter your balance →: Ievadiet savu bilanci →
+'Trough: March 2009': 'Zemākais punkts: 2009. g. marts'
+With actual historical return: Ar vēsturisko ienesīgumu
+Enter your historical data analysis: Ievadi vēstures analīzi
+State pension: Valsts pensija (1. līmenis)
+The safety net · NDC savings from payroll contributions: 'NDC uzkrājums · iemaksa: 14% no bruto algas'
+Enter your balance →: Ievadi NDC kapitālu →
 Accumulated capital (€): Uzkrātais kapitāls (€)
-Service record (yrs): Dienesta ieraksts (gadi)
-Months: Mēneši
-Annual capital indexation: Ikgadējā kapitāla indeksācija
-'Historical avg 2020–2025: ~8.9% · Conservative: 4–5%': 'Vēsturiskais vidējais
-  2020.–2025. gads: ~8,9% · Konservatīvā: 4–5%'
-'Annual contribution to Pillar 1 (14% × gross):': 'Gada iemaksa Pillar 1 (14%
-  × bruto):'
-Capital at retirement: Kapitāls aizejot pensijā
-Monthly pension: Ikmēneša pensija
+Service record (yrs): Stāžs (g.)
+Months: Mēn.
+Annual capital indexation: Kapitāla indeksācija gadā
+'Historical avg 2020–2025: ~8.9% · Conservative: 4–5%': 'Vēst. vidējais 2020–2025: ~8.9% · Konservatīvs: 4–5%'
+'Annual contribution to Pillar 1 (14% × gross):': 'Gada iemaksa 1. līmenī (14% × bruto):'
+Capital at retirement: Kapitāls pensijai
+Monthly pension: Mēneša pensija
 In today's money: Šodienas naudā
-'Formula: accumulated capital ÷ (': 'Formula: uzkrātais kapitāls ÷ ('
-× 12 months). Pension up to €1,000/month is tax-free.: × 12 mēneši). Pensija
-  līdz 1000 eiro mēnesī ir bez nodokļiem.
-Investment pension: Investīciju pensija
-Funded savings — grows with the market: Finansētie uzkrājumi, aug līdz ar
-  tirgu
-Enter balance →: Ievadiet atlikumu →
-'Contribution: gross × P2L rate · Payout: after 25.5% income tax above €1,000/month': 'Iemaksa:
-  bruto × P2L likme · Izmaksa: pēc 25,5% ienākuma nodokļa virs 1000 €/mēn.'
-Current balance (€): Pašreizējais atlikums (€)
-Latvija.lv link to your 2nd-pillar balance: Latvija.lv saite uz jūsu 2. pīlāra
-  bilanci
+'Formula: accumulated capital ÷ (': 'Aprēķins: uzkrātais kapitāls ÷ ('
+× 12 months). Pension up to €1,000/month is tax-free.: × 12 mēn.). Pensija līdz 1 000 €/mēn. ir nodokļu brīva.
+Investment pension: Fondētā pensija (2. līmenis)
+Funded savings — grows with the market: Privātais fondētais uzkrājums · VSAOI iemaksas
+Enter balance →: Ievadi uzkrājumu →
+'Contribution: gross × P2L rate · Payout: after 25.5% income tax above €1,000/month': 'Iemaksa: bruto × P2L likme · Izmaksa: pēc 25.5% IIN virs 1 000 €/mēn.'
+Current balance (€): Esošais uzkrājums (€)
+Latvija.lv link to your 2nd-pillar balance: Latvija.lv saite uz 2. līmeņa uzkrājumu
 Copy: Kopēt
 Total (€): Kopā (€)
-Already earned (€): Jau nopelnīts (€)
+Already earned (€): No tā nopelnīts (€)
 Pension plan: Pensiju plāns
 manapensija.lv public data link: manapensija.lv publisko datu saite
-'Long-term average:': 'Ilgtermiņa vidējais rādītājs:'
+'Long-term average:': 'Ilgtermiņa vidējais:'
 Market index: Tirgus indekss
-'5Y:': '5 gadi:'
+'5Y:': '5Y:'
 no data: nav datu
-'Fee:': 'Maksa:'
-Manual annual return: Manuāla gada atdeve
-'Latvia P2L funds historical: ~6–9% (manapensija.lv) · Global equity markets: ~8–10% nominal': 'Latvia
-  P2L fondu vēsture: ~6–9% (manapensija.lv) · Globālie akciju tirgi: ~8–10%
-  nomināli'
-P2L contribution rate: P2L iemaksu likme
-'current: 6% | historical avg: 4.3%': 'strāva: 6% | vēsturiskais vidējais:
-  4,3%'
-'Current rate: 6% (since 2021) · Historical range: 2–8% · Set by law': 'Pašreizējā
-  likme: 6% (kopš 2021. gada) · Vēsturiskais diapazons: 2–8% · Noteikts ar
-  likumu'
-Add plan switches over your lifetime: Pievienojiet plānu slēdžus savas dzīves
-  laikā
-Model a more aggressive plan early on and a more conservative one near retirement.: Izveidojiet
-  agresīvāku plānu agrīnā stadijā un konservatīvāku plānu, tuvojoties pensijai.
-Switch 1 — age: 1. slēdzis, vecums
-Plan after switch 1: Plāns pēc 1. slēdža
-Switch 2 — age: 2. slēdzis, vecums
-Plan after switch 2: Plānojiet pēc 2. slēdža
+'Fee:': 'Komisija:'
+Manual annual return: Manuālais gada ienesīgums
+'Latvia P2L funds historical: ~6–9% (manapensija.lv) · Global equity markets: ~8–10% nominal': 'Latvijas P2L fondi vēst.: ~6–9% (manapensija.lv) · Pasaules akciju tirgi: ~8–10% nominālais'
+P2L contribution rate: Iemaksu likme P2L
+'current: 6% | historical avg: 4.3%': 'pašreizējā: 6% | vēst. vidējā: 4.3%'
+'Current rate: 6% (since 2021) · Historical range: 2–8% · Set by law': 'Spēkā esošā: 6% (no 2021. g.) · Vēsturiski: 2–8% · Maina ar likumu'
+Add plan switches over your lifetime: Pievienot plāna maiņu dzīves laikā
+Model a more aggressive plan early on and a more conservative one near retirement.: Modelē agresīvāku plānu sākumā un konservatīvāku tuvāk pensijai.
+Switch 1 — age: Maiņa 1 — vecums
+Plan after switch 1: Plāns pēc 1. maiņas
+Switch 2 — age: Maiņa 2 — vecums
+Plan after switch 2: Plāns pēc 2. maiņas
 VSAOI ceiling: VSAOI griesti
-Applied automatically: Lietots automātiski
-Not applied automatically: Netiek lietots automātiski
+Applied automatically: Ieslēgti automātiski
+Not applied automatically: Izslēgti automātiski
 If annual gross income exceeds: Ja gada bruto ienākumi pārsniedz
-2nd-pillar contributions are calculated only up to this threshold.: 2. pīlāra
-  iemaksas tiek aprēķinātas tikai līdz šim slieksnim.
-'Current annual contribution to Pillar 2:': 'Pašreizējais ikgadējais ieguldījums
-  Pillar 2:'
-Voluntary savings: Brīvprātīgie uzkrājumi
-Your own contribution — with tax relief up to €1,020/year: Savs ieguldījums,
-  ar nodokļu atvieglojumiem līdz 1020 €/gadā
-Fund: fonds
-5-yr return / annual fee: 5 gadu atgriešana / gada maksa
+2nd-pillar contributions are calculated only up to this threshold.: 2. līmeņa iemaksas tiek rēķinātas tikai līdz šim slieksnim.
+'Current annual contribution to Pillar 2:': 'Pašreizējā gada iemaksa 2. līmenī:'
+Voluntary savings: Brīvprātīgā pensija (3. līmenis)
+Your own contribution — with tax relief up to €1,020/year: Privātais uzkrājums · IIN atlaide līdz 1 020 €/gadā
+Fund: Fonds
+5-yr return / annual fee: 5g. ienesīgums / gada maksa
 Accumulated balance (€): Uzkrātais atlikums (€)
 Monthly contribution (€): Ikmēneša iemaksa (€)
-Annual contribution growth: Ikgadējais iemaksu pieaugums
-'To keep the same share of salary: ~9% per year · Conservative: 2–5%': 'Saglabāt
-  tādu pašu algas daļu: ~9% gadā · Konservatīvais: 2–5%'
-'Annual tax refund (up to €1,020):': 'Ikgadējā nodokļu atmaksa (līdz 1020 eiro):'
-Balance at retirement: Atlikums pensijā
-Monthly payout: Ikmēneša izmaksa
-'On contributions: 0% income tax · On gains: 25.5% income tax.': 'Par iemaksām:
-  0% ienākuma nodoklis · No peļņas: 25,5% ienākuma nodoklis.'
-'After tax:': 'Pēc nodokļu nomaksas:'
+Annual contribution growth: Iemaksu pieaugums gadā
+'To keep the same share of salary: ~9% per year · Conservative: 2–5%': 'Lai saglabātu to pašu proporciju no algas: ~9% gadā · Konservatīvi: 2–5%'
+'Annual tax refund (up to €1,020):': 'IIN atmaksa gadā (līdz 1 020 €):'
+Balance at retirement: Atlikums pensijai
+Monthly payout: Mēneša izmaksa
+'On contributions: 0% income tax · On gains: 25.5% income tax.': 'Savās iemaksās: 0% IIN · Peļņā: 25.5% IIN.'
+'After tax:': 'Pēc IIN:'
 'In today''s money (total):': 'Šodienas naudā (kopā):'
-'Taxable gains:': 'Ar nodokli apliekamie ienākumi:'
-'Total contributed:': 'Kopējais ieguldījums:'
-Property value forecast: Īpašuma vērtības prognoze
-Moderate: Mērens
-Enter value →: Ievadiet vērtību →
-Riga / city: Riga / pilsēta
-Rural: Lauku
-~6.2% per year nominal (Riga, 2010–2024 · Arco Real Estate / Latio): ~6,2%
-  gadā nominālais (Riga, 2010–2024 · Arco Real Estate / Latio)
-Current property value (€): Pašreizējā īpašuma vērtība (€)
-Forecast at retirement: Prognoze aizejot pensijā
+'Taxable gains:': 'Apliekamā peļņa:'
+'Total contributed:': 'Kopā iemaksāts:'
+Property value forecast: Nekustamā īpašuma prognoze
+Moderate: Mērenais
+Enter value →: Ievadi vērtību →
+Riga / city: Rīga / pilsēta
+Rural: Lauki
+~6.2% per year nominal (Riga, 2010–2024 · Arco Real Estate / Latio): ~6.2% gadā nominālais (Rīga, 2010–2024 · Arco Real Estate / Latio)
+Current property value (€): Īpašuma pašreizējā vērtība (€)
+Forecast at retirement: Prognoze pensijai
 Value: Vērtība
-⚠ Includes a 2007–2010-style crash (−60%) applied to the starting value.: ⚠
-  Ietver 2007.–2010. gada stila avāriju (–60%), kas piemērota sākuma vērtībai.
-Positive: Pozitīvi
+⚠ Includes a 2007–2010-style crash (−60%) applied to the starting value.: ⚠ Ietver 2007–2010 tipa krīzi (−60%) sākotnējā vērtībā.
+Positive: Pozitīvais
 optimistic: optimistisks
-Markets grow fast — favourable decades. Only 1 in 10 simulations sees markets performing this well or better.: Tirgi
-  aug strauji, labvēlīgas desmitgades. Tikai 1 no 10 simulācijām uzskata,
-  ka tirgi darbojas tik labi vai labāk.
+Markets grow fast — favourable decades. Only 1 in 10 simulations sees markets performing this well or better.: Tirgus aug ātri — labvēlīgas desmitgades. Tikai 1 no 10 simulācijām tirgus aug tikpat labi vai labāk.
 realistic: reālistisks
-The most likely outcome — plan around this. Half of simulated futures end better, half worse.: Visticamākais
-  rezultāts, plānojiet to. Puse no simulētajiem nākotnes līgumiem beidzas
-  labāk, puse sliktāk.
-Negative: Negatīvs
-conservative: konservatīvs
-'Markets stagnate or a crisis has hit. 9 out of 10 scenarios end better. Test: can you survive financially?': 'Tirgi
-  stagnē vai ir iestājusies krīze. 9 no 10 scenārijiem beidzas labāk. Pārbaude:
-  vai jūs varat izdzīvot finansiāli?'
-Your retirement income: Jūsu pensijas ienākumi
-Moderate scenario: Mērens scenārijs
-per month in retirement: mēnesī pensijā
-in today's purchasing power after inflation: mūsdienu pirktspējā pēc inflācijas
+The most likely outcome — plan around this. Half of simulated futures end better, half worse.: Visbūtiskākā prognoze — plāno ar šo. Puse simulēto nākotnes scenāriju beidzas labāk, puse sliktāk.
+Negative: Negatīvais
+conservative: piesardzīgs
+'Markets stagnate or a crisis has hit. 9 out of 10 scenarios end better. Test: can you survive financially?': 'Tirgus stagnē vai bijusi krīze. 9 no 10 scenārijiem beidzas labāk. Pamēģini: vai finansiāli spēsi izdzīvot.'
+Your retirement income: Kopējā pensija · 1. + 2. + 3. līmenis
+Moderate scenario: Mērenais scenārijs
+per month in retirement: nominālā mēneša izmaksa
+in today's purchasing power after inflation: šodienas naudā (pēc inflācijas)
 Total capital: Kopējais kapitāls
-Voluntary gains: Brīvprātīgi ieguvumi
-State: valsts
-Funded: Finansēts
-Voluntary: Brīvprātīgi
-Property: Īpašums
-Running scenario analysis…: Notiek scenārija analīze…
-· payout spread over: · izmaksa sadalīta
-Pension Scenario Simulator: Pensiju scenārija simulators
-Portfolio: Portfelis
-Outcome: Rezultāts
-Monthly at retirement: Ik mēnesi aizejot pensijā
-Total savings: Kopējie ietaupījumi
-Simulation model — not financial advice. Adjust the assumptions to see how they affect your retirement outcome.: Simulācijas
-  modelis, nevis finanšu konsultācijas. Pielāgojiet pieņēmumus, lai redzētu,
-  kā tie ietekmē jūsu pensionēšanās iznākumu.
-Loan Calculator: Kredīta kalkulators
-Mortgage and consumer loan · P2L scenarios: Hipotēka un patēriņa kredīts ·
-  P2L scenāriji
-2nd-pillar balance: 2. pīlāra bilance
-Enter your P2L balance (€): Ievadiet savu P2L atlikumu (€)
-Use the P2L scenarios below to see how the balance affects your loans.: Izmantojiet
-  tālāk norādītos P2L scenārijus, lai redzētu, kā atlikums ietekmē jūsu aizdevumus.
+Voluntary gains: 3. līm. peļņa (pēc IIN)
+State: 1. līm.
+Funded: 2. līm.
+Voluntary: 3. līm.
+Property: NĪ
+Running scenario analysis…: Monte Carlo aprēķins notiek…
+· payout spread over: · 2.+3. līm. izmaksa pa
+Pension Scenario Simulator: Pensijas kalkulators
+Portfolio: Portfolio
+Outcome: Pensija
+Monthly at retirement: Nominālā / mēn.
+Total savings: Kopējais kapitāls
+Simulation model — not financial advice. Adjust the assumptions to see how they affect your retirement outcome.: Aptuvens modelis. Nav finanšu padoms. Vēsturiskais ienesīgums negarantē nākotnes rezultātus.
+Loan Calculator: Kredītu kalkulators
+Mortgage and consumer loan · P2L scenarios: Hipotekārais un patēriņa kredīts · P2L scenāriji
+2nd-pillar balance: 2. pensiju līmeņa atlikums
+Enter your P2L balance (€): Ievadi savu P2L atlikumu (€)
+Use the P2L scenarios below to see how the balance affects your loans.: Izmanto P2L scenārijus zemāk, lai redzētu, kā atlikums ietekmē kredītus.
 (empty response): (tukša atbilde)
-input +: ievade +
-output tokens: izvades marķieri
+input +: ievades +
+output tokens: izvades token.
 'Error:': 'Kļūda:'
-1st pillar: 1. pīlārs
-2nd pillar: 2. pīlārs
-3rd pillar: 3. pīlārs
-Retirement: Aiziešana pensijā
-'Switch:': 'Slēdzis:'
-yr: g
-mo.: mo.
+1st pillar: 1. līmenis
+2nd pillar: 2. līmenis
+3rd pillar: 3. līmenis
+Retirement: Pensija
+'Switch:': 'Maiņa:'
+yr: g.
+mo.: mēn.
 Using P2L: Izmantojot P2L
-loan would be fully paid off.: aizdevums tiks pilnībā nomaksāts.
-Cannot calculate — payment too low.: Nevar aprēķināt, maksājums ir pārāk mazs.
-Pay off: Atmaksāt
+loan would be fully paid off.: kredīts tiktu dzēsts pilnībā.
+Cannot calculate — payment too low.: Nevar aprēķināt — maksājums pārāk mazs.
+Pay off: Atmaksāt par
 sooner → total: ātrāk → kopā
-'Interest saved:': 'Ietaupīti procenti:'
+'Interest saved:': 'Ietaupīt procentos:'
 Cannot calculate.: Nevar aprēķināt.
 'Monthly payment:': 'Ikmēneša maksājums:'
 saving: ietaupot
-'Term unchanged:': 'Termiņš nemainīgs:'
-int.: starpt.
-prin.: prin.
+'Term unchanged:': 'Termiņš paliek:'
+int.: '%'
+prin.: pam.
 never: nekad
-'Loan name:': 'Aizdevuma nosaukums:'
-Other loan: Cits aizdevums
-yrs: g.g
-'Service record:': 'Pakalpojuma ieraksts:'
-min. 20 yrs: min. 20 g
-insufficient (min. 20 yrs): nepietiekams (vismaz 20 g.)
+'Loan name:': 'Kredīta nosaukums:'
+Other loan: Cits kredīts
+yrs: g.
+'Service record:': 'Stāžs:'
+min. 20 yrs: min. 20 g.
+insufficient (min. 20 yrs): nepietiek (min. 20 g.)
 g.: g.
-~6.2% per year nominal (Riga, 2010–2024 · Arco/Latio): ~6,2% gadā nominālais
-  (Riga, 2010–2024 · Arco/Latio)
-~5.5% per year nominal (Valmiera, 2010–2024 · Arco/Latio; few new projects): ~5,5%
-  gadā nomināli (Valmiera, 2010–2024 · Arco/Latio; maz jaunu projektu)
-~2.5% per year nominal (rural, 2010–2024): ~2,5% gadā nomināli (lauki, 2010–2024)
-positive scenario: pozitīvs scenārijs
-negative scenario: negatīvs scenārijs
+~6.2% per year nominal (Riga, 2010–2024 · Arco/Latio): ~6.2% gadā nominālais (Rīga, 2010–2024 · Arco/Latio)
+~5.5% per year nominal (Valmiera, 2010–2024 · Arco/Latio; few new projects): ~5.5% gadā nominālais (Valmiera, 2010–2024 · Arco/Latio; maz jaunu projektu)
+~2.5% per year nominal (rural, 2010–2024): ~2.5% gadā nominālais (lauki, 2010–2024)
+positive scenario: pozitīvais scenārijs
+negative scenario: negatīvais scenārijs
 per year: gadā
-Positive scenario: Pozitīvs scenārijs
-Negative scenario: Negatīvs scenārijs
-Running Monte Carlo…: Skrien Montekarlo…
-10,000 simulations · Dinamika 18-49 Feb 2019–May 2026: 10 000 simulāciju ·
-  Dinamika no 2019. gada 18.–49. februārim līdz 2026. gada maijam
+Positive scenario: Pozitīvais scenārijs
+Negative scenario: Negatīvais scenārijs
+Running Monte Carlo…: Monte Carlo aprēķins notiek…
+10,000 simulations · Dinamika 18-49 Feb 2019–May 2026: 10 000 simulācijas · Dinamika 18-49 Feb 2019–Mai 2026
 'In today''s money:': 'Šodienas naudā:'
 Net value: Neto vērtība
-January: janvārī
-February: februāris
-March: marts
-April: aprīlis
-May: maijā
-June: jūnijā
-July: jūlijā
-August: augusts
-September: septembris
-October: oktobris
-November: novembris
-December: decembris
+January: Janvāris
+February: Februāris
+March: Marts
+April: Aprīlis
+May: Maijs
+June: Jūnijs
+July: Jūlijs
+August: Augusts
+September: Septembris
+October: Oktobris
+November: Novembris
+December: Decembris
 Manual assumption: Manuāls pieņēmums
 Link copied: Saite nokopēta
-Copying not allowed in this context — select the link and copy manually: Kopēšana
-  šajā kontekstā nav atļauta, atlasiet saiti un kopējiet manuāli
+Copying not allowed in this context — select the link and copy manually: Kopēšana nav atļauta šajā skatā — iezīmē saiti un nokopē manuāli
