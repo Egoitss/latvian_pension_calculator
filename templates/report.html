@@ -1,23 +1,23 @@
 <!doctype html>
-<!-- OATS PDF retirement report — rendered by report_pdf.py/WeasyPrint -->
+<!-- OATS PDF retirement report — single page, rendered by WeasyPrint -->
 <html>
 <head><meta charset="utf-8"></head>
 <body>
 
-  <!-- ── Cover (page 1) ──────────────────────────────────────── -->
-  <section class="cover">
-    <div class="brand">
-      <span class="mark"></span><span class="word">OATS SIA</span>
+  <!-- ── Header: brand + title (left), hero metric (right) ───── -->
+  <div class="brand">
+    <span class="mark"></span><span class="word">OATS SIA</span>
+  </div>
+  <div class="head">
+    <div class="head-left">
+      <div class="eyebrow">{{ t("RETIREMENT REPORT") }}</div>
+      <h1 class="title">{{ t("Pension Scenario Report") }}</h1>
+      <p class="sub">
+        {{ t("Retirement projection and scenario analysis") }}
+      </p>
+      <div class="date">{{ t("Generated") }} · {{ date }}</div>
     </div>
-    <div class="grow"></div>
-    <div class="eyebrow">{{ t("RETIREMENT REPORT") }}</div>
-    <h1 class="cover-title">{{ t("Pension Scenario Report") }}</h1>
-    <p class="cover-sub">
-      {{ t("Retirement projection and scenario analysis") }}
-    </p>
-    <div class="cover-date">{{ t("Generated") }} · {{ date }}</div>
-    <div class="grow"></div>
-    <div class="hero">
+    <div class="head-right">
       <div class="hero-label">{{ t("Expected Monthly Pension") }}</div>
       <div class="hero-figure mono">{{ hero_real }}</div>
       <div class="hero-note">
@@ -25,7 +25,8 @@
         {{ t("nominal") }}
       </div>
     </div>
-  </section>
+  </div>
+  <hr class="rule">
 
   <!-- ── Summary cards ───────────────────────────────────────── -->
   <div class="block">
@@ -35,7 +36,7 @@
       <div class="card">
         <div class="k">{{ c.k }}</div>
         <div class="v {{ c.cls }} mono">{{ c.v }}</div>
-        {% if c.sub %}<div class="sub">{{ c.sub }}</div>{% endif %}
+        {% if c.sub %}<div class="sub-s">{{ c.sub }}</div>{% endif %}
       </div>
       {% endfor %}
     </div>
