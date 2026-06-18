@@ -105,24 +105,10 @@ body {
 }
 .block { margin-bottom: 11px; }
 
-/* ── Summary cards ──────────────────────────────────────────── */
-.cards { display: flex; flex-wrap: wrap; }
-.card {
-  width: 33.33%; padding: 8px 14px 9px 0;
-  border-top: 1px solid #DEDBD3;
-}
-.card .k {
-  font-family: "Plex Mono", monospace; font-size: 7.5pt;
-  letter-spacing: 0.1em; text-transform: uppercase; color: #8A857B;
-}
-.card .v {
-  font-size: 17pt; font-weight: 600; margin-top: 5px;
-  letter-spacing: -0.01em;
-}
-.card .v.sm { font-size: 14pt; }
-.card .sub-s {
-  font-family: "Plex Mono", monospace; font-size: 7.5pt;
-  color: #8A857B; margin-top: 3px;
+/* ── Meta line ──────────────────────────────────────────────── */
+.meta {
+  font-size: 8pt; letter-spacing: 0.04em; color: #5C574F;
+  margin-bottom: 13px;
 }
 
 /* ── Contribution bars ──────────────────────────────────────── */
@@ -140,25 +126,42 @@ body {
 .bar-fill.muted { background: #14110E; }
 .bar-fill.soft { background: #B0726F; }
 
-/* ── Scenario range (three columns) ─────────────────────────── */
-.scenarios { display: flex; gap: 14px; }
-.scn { flex: 1; border-top: 2px solid #14110E; padding-top: 9px; }
-.scn.active { border-top-color: #8B0000; }
-.scn-head {
-  font-family: "Plex Mono", monospace; font-size: 7.5pt;
-  letter-spacing: 0.12em; text-transform: uppercase; color: #8A857B;
+/* ── Scenario comparison (three cards) ──────────────────────── */
+.scn-cards { display: flex; gap: 12px; }
+.scn-card {
+  flex: 1; border: 1px solid #DEDBD3; background: #FFFEFB;
+  padding: 11px 12px 12px;
 }
-.scn.active .scn-head { color: #8B0000; }
-.scn-val {
-  font-size: 18pt; font-weight: 600; margin-top: 5px;
-  letter-spacing: -0.01em;
+.scn-card.active { border-color: #8B0000; }
+.scn-top {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 7px;
 }
-.scn.active .scn-val { color: #8B0000; }
-.scn-sub { font-size: 7.5pt; color: #8A857B; margin-top: 3px; }
-.scn-note {
-  font-family: "Plex Mono", monospace; font-size: 7.5pt;
-  color: #A39E94; margin-top: 8px;
+.scn-label {
+  font-family: "Plex Mono", monospace; font-size: 8pt;
+  letter-spacing: 0.1em; text-transform: uppercase; color: #5C574F;
 }
+.scn-card.active .scn-label { color: #8B0000; }
+.scn-card .badge {
+  font-family: "Plex Mono", monospace; font-size: 6pt;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 2px 5px; color: #fff; background: #8B0000;
+}
+.scn-card .badge.moderate { background: #14110E; }
+.scn-card .badge.weak { background: #8A857B; }
+.scn-big {
+  font-size: 21pt; font-weight: 700; letter-spacing: -0.02em;
+  line-height: 1; color: #14110E;
+}
+.scn-card.active .scn-big { color: #8B0000; }
+.scn-note { font-size: 7pt; color: #8A857B; margin-top: 4px; }
+.scn-rows { margin-top: 9px; }
+.scn-r {
+  display: flex; justify-content: space-between;
+  border-top: 1px solid #ECEAE4; padding: 4px 0; font-size: 8.5pt;
+}
+.scn-r .rk { color: #8A857B; }
+.scn-r .rv { font-weight: 600; }
 
 /* ── Insight / outlook ──────────────────────────────────────── */
 .insight {

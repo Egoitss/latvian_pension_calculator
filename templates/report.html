@@ -28,19 +28,43 @@
   </div>
   <hr class="rule">
 
-  <!-- ── Summary cards ───────────────────────────────────────── -->
+  <!-- ── Meta line ───────────────────────────────────────────── -->
+  <div class="meta mono">
+    {{ t("Retirement age") }} {{ ret_age }} &nbsp;·&nbsp;
+    {{ t("Gross monthly") }} {{ gross_fmt }} &nbsp;·&nbsp;
+    {{ t("Scenario") }}: {{ active_label }}
+  </div>
+
+  <!-- ── Scenario comparison (three detailed cards) ──────────── -->
+  {% if scenarios %}
   <div class="block">
-    <div class="section-head">{{ t("Summary") }}</div>
-    <div class="cards">
-      {% for c in cards %}
-      <div class="card">
-        <div class="k">{{ c.k }}</div>
-        <div class="v {{ c.cls }} mono">{{ c.v }}</div>
-        {% if c.sub %}<div class="sub-s">{{ c.sub }}</div>{% endif %}
+    <div class="section-head">{{ t("Scenario comparison") }}</div>
+    <div class="scn-cards">
+      {% for s in scenarios %}
+      <div class="scn-card{% if s.active %} active{% endif %}">
+        <div class="scn-top">
+          <span class="scn-label">{{ s.label }}</span>
+          <span class="badge {{ s.outlook }}">{{ s.outlook_label }}</span>
+        </div>
+        <div class="scn-big mono">{{ s.real }}</div>
+        <div class="scn-note mono">
+          {{ t("/month") }} · {{ t("in today's money") }}
+        </div>
+        <div class="scn-rows">
+          <div class="scn-r">
+            <span class="rk">{{ t("Capital at retirement") }}</span>
+            <span class="rv mono">{{ s.capital }}</span>
+          </div>
+          <div class="scn-r">
+            <span class="rk">{{ t("Replacement rate") }}</span>
+            <span class="rv mono">{{ s.rate }}%</span>
+          </div>
+        </div>
       </div>
       {% endfor %}
     </div>
   </div>
+  {% endif %}
 
   <!-- ── Pillar breakdown bars ───────────────────────────────── -->
   <div class="block">
@@ -59,26 +83,7 @@
     {% endfor %}
   </div>
 
-  <!-- ── Scenario range (all three) ──────────────────────────── -->
-  {% if scenarios %}
-  <div class="block">
-    <div class="section-head">{{ t("Scenario range") }}</div>
-    <div class="scenarios">
-      {% for s in scenarios %}
-      <div class="scn{% if s.active %} active{% endif %}">
-        <div class="scn-head">{{ s.label }}</div>
-        <div class="scn-val mono">{{ s.real }}</div>
-        <div class="scn-sub mono">{{ s.nominal }} {{ t("nominal") }}</div>
-      </div>
-      {% endfor %}
-    </div>
-    <div class="scn-note">
-      {{ t("Monthly pension, in today's money") }}
-    </div>
-  </div>
-  {% endif %}
-
-  <!-- ── Retirement outlook ──────────────────────────────────── -->
+  <!-- ── Retirement outlook (active scenario) ────────────────── -->
   <div class="block">
     <div class="section-head">{{ t("Retirement outlook") }}</div>
     <div class="insight">

@@ -61,27 +61,6 @@ def _num(value, default=0.0):
         return default
 
 
-def _cards(t, totals, inputs):
-    # The five summary metric cards.
-    scen = inputs.get("scenario", "moderate")
-    return [
-        {"k": t("Monthly pension"), "v": _eur(totals.get("monthly")),
-         "sub": t("nominal"), "cls": ""},
-        {"k": t("Inflation-adjusted"),
-         "v": _eur(totals.get("realMonthly")),
-         "sub": t("in today's money"), "cls": ""},
-        {"k": t("Total capital"), "v": _eur(totals.get("capital")),
-         "sub": _eur(totals.get("realCapital")) + " "
-         + t("in today's money"), "cls": "sm"},
-        {"k": t("Retirement age"),
-         "v": str(inputs.get("retirementAge") or "—"),
-         "sub": "", "cls": ""},
-        {"k": t("Scenario"),
-         "v": t(_SCENARIO.get(scen, "Moderate")), "sub": "",
-         "cls": ""},
-    ]
-
-
 def _bars(t, pillars):
     # Horizontal contribution bars, widths ∝ each pillar's monthly.
     rows = [
@@ -99,18 +78,24 @@ def _bars(t, pillars):
 
 
 def _scenarios(t, data):
-    # Three-scenario comparison strip; empty when not provided.
+    # Three detailed scenario cards; empty when not provided.
     s = data.get("scenarios") or {}
     if not s:
         return []
     active = data.get("activeScenario", "moderate")
+    gross = (data.get("inputs") or {}).get("grossMonthly")
     out = []
     for key, label in _SCN_ORDER:
         v = s.get(key) or {}
+        rate = insights.replacement_rate(v.get("realMonthly"), gross)
+        band = insights.outlook(rate)
         out.append({
             "label": t(label),
             "real": _eur(v.get("realMonthly")),
-            "nominal": _eur(v.get("monthly")),
+            "capital": _eur(v.get("capital")),
+            "rate": rate,
+            "outlook": band,
+            "outlook_label": t(_OUTLOOK[band]),
             "active": key == active,
         })
     return out
@@ -126,7 +111,10 @@ def build_report_pdf(data, t, date_str=""):
         "t": t, "date": date_str,
         "hero_real": _eur(totals.get("realMonthly")),
         "hero_nominal": _eur(totals.get("monthly")),
-        "cards": _cards(t, totals, inputs),
+        "ret_age": str(inputs.get("retirementAge") or "—"),
+        "gross_fmt": _eur(inputs.get("grossMonthly")),
+        "active_label": t(_SCENARIO.get(
+            inputs.get("scenario", "moderate"), "Moderate")),
         "bars": _bars(t, data.get("pillars", {})),
         "scenarios": _scenarios(t, data),
         "outlook": ins["outlook"],
