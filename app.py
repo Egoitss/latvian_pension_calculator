@@ -19,7 +19,7 @@ from calculator import (
 from i18n import (
     lang_from_path, make_t, js_catalog,
 )
-from export_docx import build_summary_docx
+from report_pdf import build_report_pdf
 import download_counter
 
 app = Flask(__name__)
@@ -298,28 +298,22 @@ def api_recommend():
     })
 
 
-_DOCX_MIME = (
-    "application/vnd.openxmlformats-officedocument"
-    ".wordprocessingml.document"
-)
-
-
-@app.route("/export/docx", methods=["POST"])
-@app.route("/lv/export/docx", methods=["POST"])
-def export_docx():
-    # Build a one-page .docx from the posted calculator state,
-    # localized to the request path's language, and count the download.
+@app.route("/export/pdf", methods=["POST"])
+@app.route("/lv/export/pdf", methods=["POST"])
+def export_pdf():
+    # Build the PDF retirement report from the posted calculator
+    # state, localized to the request path's language, and count it.
     lang = lang_from_path(request.path)
     payload = request.get_json(silent=True) or {}
     date_str = _date.today().isoformat()
-    blob = build_summary_docx(payload, make_t(lang), date_str)
+    blob = build_report_pdf(payload, make_t(lang), date_str)
     total = download_counter.increment()
-    app.logger.info("docx export #%d", total)
+    app.logger.info("pdf export #%d", total)
 
     resp = make_response(blob)
-    resp.headers["Content-Type"] = _DOCX_MIME
+    resp.headers["Content-Type"] = "application/pdf"
     resp.headers["Content-Disposition"] = (
-        f'attachment; filename="pension-summary-{date_str}.docx"'
+        f'attachment; filename="pension-report-{date_str}.pdf"'
     )
     resp.headers["X-Download-Count"] = str(total)
     resp.headers["Cache-Control"] = "no-store"

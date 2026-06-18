@@ -3,4 +3,4 @@ anthropic
 pytest
 pyyaml
 deep-translator
-python-docx
+weasyprint

@@ -1,6 +1,6 @@
-// Word export: gathers calculator state, POSTs to /export/docx, and
+// PDF report: gathers calculator state, POSTs to /export/pdf, and
 // triggers the browser download. Mirrors ai_recommend.js: caches the
-// latest pillarResult so the doc matches what's on screen.
+// latest pillarResult so the report matches what's on screen.
 
 function g(id) { return document.getElementById(id); }
 
@@ -80,15 +80,15 @@ async function downloadDocx(btn) {
   btn.disabled = true;
   label.textContent = t("Preparing…");
   try {
-    // Respect the /lv prefix so the doc is built in the page language.
+    // Respect the /lv prefix so the report is in the page language.
     const base = window.location.pathname.startsWith("/lv") ? "/lv" : "";
-    const resp = await fetch(`${base}/export/docx`, {
+    const resp = await fetch(`${base}/export/pdf`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(buildPayload()),
     });
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-    saveBlob(await resp.blob(), "pension-summary.docx");
+    saveBlob(await resp.blob(), "pension-report.pdf");
   } catch (err) {
     label.textContent = t("Download failed — try again");
     setTimeout(() => { label.textContent = original; }, 2500);
