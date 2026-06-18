@@ -59,6 +59,25 @@
     {% endfor %}
   </div>
 
+  <!-- ── Scenario range (all three) ──────────────────────────── -->
+  {% if scenarios %}
+  <div class="block">
+    <div class="section-head">{{ t("Scenario range") }}</div>
+    <div class="scenarios">
+      {% for s in scenarios %}
+      <div class="scn{% if s.active %} active{% endif %}">
+        <div class="scn-head">{{ s.label }}</div>
+        <div class="scn-val mono">{{ s.real }}</div>
+        <div class="scn-sub mono">{{ s.nominal }} {{ t("nominal") }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="scn-note">
+      {{ t("Monthly pension, in today's money") }}
+    </div>
+  </div>
+  {% endif %}
+
   <!-- ── Retirement outlook ──────────────────────────────────── -->
   <div class="block">
     <div class="section-head">{{ t("Retirement outlook") }}</div>
@@ -79,8 +98,8 @@
           <div class="fv mono">−{{ erosion }}%</div>
         </div>
         <div class="f">
-          <div class="fk">{{ t("Market risk") }}</div>
-          <div class="fv">{{ risk_label }}</div>
+          <div class="fk">{{ t("Market exposure") }}</div>
+          <div class="fv mono">{{ exposure }}</div>
         </div>
       </div>
       <div class="disclaimer">

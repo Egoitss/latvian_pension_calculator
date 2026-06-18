@@ -28,9 +28,11 @@ _env = Environment(
 )
 
 _OUTLOOK = {"strong": "Strong", "moderate": "Moderate", "weak": "Weak"}
-_RISK = {"higher": "Higher", "moderate": "Moderate", "lower": "Lower"}
 _SCENARIO = {"positive": "Positive", "moderate": "Moderate",
              "negative": "Negative"}
+# Worst → best, left to right in the comparison strip.
+_SCN_ORDER = [("negative", "Negative"), ("moderate", "Moderate"),
+              ("positive", "Positive")]
 _VERDICT = {
     "strong":
         "On track — your pension covers a strong share of today's "
@@ -96,6 +98,24 @@ def _bars(t, pillars):
     } for name, key, cls in rows]
 
 
+def _scenarios(t, data):
+    # Three-scenario comparison strip; empty when not provided.
+    s = data.get("scenarios") or {}
+    if not s:
+        return []
+    active = data.get("activeScenario", "moderate")
+    out = []
+    for key, label in _SCN_ORDER:
+        v = s.get(key) or {}
+        out.append({
+            "label": t(label),
+            "real": _eur(v.get("realMonthly")),
+            "nominal": _eur(v.get("monthly")),
+            "active": key == active,
+        })
+    return out
+
+
 def build_report_pdf(data, t, date_str=""):
     # Render the report HTML and convert it to PDF bytes.
     from weasyprint import CSS, HTML
@@ -108,12 +128,13 @@ def build_report_pdf(data, t, date_str=""):
         "hero_nominal": _eur(totals.get("monthly")),
         "cards": _cards(t, totals, inputs),
         "bars": _bars(t, data.get("pillars", {})),
+        "scenarios": _scenarios(t, data),
         "outlook": ins["outlook"],
         "outlook_label": t(_OUTLOOK[ins["outlook"]]),
         "verdict": t(_VERDICT[ins["outlook"]]),
         "rate": ins["replacement_rate"],
         "erosion": ins["inflation_erosion"],
-        "risk_label": t(_RISK[ins["risk"]]),
+        "exposure": f'{ins["market_share"]}%',
     }
     html = _env.get_template("report.html").render(**ctx)
     return HTML(string=html, base_url=str(ROOT)).write_pdf(

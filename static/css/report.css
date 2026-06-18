@@ -57,7 +57,7 @@ body {
 }
 
 /* ── Header: brand + title (left) · hero metric (right) ─────── */
-.brand { margin-bottom: 16px; }
+.brand { margin-bottom: 11px; }
 .head {
   display: flex; justify-content: space-between;
   align-items: flex-end; gap: 18px;
@@ -93,7 +93,7 @@ body {
   color: #8A857B; margin-top: 6px;
 }
 .rule {
-  border: 0; border-top: 2px solid #14110E; margin: 16px 0 18px;
+  border: 0; border-top: 2px solid #14110E; margin: 11px 0 13px;
 }
 
 /* ── Section headings ───────────────────────────────────────── */
@@ -101,14 +101,14 @@ body {
   font-family: "Plex Mono", monospace; font-size: 8.5pt;
   letter-spacing: 0.2em; text-transform: uppercase;
   color: #14110E; border-bottom: 1px solid #14110E;
-  padding-bottom: 5px; margin: 0 0 12px;
+  padding-bottom: 4px; margin: 0 0 9px;
 }
-.block { margin-bottom: 15px; }
+.block { margin-bottom: 11px; }
 
 /* ── Summary cards ──────────────────────────────────────────── */
 .cards { display: flex; flex-wrap: wrap; }
 .card {
-  width: 33.33%; padding: 10px 14px 11px 0;
+  width: 33.33%; padding: 8px 14px 9px 0;
   border-top: 1px solid #DEDBD3;
 }
 .card .k {
@@ -126,7 +126,7 @@ body {
 }
 
 /* ── Contribution bars ──────────────────────────────────────── */
-.bar-row { margin-bottom: 12px; }
+.bar-row { margin-bottom: 9px; }
 .bar-top {
   display: flex; justify-content: space-between;
   align-items: baseline; margin-bottom: 5px;
@@ -140,9 +140,29 @@ body {
 .bar-fill.muted { background: #14110E; }
 .bar-fill.soft { background: #B0726F; }
 
+/* ── Scenario range (three columns) ─────────────────────────── */
+.scenarios { display: flex; gap: 14px; }
+.scn { flex: 1; border-top: 2px solid #14110E; padding-top: 9px; }
+.scn.active { border-top-color: #8B0000; }
+.scn-head {
+  font-family: "Plex Mono", monospace; font-size: 7.5pt;
+  letter-spacing: 0.12em; text-transform: uppercase; color: #8A857B;
+}
+.scn.active .scn-head { color: #8B0000; }
+.scn-val {
+  font-size: 18pt; font-weight: 600; margin-top: 5px;
+  letter-spacing: -0.01em;
+}
+.scn.active .scn-val { color: #8B0000; }
+.scn-sub { font-size: 7.5pt; color: #8A857B; margin-top: 3px; }
+.scn-note {
+  font-family: "Plex Mono", monospace; font-size: 7.5pt;
+  color: #A39E94; margin-top: 8px;
+}
+
 /* ── Insight / outlook ──────────────────────────────────────── */
 .insight {
-  border: 1px solid #DEDBD3; background: #FFFEFB; padding: 13px 16px;
+  border: 1px solid #DEDBD3; background: #FFFEFB; padding: 10px 14px;
 }
 .outlook {
   display: flex; align-items: baseline; gap: 12px;
@@ -160,7 +180,7 @@ body {
   font-size: 9pt; font-weight: 400; color: #8A857B;
 }
 .insight p { font-size: 9.5pt; color: #3A352E; margin-top: 6px; }
-.facts { display: flex; margin-top: 12px; }
+.facts { display: flex; margin-top: 9px; }
 .facts .f {
   width: 33.33%; border-left: 2px solid #8B0000; padding-left: 8px;
 }
@@ -172,5 +192,5 @@ body {
 .facts .fv { font-size: 12pt; font-weight: 600; margin-top: 2px; }
 .disclaimer {
   font-family: "Plex Mono", monospace; font-size: 7pt;
-  color: #A39E94; margin-top: 14px;
+  color: #A39E94; margin-top: 9px;
 }

@@ -61,6 +61,41 @@ function buildPayload() {
   };
 }
 
+// Sum the cached pillar results into combined totals (the same
+// formula scenarios.js uses for the on-screen hero).
+function captureTotals() {
+  const p1 = pillarCache.p1 || {};
+  const p2 = pillarCache.p2 || {};
+  const p3 = pillarCache.p3 || {};
+  const n = (v) => (Number.isFinite(v) ? v : 0);
+  return {
+    monthly: n(p1.monthly) + n(p2.monthlyAfterTax) + n(p3.monthlyPayout),
+    realMonthly:
+      n(p1.realMonthly) + n(p2.realMonthlyAfterTax)
+      + n(p3.realMonthlyPayout),
+    capital: n(p1.finalCapital) + n(p2.finalBalance) + n(p3.netPayout),
+  };
+}
+
+const SCN_BTN = {
+  positive: "btnPositive", moderate: "btnModerate",
+  negative: "btnNegative",
+};
+
+// Compute totals for all three scenarios by cycling the scenario
+// buttons. Runs synchronously so the browser never paints the
+// intermediate states (no flicker); restores the active scenario.
+function gatherScenarios(active) {
+  const out = {};
+  for (const name of ["positive", "moderate", "negative"]) {
+    const btn = g(SCN_BTN[name]);
+    if (btn) { btn.click(); out[name] = captureTotals(); }
+  }
+  const back = g(SCN_BTN[active]);
+  if (back) back.click();
+  return out;
+}
+
 // Save a blob to disk via a transient <a download> click.
 function saveBlob(blob, filename) {
   const url = URL.createObjectURL(blob);
@@ -80,12 +115,17 @@ async function downloadDocx(btn) {
   btn.disabled = true;
   label.textContent = t("Preparing…");
   try {
+    const active = readScenario();
+    const scenarios = gatherScenarios(active);   // restores active
+    const payload = buildPayload();
+    payload.activeScenario = active;
+    payload.scenarios = scenarios;
     // Respect the /lv prefix so the report is in the page language.
     const base = window.location.pathname.startsWith("/lv") ? "/lv" : "";
     const resp = await fetch(`${base}/export/pdf`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(buildPayload()),
+      body: JSON.stringify(payload),
     });
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     saveBlob(await resp.blob(), "pension-report.pdf");
