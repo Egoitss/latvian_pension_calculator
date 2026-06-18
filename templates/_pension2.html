@@ -89,7 +89,7 @@
               class="w-full rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm
                      outline-none transition focus:border-slate-500 focus:ring-2
                      focus:ring-slate-200">
-        {% for plan in plans %}
+        {% for plan in plans if not plan.get("benchmark") and not plan.get("manual") %}
           {% if plan.get("benchmark") %}
             {% set return_label = t("Long-term average:") ~ " " ~ "%.2f"|format(plan.assumption_return) ~ "%" %}
             {% set fee_label = " • " ~ t("Market index") %}
@@ -167,7 +167,7 @@
                     class="w-full rounded-2xl border border-slate-200 bg-white px-3 py-2
                            text-sm outline-none transition focus:border-slate-500
                            focus:ring-2 focus:ring-slate-200">
-              {% for plan in plans %}
+              {% for plan in plans if not plan.get("benchmark") and not plan.get("manual") %}
                 <option value="{{ plan.name }}"
                   {{ "selected" if plan.name == defaults.switch_one_plan_name else "" }}>
                   {{ plan.name }}
@@ -191,7 +191,7 @@
                     class="w-full rounded-2xl border border-slate-200 bg-white px-3 py-2
                            text-sm outline-none transition focus:border-slate-500
                            focus:ring-2 focus:ring-slate-200">
-              {% for plan in plans %}
+              {% for plan in plans if not plan.get("benchmark") and not plan.get("manual") %}
                 <option value="{{ plan.name }}"
                   {{ "selected" if plan.name == defaults.switch_two_plan_name else "" }}>
                   {{ plan.name }}

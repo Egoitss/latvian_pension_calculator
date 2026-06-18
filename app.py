@@ -9,7 +9,7 @@ from flask import (
 from data import (
     PLANS, VSAOI_CEILING, P2L_RATE, DEFAULT_RETURN,
     PENSION_TAX_FREE_THRESHOLD, PENSION_TAX_RATE,
-    LATVIJA_LV_P2L_URL, MANAPENSIJA_STATS_URL,
+    LATVIJA_LV_P2L_URL, MANAPENSIJA_STATS_URL, STATE_PENSION_URL,
     P3_PLANS,
 )
 from calculator import (
@@ -19,6 +19,8 @@ from calculator import (
 from i18n import (
     lang_from_path, make_t, js_catalog,
 )
+from export_docx import build_summary_docx
+import download_counter
 
 app = Flask(__name__)
 
@@ -100,7 +102,8 @@ DEFAULTS = {
     "p1_capital": "",
     "p1_record_years": "",
     "p1_record_months": "",
-    "p1_revaluation_rate": 5.0,
+    # Conservative neutral baseline; the active scenario shifts it ±2pp.
+    "p1_revaluation_rate": 3.0,
     # 3rd-pillar voluntary pension inputs
     "p3_balance": "",
     "p3_monthly": "",
@@ -173,6 +176,7 @@ def index():
     urls = {
         "latvija_lv": LATVIJA_LV_P2L_URL,
         "manapensija": MANAPENSIJA_STATS_URL,
+        "state_pension": STATE_PENSION_URL,
     }
 
     resp = make_response(render_template(
@@ -292,6 +296,40 @@ def api_recommend():
             "output_tokens": msg.usage.output_tokens,
         },
     })
+
+
+_DOCX_MIME = (
+    "application/vnd.openxmlformats-officedocument"
+    ".wordprocessingml.document"
+)
+
+
+@app.route("/export/docx", methods=["POST"])
+@app.route("/lv/export/docx", methods=["POST"])
+def export_docx():
+    # Build a one-page .docx from the posted calculator state,
+    # localized to the request path's language, and count the download.
+    lang = lang_from_path(request.path)
+    payload = request.get_json(silent=True) or {}
+    date_str = _date.today().isoformat()
+    blob = build_summary_docx(payload, make_t(lang), date_str)
+    total = download_counter.increment()
+    app.logger.info("docx export #%d", total)
+
+    resp = make_response(blob)
+    resp.headers["Content-Type"] = _DOCX_MIME
+    resp.headers["Content-Disposition"] = (
+        f'attachment; filename="pension-summary-{date_str}.docx"'
+    )
+    resp.headers["X-Download-Count"] = str(total)
+    resp.headers["Cache-Control"] = "no-store"
+    return resp
+
+
+@app.route("/api/download-count")
+def api_download_count():
+    # Read-only total downloads — handy once the app is live.
+    return jsonify({"count": download_counter.read_count()})
 
 
 if __name__ == "__main__":

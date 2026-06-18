@@ -134,10 +134,11 @@ function updateCombinedDisplay() {
   // Monthly payout: P1 NDC + P2 after-tax + P3 monthly
   const monthly     = p1.monthly + p2.monthlyAfterTax + p3.monthlyPayout;
   const realMonthly = p1.realMonthly + p2.realMonthlyAfterTax + p3.realMonthlyPayout;
+  // Lead with real (today's money); nominal is the secondary line.
+  if (g("combinedRealMonthly"))
+    g("combinedRealMonthly").textContent = fmtEur(realMonthly);
   if (g("combinedMonthly"))
     g("combinedMonthly").textContent = fmtEur(monthly);
-  if (g("combinedRealMonthly"))
-    g("combinedRealMonthly").textContent = `${t("In today's money:")} ${fmtEur(realMonthly)}`;
 
   // Sticky bar
   if (g("summaryMonthly")) g("summaryMonthly").textContent = fmtEur(monthly);

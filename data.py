@@ -11,6 +11,10 @@ LATVIJA_LV_P2L_URL = "https://latvija.gov.lv/Services/45686"
 MANAPENSIJA_STATS_URL = (
     "https://www.manapensija.lv/en/2nd-pension-pillar/statistics/"
 )
+# VISS e-service to check 1st-pillar (State pension) NDC capital
+STATE_PENSION_URL = (
+    "https://eservices.viss.gov.lv/eserviceplatform.ep222/eservice/"
+)
 
 # Pension plan dataset — sourced from public manapensija.lv statistics.
 # Keys: category, name, return_3y, return_5y, fee_total (real plans);
