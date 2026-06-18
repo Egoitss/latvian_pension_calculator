@@ -51,7 +51,7 @@ body {
 
 /* ── Brand lockup ───────────────────────────────────────────── */
 .brand { display: flex; align-items: center; gap: 8px; }
-.brand .mark { width: 18px; height: 18px; background: #000; }
+.brand .mark { width: 18px; height: 18px; display: block; }
 .brand .word {
   font-weight: 700; font-size: 12pt; letter-spacing: 0.02em;
 }
@@ -130,38 +130,31 @@ body {
 .scn-cards { display: flex; gap: 12px; }
 .scn-card {
   flex: 1; border: 1px solid #DEDBD3; background: #FFFEFB;
-  padding: 11px 12px 12px;
+  padding: 11px 13px 8px;
 }
 .scn-card.active { border-color: #8B0000; }
-.scn-top {
-  display: flex; justify-content: space-between;
-  align-items: center; margin-bottom: 7px;
-}
 .scn-label {
   font-family: "Plex Mono", monospace; font-size: 8pt;
   letter-spacing: 0.1em; text-transform: uppercase; color: #5C574F;
+  margin-bottom: 6px;
 }
 .scn-card.active .scn-label { color: #8B0000; }
-.scn-card .badge {
-  font-family: "Plex Mono", monospace; font-size: 6pt;
-  letter-spacing: 0.1em; text-transform: uppercase;
-  padding: 2px 5px; color: #fff; background: #8B0000;
-}
-.scn-card .badge.moderate { background: #14110E; }
-.scn-card .badge.weak { background: #8A857B; }
 .scn-big {
-  font-size: 21pt; font-weight: 700; letter-spacing: -0.02em;
+  font-size: 22pt; font-weight: 700; letter-spacing: -0.02em;
   line-height: 1; color: #14110E;
 }
 .scn-card.active .scn-big { color: #8B0000; }
-.scn-note { font-size: 7pt; color: #8A857B; margin-top: 4px; }
-.scn-rows { margin-top: 9px; }
-.scn-r {
-  display: flex; justify-content: space-between;
-  border-top: 1px solid #ECEAE4; padding: 4px 0; font-size: 8.5pt;
+.scn-note { font-size: 7pt; color: #8A857B; margin-top: 3px; }
+/* Stacked metrics: caption above value — width-proof, consistent */
+.scn-m { border-top: 1px solid #ECEAE4; margin-top: 7px; padding-top: 5px; }
+.scn-m .mk {
+  font-family: "Plex Mono", monospace; font-size: 6.5pt;
+  letter-spacing: 0.07em; text-transform: uppercase; color: #8A857B;
 }
-.scn-r .rk { color: #8A857B; }
-.scn-r .rv { font-weight: 600; }
+.scn-m .mv {
+  font-size: 10pt; font-weight: 600; margin-top: 1px;
+  white-space: nowrap;
+}
 
 /* ── Insight / outlook ──────────────────────────────────────── */
 .insight {

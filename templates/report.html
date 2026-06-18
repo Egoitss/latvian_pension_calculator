@@ -6,7 +6,13 @@
 
   <!-- ── Header: brand + title (left), hero metric (right) ───── -->
   <div class="brand">
-    <span class="mark"></span><span class="word">OATS SIA</span>
+    <svg class="mark" viewBox="0 0 100 100" aria-hidden="true">
+      <path fill="#14110E" fill-rule="evenodd"
+            d="M0 0H100V100H0Z
+               M76 50A26 26 0 1 1 24 50A26 26 0 1 1 76 50Z
+               M62 50A12 12 0 1 1 38 50A12 12 0 1 1 62 50Z"/>
+    </svg>
+    <span class="word">OATS SIA</span>
   </div>
   <div class="head">
     <div class="head-left">
@@ -42,23 +48,20 @@
     <div class="scn-cards">
       {% for s in scenarios %}
       <div class="scn-card{% if s.active %} active{% endif %}">
-        <div class="scn-top">
-          <span class="scn-label">{{ s.label }}</span>
-          <span class="badge {{ s.outlook }}">{{ s.outlook_label }}</span>
-        </div>
+        <div class="scn-label">{{ s.label }}</div>
         <div class="scn-big mono">{{ s.real }}</div>
-        <div class="scn-note mono">
-          {{ t("/month") }} · {{ t("in today's money") }}
+        <div class="scn-note">{{ t("in today's money") }}</div>
+        <div class="scn-m">
+          <div class="mk">{{ t("Actual monthly payout") }}</div>
+          <div class="mv mono">{{ s.nominal }}</div>
         </div>
-        <div class="scn-rows">
-          <div class="scn-r">
-            <span class="rk">{{ t("Capital at retirement") }}</span>
-            <span class="rv mono">{{ s.capital }}</span>
-          </div>
-          <div class="scn-r">
-            <span class="rk">{{ t("Replacement rate") }}</span>
-            <span class="rv mono">{{ s.rate }}%</span>
-          </div>
+        <div class="scn-m">
+          <div class="mk">{{ t("Capital at retirement") }}</div>
+          <div class="mv mono">{{ s.capital }}</div>
+        </div>
+        <div class="scn-m">
+          <div class="mk">{{ t("Replacement rate") }}</div>
+          <div class="mv mono">{{ s.rate }}%</div>
         </div>
       </div>
       {% endfor %}

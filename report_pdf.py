@@ -92,10 +92,9 @@ def _scenarios(t, data):
         out.append({
             "label": t(label),
             "real": _eur(v.get("realMonthly")),
+            "nominal": _eur(v.get("monthly")),
             "capital": _eur(v.get("capital")),
             "rate": rate,
-            "outlook": band,
-            "outlook_label": t(_OUTLOOK[band]),
             "active": key == active,
         })
     return out
