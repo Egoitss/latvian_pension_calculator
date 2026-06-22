@@ -88,9 +88,13 @@ body {
   font-size: 40pt; font-weight: 700; letter-spacing: -0.03em;
   line-height: 1; margin-top: 2px; color: #8B0000;
 }
+.hero-sub {
+  font-family: "Plex Mono", monospace; font-size: 8pt;
+  letter-spacing: 0.04em; color: #5C574F; margin-top: 3px;
+}
 .hero-note {
   font-family: "Plex Mono", monospace; font-size: 8pt;
-  color: #8A857B; margin-top: 6px;
+  color: #8A857B; margin-top: 5px;
 }
 .hero-note .hero-nom {
   font-size: 10pt; font-weight: 700; color: #14110E;
