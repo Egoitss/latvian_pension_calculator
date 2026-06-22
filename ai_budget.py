@@ -3,7 +3,7 @@
 # atomic (mirrors download_counter). When the day's limit is reached,
 # the AI review is skipped and the PDF falls back to deterministic text.
 #
-# Max daily spend ≈ AI_DAILY_LIMIT × per-call cost (~$0.0004), so the
+# Max daily spend ≈ AI_DAILY_LIMIT × per-call cost (~$0.00023), so the
 # loss is bounded regardless of how many IPs an attacker uses.
 import json
 import os
@@ -16,9 +16,9 @@ _DEFAULT = Path(__file__).parent / "ai_budget.json"
 
 def _limit() -> int:
     try:
-        return int(os.environ.get("AI_DAILY_LIMIT", "200"))
+        return int(os.environ.get("AI_DAILY_LIMIT", "1000"))
     except ValueError:
-        return 200
+        return 1000
 
 
 def _path() -> Path:
