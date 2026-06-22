@@ -39,7 +39,9 @@ _SYSTEM = (
     "2. Compare projected pension with inflation-adjusted purchasing "
     "power and mention inflation risk if purchasing power drops "
     "materially.\n"
-    "3. Recommend the single most effective improvement action.\n\n"
+    "3. Always recommend raising voluntary 3rd-pillar contributions "
+    "as the primary action; when the property is oversized, also "
+    "recommend downsizing it.\n\n"
     "Priority of recommendations:\n"
     "1. Increase voluntary 3rd-pillar contributions\n"
     "2. Delay retirement\n"
@@ -49,7 +51,9 @@ _SYSTEM = (
     "Property logic:\n"
     "- If property is flagged oversized, mention downsizing.\n"
     "- If home size is given, mention how many residents it optimally "
-    "suits versus a retiring couple.\n\n"
+    "suits versus a retiring couple.\n"
+    "- If no property value is given, do not mention property, "
+    "downsizing, or selling assets at all.\n\n"
     "Weak outlook rule:\n"
     "If outlook is WEAK, state clearly that pension may struggle to "
     "cover typical Latvian retirement living costs (~1200-1800 "
@@ -136,7 +140,8 @@ def _user_prompt(f):
             f"- Property value at retirement: EUR {f['prop']} "
             f"(today's money EUR {f['prop_real']}) — {flag}")
     else:
-        lines.append("- Property: none entered")
+        lines.append("- Property: NONE entered — do NOT mention "
+                     "property, downsizing, or selling assets")
     if f["size"] > 0:
         lines.append(
             f"- Home size: {f['size']} m2 — comfortably fits about "
@@ -160,7 +165,7 @@ def generate_review(data, lang="en"):
         client = OpenAI(api_key=key, base_url=_API_BASE,
                         timeout=_TIMEOUT_S)
         resp = client.chat.completions.create(
-            model=_MODEL, max_tokens=_MAX_TOKENS, temperature=0.3,
+            model=_MODEL, max_tokens=_MAX_TOKENS, temperature=0.1,
             messages=[
                 {"role": "system",
                  "content": _SYSTEM.format(lang=lang_name)},
