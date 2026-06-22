@@ -103,9 +103,10 @@ def _scenarios(t, data):
     return out
 
 
-def build_report_pdf(data, t, date_str=""):
-    # Render the report HTML and convert it to PDF bytes.
-    from weasyprint import CSS, HTML
+def render_report_html(data, t, date_str="", ai_review=None):
+    # Build the report's HTML string (no WeasyPrint — unit-testable).
+    # ai_review: optional DeepSeek verdict; when present it replaces the
+    # deterministic outlook prose and shows a badged "AI Review" box.
     totals = data.get("totals", {})
     inputs = data.get("inputs", {})
     ins = insights.summarize(data)
@@ -125,7 +126,14 @@ def build_report_pdf(data, t, date_str=""):
         "rate": ins["replacement_rate"],
         "erosion": ins["inflation_erosion"],
         "exposure": f'{ins["market_share"]}%',
+        "ai_review": (ai_review or "").strip() or None,
     }
-    html = _env.get_template("report.html").render(**ctx)
+    return _env.get_template("report.html").render(**ctx)
+
+
+def build_report_pdf(data, t, date_str="", ai_review=None):
+    # Render the report HTML and convert it to PDF bytes.
+    from weasyprint import CSS, HTML
+    html = render_report_html(data, t, date_str, ai_review)
     return HTML(string=html, base_url=str(ROOT)).write_pdf(
         stylesheets=[CSS(filename=str(CSS_PATH))])

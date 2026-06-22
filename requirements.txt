@@ -1,5 +1,7 @@
 flask
 anthropic
+openai
+python-dotenv
 pytest
 pyyaml
 deep-translator

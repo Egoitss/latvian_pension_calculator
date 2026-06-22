@@ -101,7 +101,7 @@
         <span class="rate mono">{{ rate }}%
           <small>{{ t("of current gross income") }}</small></span>
       </div>
-      <p>{{ verdict }}</p>
+      {% if not ai_review %}<p>{{ verdict }}</p>{% endif %}
       <div class="facts">
         <div class="f">
           <div class="fk">{{ t("Replacement rate") }}</div>
@@ -121,6 +121,22 @@
       </div>
     </div>
   </div>
+
+  <!-- ── AI Review (DeepSeek) — only when a verdict was returned ── -->
+  {% if ai_review %}
+  <div class="block">
+    <div class="ai-review">
+      <div class="ai-head">
+        <span class="ai-eyebrow">{{ t("AI Review") }}</span>
+        <span class="ai-badge mono">DeepSeek</span>
+      </div>
+      <p class="ai-text">{{ ai_review }}</p>
+      <div class="disclaimer">
+        {{ t("AI-generated · not financial advice") }}
+      </div>
+    </div>
+  </div>
+  {% endif %}
 
 </body>
 </html>

@@ -2,6 +2,11 @@ import json
 import os
 import time
 from datetime import date as _date
+
+from dotenv import load_dotenv
+
+load_dotenv()  # load DEEPSEEK_API_KEY / ANTHROPIC_API_KEY from .env
+
 from flask import (
     Flask, jsonify, make_response, redirect,
     render_template, request, url_for,
@@ -20,6 +25,7 @@ from i18n import (
     lang_from_path, make_t, js_catalog,
 )
 from report_pdf import build_report_pdf
+import ai_review
 import download_counter
 
 app = Flask(__name__)
@@ -306,7 +312,9 @@ def export_pdf():
     lang = lang_from_path(request.path)
     payload = request.get_json(silent=True) or {}
     date_str = _date.today().isoformat()
-    blob = build_report_pdf(payload, make_t(lang), date_str)
+    # Short DeepSeek verdict; None (graceful fallback) if key/API absent.
+    review = ai_review.generate_review(payload, lang)
+    blob = build_report_pdf(payload, make_t(lang), date_str, review)
     total = download_counter.increment()
     app.logger.info("pdf export #%d", total)
 

@@ -1,14 +1,16 @@
 import os
 import sys
+import types
 
 # Allow importing from the project root
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import yaml
 
+import ai_review
 import insights
 from i18n import make_t
-from report_pdf import build_report_pdf
+from report_pdf import build_report_pdf, render_report_html
 import app as app_module
 
 
@@ -124,6 +126,7 @@ def _client():
 
 
 def test_export_pdf_route(tmp_path, monkeypatch):
+    monkeypatch.delenv("DEEPSEEK_API_KEY", raising=False)  # no network
     monkeypatch.setenv(
         "DOWNLOAD_COUNT_FILE", str(tmp_path / "count.json"))
     resp = _client().post("/export/pdf", json=SAMPLE)
@@ -135,9 +138,79 @@ def test_export_pdf_route(tmp_path, monkeypatch):
 
 
 def test_download_count_endpoint(tmp_path, monkeypatch):
+    monkeypatch.delenv("DEEPSEEK_API_KEY", raising=False)  # no network
     monkeypatch.setenv(
         "DOWNLOAD_COUNT_FILE", str(tmp_path / "count.json"))
     client = _client()
     client.post("/export/pdf", json=SAMPLE)
     client.post("/lv/export/pdf", json=SAMPLE)
     assert client.get("/api/download-count").get_json()["count"] == 2
+
+
+# ── AI review (DeepSeek) — mocked, no real network ─────────────
+
+AI_DATA = dict(SAMPLE, scenarios={
+    "moderate": {"realMonthly": 700, "capital": 200000,
+                 "propEquity": 300000, "propEquityReal": 220000},
+})
+
+
+def _fake_openai(reply, captured):
+    """Return a stand-in openai.OpenAI capturing the create() kwargs."""
+    def create(**kw):
+        captured.update(kw)
+        msg = types.SimpleNamespace(content=reply)
+        return types.SimpleNamespace(
+            choices=[types.SimpleNamespace(message=msg)])
+    chat = types.SimpleNamespace(
+        completions=types.SimpleNamespace(create=create))
+    return lambda **kw: types.SimpleNamespace(chat=chat)
+
+
+def test_generate_review_returns_none_without_key(monkeypatch):
+    monkeypatch.delenv("DEEPSEEK_API_KEY", raising=False)
+    assert ai_review.generate_review(AI_DATA, "en") is None
+
+
+def test_generate_review_uses_moderate_and_flags_property(monkeypatch):
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "sk-test")
+    captured = {}
+    import openai
+    monkeypatch.setattr(
+        openai, "OpenAI", _fake_openai("Looks weak.", captured))
+    out = ai_review.generate_review(AI_DATA, "en")
+    assert out == "Looks weak."
+    user_msg = captured["messages"][-1]["content"]
+    assert "MODERATE" in user_msg          # based on moderate scenario
+    assert "OVERSIZED" in user_msg         # 300k prop ≥ 200k capital
+    assert captured["model"] == "deepseek-chat"
+    assert captured["max_tokens"] <= 250   # short / cheap
+
+
+def test_generate_review_swallows_api_errors(monkeypatch):
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "sk-test")
+
+    def boom(**kw):
+        raise RuntimeError("network down")
+    import openai
+    monkeypatch.setattr(openai, "OpenAI", boom)
+    assert ai_review.generate_review(AI_DATA, "en") is None
+
+
+# ── AI box rendering in the report ─────────────────────────────
+
+def test_report_html_shows_ai_box_when_present():
+    html = render_report_html(
+        SAMPLE, make_t("en"), "2026-06-22", ai_review="Consider downsizing.")
+    assert "Consider downsizing." in html
+    assert 'class="ai-review"' in html and "Consider downsizing." in html
+    assert "ai-badge" in html               # DeepSeek badge rendered
+    # AI prose replaces the deterministic verdict sentence (SAMPLE=weak).
+    assert "voluntary saving" not in html
+
+
+def test_report_html_falls_back_without_ai():
+    html = render_report_html(SAMPLE, make_t("en"), "2026-06-22")
+    assert 'class="ai-review"' not in html   # no AI box
+    # Deterministic verdict still present (SAMPLE outlook is weak).
+    assert "voluntary saving" in html
