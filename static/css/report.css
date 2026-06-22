@@ -93,12 +93,10 @@ body {
   letter-spacing: 0.04em; color: #5C574F; margin-top: 3px;
 }
 .hero-note {
-  font-family: "Plex Mono", monospace; font-size: 8pt;
-  color: #8A857B; margin-top: 5px;
+  font-family: "Plex Mono", monospace; font-size: 9pt;
+  font-weight: 700; color: #14110E; margin-top: 5px;
 }
-.hero-note .hero-nom {
-  font-size: 10pt; font-weight: 700; color: #14110E;
-}
+.hero-note .hero-nom { font-size: 10pt; }
 .rule {
   border: 0; border-top: 2px solid #14110E; margin: 9px 0 10px;
 }
