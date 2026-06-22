@@ -89,12 +89,15 @@ def _scenarios(t, data):
         v = s.get(key) or {}
         rate = insights.replacement_rate(v.get("realMonthly"), gross)
         band = insights.outlook(rate)
+        prop = _num(v.get("propEquity"))
         out.append({
             "label": t(label),
             "real": _eur(v.get("realMonthly")),
             "nominal": _eur(v.get("monthly")),
             "capital": _eur(v.get("capital")),
             "rate": rate,
+            # Property is opt-in: only surfaced when a value was entered.
+            "property": _eur(prop) if prop > 0 else None,
             "active": key == active,
         })
     return out

@@ -59,6 +59,12 @@
           <div class="mk">{{ t("Capital at retirement") }}</div>
           <div class="mv mono">{{ s.capital }}</div>
         </div>
+        {% if s.property %}
+        <div class="scn-m">
+          <div class="mk">{{ t("Property at retirement") }}</div>
+          <div class="mv mono">{{ s.property }}</div>
+        </div>
+        {% endif %}
         <div class="scn-m">
           <div class="mk">{{ t("Replacement rate") }}</div>
           <div class="mv mono">{{ s.rate }}%</div>

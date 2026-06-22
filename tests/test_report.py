@@ -81,6 +81,34 @@ def test_build_pdf_empty_payload_is_safe():
     assert pdf[:5] == b"%PDF-"
 
 
+# ── property (opt-in) inclusion in scenario cards ──────────────
+
+def test_scenarios_include_property_when_entered():
+    import report_pdf
+    data = dict(SAMPLE, activeScenario="moderate", scenarios={
+        "negative": {"realMonthly": 600, "capital": 250000,
+                     "propEquity": 90000},
+        "moderate": {"realMonthly": 900, "capital": 400000,
+                     "propEquity": 230000},
+        "positive": {"realMonthly": 1200, "capital": 560000,
+                     "propEquity": 310000},
+    })
+    cards = report_pdf._scenarios(make_t("en"), data)
+    assert [c["property"] for c in cards] == \
+        ["€ 90 000", "€ 230 000", "€ 310 000"]
+
+
+def test_scenarios_omit_property_when_absent():
+    import report_pdf
+    data = dict(SAMPLE, activeScenario="moderate", scenarios={
+        "negative": {"realMonthly": 600, "capital": 250000},
+        "moderate": {"realMonthly": 900, "capital": 400000},
+        "positive": {"realMonthly": 1200, "capital": 560000},
+    })
+    cards = report_pdf._scenarios(make_t("en"), data)
+    assert all(c["property"] is None for c in cards)
+
+
 # ── route + counter ────────────────────────────────────────────
 
 def test_lv_yaml_parses():

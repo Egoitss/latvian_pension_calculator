@@ -7,6 +7,10 @@ function g(id) { return document.getElementById(id); }
 // Latest result from each pillar widget, fed by pillarResult events.
 const pillarCache = { p1: null, p2: null, p3: null };
 
+// Latest property forecast, fed by propertyResult events. Property is a
+// lump-sum asset (no monthly income) — it only enters the capital total.
+const propCache = { retEquity: 0, retEquityReal: 0 };
+
 // Read a number from an input; null if empty/invalid.
 function readNum(id) {
   const el = g(id);
@@ -49,6 +53,10 @@ function buildPayload() {
       p2: { monthly: n(p2.monthlyAfterTax), capital: n(p2.finalBalance) },
       p3: { monthly: n(p3.monthlyPayout), capital: n(p3.netPayout) },
     },
+    property: {
+      retEquity: n(propCache.retEquity),
+      retEquityReal: n(propCache.retEquityReal),
+    },
     totals: {
       monthly: n(p1.monthly) + n(p2.monthlyAfterTax) + n(p3.monthlyPayout),
       realMonthly:
@@ -74,6 +82,8 @@ function captureTotals() {
       n(p1.realMonthly) + n(p2.realMonthlyAfterTax)
       + n(p3.realMonthlyPayout),
     capital: n(p1.finalCapital) + n(p2.finalBalance) + n(p3.netPayout),
+    propEquity: n(propCache.retEquity),
+    propEquityReal: n(propCache.retEquityReal),
   };
 }
 
@@ -143,6 +153,10 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("pillarResult", (evt) => {
     const { pillar, rows, ...data } = evt.detail;
     pillarCache[`p${pillar}`] = data;
+  });
+  document.addEventListener("propertyResult", ({ detail }) => {
+    propCache.retEquity = detail.retEquity || 0;
+    propCache.retEquityReal = detail.retEquityReal || 0;
   });
   const btn = g("downloadDocxBtn");
   if (btn) btn.addEventListener("click", () => downloadDocx(btn));
