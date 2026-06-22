@@ -27,8 +27,15 @@ from i18n import (
 from report_pdf import build_report_pdf
 import ai_review
 import download_counter
+import rate_limit
 
 app = Flask(__name__)
+
+# Max PDF exports per IP per hour (each may trigger one AI call).
+try:
+    EXPORT_LIMIT = int(os.environ.get("EXPORT_RATE_LIMIT", "20"))
+except ValueError:
+    EXPORT_LIMIT = 20
 
 
 def _alt_path(path: str, lang: str) -> str:
@@ -304,11 +311,21 @@ def api_recommend():
     })
 
 
+def _client_ip() -> str:
+    # First hop in X-Forwarded-For (set by a proxy) else the peer addr.
+    fwd = request.headers.get("X-Forwarded-For", "")
+    return (fwd.split(",")[0].strip() if fwd
+            else (request.remote_addr or "unknown"))
+
+
 @app.route("/export/pdf", methods=["POST"])
 @app.route("/lv/export/pdf", methods=["POST"])
 def export_pdf():
     # Build the PDF retirement report from the posted calculator
     # state, localized to the request path's language, and count it.
+    # Per-IP throttle in front of the AI call (see rate_limit).
+    if not rate_limit.allow(f"pdf:{_client_ip()}", EXPORT_LIMIT, 3600):
+        return make_response(("Too many requests, try later.", 429))
     lang = lang_from_path(request.path)
     payload = request.get_json(silent=True) or {}
     date_str = _date.today().isoformat()

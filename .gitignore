@@ -5,6 +5,10 @@ local_config.py
 download_count.json
 download_count.lock
 
+# Runtime AI daily-budget counter (persisted state, not source)
+ai_budget.json
+ai_budget.lock
+
 # Claude Code project instructions — personal dev tool
 CLAUDE.md
 .env

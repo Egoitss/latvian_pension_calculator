@@ -4,6 +4,7 @@
 import os
 import re
 
+import ai_budget
 import insights
 
 _API_BASE = "https://api.deepseek.com"
@@ -157,6 +158,10 @@ def generate_review(data, lang="en"):
     try:
         from openai import OpenAI
     except ImportError:
+        return None
+    # Hard daily spend cap: once exhausted, skip the API and let the
+    # PDF fall back to the deterministic verdict.
+    if not ai_budget.try_consume():
         return None
 
     facts = _facts(data)
