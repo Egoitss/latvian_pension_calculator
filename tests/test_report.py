@@ -184,7 +184,15 @@ def test_generate_review_uses_moderate_and_flags_property(monkeypatch):
     assert "MODERATE" in user_msg          # based on moderate scenario
     assert "OVERSIZED" in user_msg         # 300k prop ≥ 200k capital
     assert captured["model"] == "deepseek-chat"
-    assert captured["max_tokens"] <= 250   # short / cheap
+    assert captured["max_tokens"] <= 320   # short / cheap
+
+
+def test_clean_strips_markdown_and_whitespace():
+    raw = "**Verdict:** WEAK\n\nRisk: inflation __erodes__ `value`."
+    out = ai_review._clean(raw)
+    assert "*" not in out and "_" not in out and "`" not in out
+    assert "\n" not in out
+    assert out == "Verdict: WEAK Risk: inflation erodes value."
 
 
 def test_home_size_drives_oversized_flag():

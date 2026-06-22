@@ -108,7 +108,7 @@ body {
   color: #14110E; border-bottom: 1px solid #14110E;
   padding-bottom: 4px; margin: 0 0 7px;
 }
-.block { margin-bottom: 8px; }
+.block { margin-bottom: 7px; }
 
 /* ── Meta line ──────────────────────────────────────────────── */
 .meta {
@@ -198,11 +198,11 @@ body {
 
 /* ── AI Review box (DeepSeek) ───────────────────────────────── */
 .ai-review {
-  border: 1px solid #14110E; background: #FBFAF7; padding: 8px 13px;
+  border: 1px solid #14110E; background: #FBFAF7; padding: 6px 12px;
 }
 .ai-head {
   display: flex; align-items: center; gap: 8px;
-  border-bottom: 1px solid #ECEAE4; padding-bottom: 4px;
+  border-bottom: 1px solid #ECEAE4; padding-bottom: 3px;
 }
 .ai-eyebrow {
   font-family: "Plex Mono", monospace; font-size: 8.5pt;
@@ -213,5 +213,5 @@ body {
   background: #8B0000; padding: 2px 7px; border-radius: 2px;
 }
 .ai-text {
-  font-size: 9.5pt; color: #3A352E; margin-top: 6px;
+  font-size: 9pt; line-height: 1.4; color: #3A352E; margin-top: 5px;
 }
