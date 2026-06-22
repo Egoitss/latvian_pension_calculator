@@ -14,6 +14,11 @@ _TIMEOUT_S = 8.0
 
 _LANG_NAME = {"lv": "Latvian", "en": "English"}
 
+# Comfortable living space and the assumed retiring household size.
+# Used to judge whether a home is larger than a couple needs.
+_M2_PER_PERSON = 30
+_COUPLE = 2
+
 _SYSTEM = (
     "You are a concise retirement assistant for a Latvian pension "
     "simulator. Reply in {lang}, 2-3 short sentences, plain and "
@@ -22,7 +27,9 @@ _SYSTEM = (
     "- Open with a one-line verdict on the replacement rate.\n"
     "- Name the single strongest lever to improve it.\n"
     "- If the property is flagged oversized, say downsizing the home "
-    "could release capital to top up income.\n"
+    "could release capital to top up income. When a home size is "
+    "given, reference how many people it optimally suits versus a "
+    "retiring couple of two.\n"
     "- If, and only if, the outlook is WEAK, state plainly that this "
     "pension may not cover Latvian living costs and that selling "
     "assets (including the property) and relocating to a lower-cost "
@@ -54,13 +61,19 @@ def _facts(data):
     capital = _num(mod.get("capital"))
     prop = _num(mod.get("propEquity"))
     prop_real = _num(mod.get("propEquityReal"))
-    # "Oversized" = property is a large share of total net worth and a
-    # meaningful absolute value (a home larger than two people need).
-    heavy = prop > 0 and prop >= capital and prop_real >= 150000
+    size = _num((data.get("inputs") or {}).get("homeSize"))
+    optimal = round(size / _M2_PER_PERSON) if size > 0 else 0
+    # Prefer the measured size: a home that comfortably fits more than
+    # a couple is oversized. Without a size, fall back to value share.
+    if size > 0:
+        heavy = optimal > _COUPLE
+    else:
+        heavy = prop > 0 and prop >= capital and prop_real >= 150000
     return {
         "real": round(real), "rate": rate, "band": band,
         "capital": round(capital), "prop": round(prop),
         "prop_real": round(prop_real), "heavy": heavy,
+        "size": round(size), "optimal": optimal,
     }
 
 
@@ -79,6 +92,10 @@ def _user_prompt(f):
             f"(today's money EUR {f['prop_real']}) — {flag}")
     else:
         lines.append("- Property: none entered")
+    if f["size"] > 0:
+        lines.append(
+            f"- Home size: {f['size']} m2 — comfortably fits about "
+            f"{f['optimal']} people (a retiring couple = {_COUPLE})")
     return "\n".join(lines)
 
 

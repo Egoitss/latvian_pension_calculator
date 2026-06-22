@@ -46,12 +46,12 @@ _VERDICT = {
 
 
 def _eur(value):
-    # "€ 1 311" — space thousands, matching the lv-LV UI formatting.
+    # "€ 2802" — no thousands separator (lv convention: written solid).
     try:
         n = round(float(value))
     except (TypeError, ValueError):
         n = 0
-    return "€ " + f"{n:,.0f}".replace(",", " ")
+    return "€ " + f"{n:.0f}"
 
 
 def _num(value, default=0.0):

@@ -97,7 +97,7 @@ def test_scenarios_include_property_when_entered():
     })
     cards = report_pdf._scenarios(make_t("en"), data)
     assert [c["property"] for c in cards] == \
-        ["€ 90 000", "€ 230 000", "€ 310 000"]
+        ["€ 90000", "€ 230000", "€ 310000"]
 
 
 def test_scenarios_omit_property_when_absent():
@@ -185,6 +185,29 @@ def test_generate_review_uses_moderate_and_flags_property(monkeypatch):
     assert "OVERSIZED" in user_msg         # 300k prop ≥ 200k capital
     assert captured["model"] == "deepseek-chat"
     assert captured["max_tokens"] <= 250   # short / cheap
+
+
+def test_home_size_drives_oversized_flag():
+    # 120 m² → fits ~4 people → oversized for a couple.
+    big = dict(AI_DATA, inputs=dict(AI_DATA["inputs"], homeSize=120))
+    f = ai_review._facts(big)
+    assert f["optimal"] == 4 and f["heavy"] is True
+    # 60 m² → fits ~2 → right-sized for a couple.
+    small = dict(AI_DATA, inputs=dict(AI_DATA["inputs"], homeSize=60))
+    f2 = ai_review._facts(small)
+    assert f2["optimal"] == 2 and f2["heavy"] is False
+
+
+def test_home_size_appears_in_prompt(monkeypatch):
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "sk-test")
+    captured = {}
+    import openai
+    monkeypatch.setattr(
+        openai, "OpenAI", _fake_openai("ok", captured))
+    data = dict(AI_DATA, inputs=dict(AI_DATA["inputs"], homeSize=120))
+    ai_review.generate_review(data, "en")
+    user_msg = captured["messages"][-1]["content"]
+    assert "120 m2" in user_msg and "about 4 people" in user_msg
 
 
 def test_generate_review_swallows_api_errors(monkeypatch):

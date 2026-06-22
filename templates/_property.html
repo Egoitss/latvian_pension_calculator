@@ -53,16 +53,25 @@
       {{ t("~6.2% per year nominal (Riga, 2010–2024 · Arco Real Estate / Latio)") }}
     </div>
 
-    <!-- Price input -->
-    <div class="mt-2">
-      <div class="mb-1 text-[10px] font-medium text-slate-400">{{ t("Current property value (€)") }}</div>
-      <input id="propPrice" type="number" step="1000" min="0" placeholder="150 000"
-             {% if defaults.get('prop_price') %}
-             value="{{ defaults.get('prop_price') }}"
-             {% endif %}
-             class="w-full rounded-2xl border border-slate-200 bg-white px-3 py-1.5
-                    text-sm outline-none transition focus:border-slate-500
-                    focus:ring-2 focus:ring-slate-200" />
+    <!-- Price + size inputs -->
+    <div class="mt-2 flex gap-2">
+      <div class="flex-1">
+        <div class="mb-1 text-[10px] font-medium text-slate-400">{{ t("Current property value (€)") }}</div>
+        <input id="propPrice" type="number" step="1000" min="0" placeholder="150000"
+               {% if defaults.get('prop_price') %}
+               value="{{ defaults.get('prop_price') }}"
+               {% endif %}
+               class="w-full rounded-2xl border border-slate-200 bg-white px-3 py-1.5
+                      text-sm outline-none transition focus:border-slate-500
+                      focus:ring-2 focus:ring-slate-200" />
+      </div>
+      <div class="w-24">
+        <div class="mb-1 text-[10px] font-medium text-slate-400">{{ t("Size (m²)") }}</div>
+        <input id="propSize" type="number" step="1" min="0" placeholder="70"
+               class="w-full rounded-2xl border border-slate-200 bg-white px-3 py-1.5
+                      text-sm outline-none transition focus:border-slate-500
+                      focus:ring-2 focus:ring-slate-200" />
+      </div>
     </div>
 
     <!-- Projection results (hidden until price entered) -->

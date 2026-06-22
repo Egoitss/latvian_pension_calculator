@@ -47,6 +47,7 @@ function buildPayload() {
       retirementAge: readNum("retirementAge"),
       grossMonthly: readNum("grossMonthly"),
       scenario: readScenario(),
+      homeSize: readNum("propSize"),
     },
     pillars: {
       p1: { monthly: n(p1.monthly), capital: n(p1.finalCapital) },
