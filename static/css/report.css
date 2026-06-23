@@ -214,4 +214,5 @@ body {
 }
 .ai-text {
   font-size: 9pt; line-height: 1.4; color: #3A352E; margin-top: 5px;
+  text-align: justify; text-indent: 2em;
 }

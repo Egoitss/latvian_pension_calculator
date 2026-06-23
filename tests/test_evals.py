@@ -48,6 +48,16 @@ def test_downsize_required_when_oversized():
     assert s == graders.FAIL
 
 
+def test_no_downsize_when_rightsized():
+    # Home suits a couple (size given, not oversized) → no downsizing.
+    bad, _ = graders.grade_no_downsize_rightsized(
+        "Consider downsizing your home.", _f(size=60, heavy=False), "en")
+    assert bad == graders.FAIL
+    ok, _ = graders.grade_no_downsize_rightsized(
+        "Raise 3rd-pillar contributions.", _f(size=60, heavy=False), "en")
+    assert ok == graders.PASS
+
+
 # ── format + language ──────────────────────────────────────────
 
 def test_markdown_detected():

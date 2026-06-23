@@ -18,6 +18,7 @@ CRITERIA = [
     ("3rd-pillar rec", graders.grade_pillar3, 95),
     ("downsize oversized", graders.grade_downsize, 90),
     ("no phantom property", graders.grade_no_phantom, 100),
+    ("no downsize right-sized", graders.grade_no_downsize_rightsized, 100),
     ("size/occupancy", graders.grade_size, 90),
     ("inflation note", graders.grade_inflation, 85),
     ("weak living-cost", graders.grade_living, 90),
