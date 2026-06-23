@@ -1,28 +1,32 @@
 <!DOCTYPE html>
 <!-- Base template: HTML shell, CDN links, layout blocks -->
-<html lang="lv">
+<html lang="{{ lang }}">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pensijas kalkulators</title>
+  <title>Pension Scenario Simulator — OATS</title>
+  <link rel="icon" type="image/svg+xml"
+        href="{{ url_for('static', filename='favicon.svg') }}?v=2" />
 
-  <!-- Inter typeface -->
+  <!-- OATS typeface stack: Space Grotesk + IBM Plex Sans + IBM Plex Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
         rel="stylesheet" />
 
   <!-- Tailwind CSS utility framework (CDN, no build step) -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ["Inter", "system-ui", "sans-serif"] },
+          fontFamily: {
+            sans: ["IBM Plex Sans", "system-ui", "sans-serif"],
+          },
         },
       },
     };
   </script>
-  <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Chart.js for the accumulation line chart -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
@@ -30,12 +34,49 @@
   <!-- Annotation plugin for plan-switch vertical reference lines -->
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
 
-  <!-- Custom styles (minimal overrides on top of Tailwind) -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <!-- Base custom styles -->
+  <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}" />
+  <!-- OATS theme — loaded after Tailwind to override design tokens -->
+  <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/oats-theme.css') }}" />
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900 font-sans antialiased">
 
+  <!-- OATS brand nav — update href attrs for production deployment -->
+  <nav class="oats-nav">
+    <a class="oats-logo" href="http://localhost:8000/home.html">
+      <svg class="oats-logo-mark" viewBox="0 0 100 100"
+           role="img" aria-label="OATS">
+        <path fill="currentColor" fill-rule="evenodd"
+              d="M0 0H100V100H0Z
+                 M76 50A26 26 0 1 1 24 50A26 26 0 1 1 76 50Z
+                 M62 50A12 12 0 1 1 38 50A12 12 0 1 1 62 50Z"/>
+      </svg>
+      OATS SIA
+    </a>
+    <span class="oats-crumb">[ {{ t("Pension Scenario Simulator") }} ]</span>
+    {# Language switch (EN/LV) — links to the same page in the other
+       language. Active language is a static span. #}
+    {% include "_lang.html" %}
+    {# Return to wherever the visitor came from (file://, localhost,
+       or live domain). Falls back to the hardcoded URL only when
+       opened with no history (direct load / fresh tab). #}
+    <a class="oats-back" href="http://localhost:8000/home.html"
+       onclick="if (history.length > 1) {
+                  history.back(); return false; }">
+      ← {{ t("Portfolio") }}
+    </a>
+  </nav>
+
   {% block content %}{% endblock %}
+
+  <!-- i18n bridge to JS: current language + LV override map -->
+  <script>
+    window.LANG = "{{ lang }}";
+    window.I18N = {{ js_i18n | tojson }};
+  </script>
+  <script src="{{ url_for('static', filename='js/i18n.js', v=js_v) }}"></script>
 
   <!-- JS modules loaded after DOM is ready -->
   {% block scripts %}{% endblock %}

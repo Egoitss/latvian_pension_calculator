@@ -11,17 +11,16 @@
             class="w-full rounded-2xl border px-2 py-2 text-sm font-semibold
                    transition border-emerald-300 bg-white text-emerald-700
                    hover:bg-emerald-50">
-      <div class="text-xs font-bold">Pozitīvais</div>
+      <div class="text-xs font-bold">{{ t("Positive") }}</div>
       <div id="rateLabelPositive" class="text-[11px] mt-0.5 opacity-90">—%</div>
-      <div class="text-[9px] mt-0.5 opacity-70">optimistisks</div>
+      <div class="text-[9px] mt-0.5 opacity-70">{{ t("optimistic") }}</div>
     </button>
     <div class="pointer-events-none absolute bottom-full left-0 mb-2 w-52
                 rounded-2xl bg-slate-900 px-3 py-2.5 text-[11px] leading-relaxed
                 text-white shadow-lg z-20
                 invisible opacity-0 group-hover:visible group-hover:opacity-100
                 transition-opacity duration-150">
-      Tirgus aug ātri — labvēlīgas desmitgades. Tikai 1 no 10 simulācijām
-      tirgus aug tikpat labi vai labāk.
+      {{ t("Markets grow fast — favourable decades. Only 1 in 10 simulations sees markets performing this well or better.") }}
       <div class="absolute top-full left-4 border-4 border-transparent
                   border-t-slate-900"></div>
     </div>
@@ -32,17 +31,16 @@
     <button id="btnModerate" type="button"
             class="w-full rounded-2xl border px-2 py-2 text-sm font-semibold
                    transition border-slate-900 bg-slate-900 text-white">
-      <div class="text-xs font-bold">Mērenais</div>
+      <div class="text-xs font-bold">{{ t("Moderate") }}</div>
       <div id="rateLabelModerate" class="text-[11px] mt-0.5 opacity-90">—%</div>
-      <div class="text-[9px] mt-0.5 opacity-70">reālistisks</div>
+      <div class="text-[9px] mt-0.5 opacity-70">{{ t("realistic") }}</div>
     </button>
     <div class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2
                 mb-2 w-52 rounded-2xl bg-slate-900 px-3 py-2.5 text-[11px]
                 leading-relaxed text-white shadow-lg z-20
                 invisible opacity-0 group-hover:visible group-hover:opacity-100
                 transition-opacity duration-150">
-      Visbūtiskākā prognoze — plāno ar šo. Puse simulēto nākotnes scenāriju
-      beidzas labāk, puse sliktāk.
+      {{ t("The most likely outcome — plan around this. Half of simulated futures end better, half worse.") }}
       <div class="absolute top-full left-1/2 -translate-x-1/2 border-4
                   border-transparent border-t-slate-900"></div>
     </div>
@@ -54,17 +52,16 @@
             class="w-full rounded-2xl border px-2 py-2 text-sm font-semibold
                    transition border-red-300 bg-white text-red-600
                    hover:bg-red-50">
-      <div class="text-xs font-bold">Negatīvais</div>
+      <div class="text-xs font-bold">{{ t("Negative") }}</div>
       <div id="rateLabelNegative" class="text-[11px] mt-0.5 opacity-90">—%</div>
-      <div class="text-[9px] mt-0.5 opacity-70">piesardzīgs</div>
+      <div class="text-[9px] mt-0.5 opacity-70">{{ t("conservative") }}</div>
     </button>
     <div class="pointer-events-none absolute bottom-full right-0 mb-2 w-52
                 rounded-2xl bg-slate-900 px-3 py-2.5 text-[11px] leading-relaxed
                 text-white shadow-lg z-20
                 invisible opacity-0 group-hover:visible group-hover:opacity-100
                 transition-opacity duration-150">
-      Tirgus stagnē vai bijusi krīze. 9 no 10 scenārijiem beidzas labāk.
-      Pamēģini: vai finansiāli spēsi izdzīvot.
+      {{ t("Markets stagnate or a crisis has hit. 9 out of 10 scenarios end better. Test: can you survive financially?") }}
       <div class="absolute top-full right-4 border-4 border-transparent
                   border-t-slate-900"></div>
     </div>
@@ -80,28 +77,28 @@
   <div class="px-5 pt-5 pb-4">
     <div class="flex items-start justify-between mb-1">
       <div class="text-xs font-medium text-slate-400 uppercase tracking-wide">
-        Kopējā pensija · 1. + 2. + 3. līmenis
+        {{ t("Your retirement income") }}
       </div>
       <span id="activeScenarioLabel"
             class="text-xs font-medium text-slate-500">
-        Mērenais scenārijs
+        {{ t("Moderate scenario") }}
       </span>
     </div>
 
-    <!-- Primary number: nominal monthly -->
-    <div id="combinedMonthly"
-         class="text-5xl font-bold tracking-tight text-slate-900 mt-1">
+    <!-- Primary number: real monthly (today's money) -->
+    <div id="combinedRealMonthly"
+         class="text-5xl font-bold tracking-tight text-emerald-700 mt-1">
       —
     </div>
-    <div class="text-xs text-slate-500 mt-0.5">nominālā mēneša izmaksa</div>
+    <div class="text-xs text-slate-500 mt-0.5">{{ t("per month, in today's money") }}</div>
 
-    <!-- Secondary number: real monthly -->
+    <!-- Secondary number: nominal monthly (future euros) -->
     <div class="mt-3 flex items-baseline gap-2">
-      <div id="combinedRealMonthly"
-           class="text-2xl font-semibold text-emerald-600">
+      <div id="combinedMonthly"
+           class="text-2xl font-semibold text-slate-500">
         —
       </div>
-      <div class="text-xs text-slate-400">šodienas naudā (pēc inflācijas)</div>
+      <div class="text-xs text-slate-400">{{ t("nominal — future euros, before inflation") }}</div>
     </div>
   </div>
 
@@ -112,16 +109,16 @@
   <div class="px-5 py-3 grid grid-cols-3 gap-3">
     <div>
       <div id="combinedCapitalLabel"
-           class="text-[10px] text-slate-400 mb-0.5">Kopējais kapitāls</div>
+           class="text-[10px] text-slate-400 mb-0.5">{{ t("Total capital") }}</div>
       <div id="combinedTotal" class="text-sm font-bold text-slate-900">—</div>
       <div id="combinedRealTotal" class="text-[10px] text-slate-400 mt-0.5">—</div>
     </div>
     <div>
-      <div class="text-[10px] text-slate-400 mb-0.5">2. līm. peļņa</div>
+      <div class="text-[10px] text-slate-400 mb-0.5">{{ t("Investment earnings") }}</div>
       <div id="combinedP2Earnings" class="text-sm font-bold text-slate-900">—</div>
     </div>
     <div>
-      <div class="text-[10px] text-slate-400 mb-0.5">3. līm. peļņa (pēc IIN)</div>
+      <div class="text-[10px] text-slate-400 mb-0.5">{{ t("Voluntary gains") }}</div>
       <div id="combinedP3NetGains" class="text-sm font-bold text-slate-900">—</div>
     </div>
   </div>
@@ -129,24 +126,24 @@
   <!-- Per-pillar breakdown strip -->
   <div class="bg-slate-50 px-5 py-2.5 flex gap-1.5">
     <div class="flex-1 text-center">
-      <div class="text-[9px] text-slate-400 uppercase tracking-wide">1. līm.</div>
+      <div class="text-[9px] text-slate-400 uppercase tracking-wide">{{ t("State") }}</div>
       <div id="breakdownP1" class="text-xs font-semibold text-slate-700">—</div>
     </div>
     <div class="w-px bg-slate-200"></div>
     <div class="flex-1 text-center">
-      <div class="text-[9px] text-slate-400 uppercase tracking-wide">2. līm.</div>
+      <div class="text-[9px] text-slate-400 uppercase tracking-wide">{{ t("Funded") }}</div>
       <div id="breakdownP2" class="text-xs font-semibold text-slate-700">—</div>
     </div>
     <div class="w-px bg-slate-200"></div>
     <div class="flex-1 text-center">
-      <div class="text-[9px] text-slate-400 uppercase tracking-wide">3. līm.</div>
+      <div class="text-[9px] text-slate-400 uppercase tracking-wide">{{ t("Voluntary") }}</div>
       <div id="breakdownP3" class="text-xs font-semibold text-slate-700">—</div>
     </div>
     <!-- Property column: hidden until price is entered -->
     <div id="breakdownPropWrapper" class="hidden contents">
       <div class="w-px bg-slate-200"></div>
       <div class="flex-1 text-center">
-        <div class="text-[9px] text-slate-400 uppercase tracking-wide">NĪ</div>
+        <div class="text-[9px] text-slate-400 uppercase tracking-wide">{{ t("Property") }}</div>
         <div id="breakdownProp"
              class="text-xs font-semibold text-slate-700">—</div>
       </div>
@@ -155,9 +152,28 @@
 
   <!-- Footer note -->
   <div class="px-5 py-2 text-[10px] text-slate-400">
-    <span id="bootstrapNote">Monte Carlo aprēķins notiek…</span>
-    · 2.+3. līm. izmaksa pa
+    <span id="bootstrapNote">{{ t("Running scenario analysis…") }}</span>
+    {{ t("· payout spread over") }}
     <span id="chartPeriod"></span>
+  </div>
+
+  <!-- Download the retirement report as a PDF -->
+  <div class="px-5 pb-4 pt-1">
+    <button id="downloadDocxBtn" type="button"
+            class="flex w-full items-center justify-center gap-2 rounded-2xl
+                   bg-emerald-600 px-4 py-3 text-sm font-semibold text-white
+                   shadow-md shadow-emerald-600/30 ring-1 ring-emerald-700/10
+                   transition hover:bg-emerald-700 hover:shadow-lg
+                   focus:outline-none focus:ring-2 focus:ring-emerald-300">
+      <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round"
+           stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
+      </svg>
+      <span id="downloadDocxLabel">{{ t("Download report (.pdf)") }}</span>
+    </button>
   </div>
 
 </div>

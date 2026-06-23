@@ -1,0 +1,29 @@
+{# _lang.html — EN/LV switcher, mirrors the HOME_PAGE design.
+   Active language is a static span; the other links to alt_path. #}
+{% macro gb_flag() %}
+<svg viewBox="0 0 60 42" width="20" height="14"
+     aria-hidden="true" class="oats-flag">
+  <rect width="60" height="42" fill="#012169"/>
+  <path d="M0 0l60 42M60 0L0 42" stroke="#fff" stroke-width="8"/>
+  <path d="M0 0l60 42M60 0L0 42" stroke="#C8102E" stroke-width="4"/>
+  <path d="M30 0v42M0 21h60" stroke="#fff" stroke-width="12"/>
+  <path d="M30 0v42M0 21h60" stroke="#C8102E" stroke-width="7"/>
+</svg>
+{% endmacro %}
+{% macro lv_flag() %}
+<svg viewBox="0 0 60 42" width="20" height="14"
+     aria-hidden="true" class="oats-flag">
+  <rect width="60" height="42" fill="#9E3039"/>
+  <rect y="17" width="60" height="8" fill="#fff"/>
+</svg>
+{% endmacro %}
+
+<div class="oats-lang">
+  {% if lang == "lv" %}
+  <a hreflang="en" href="{{ alt_path }}">{{ gb_flag() }}<span>EN</span></a>
+  <span class="is-active">{{ lv_flag() }}<span>LV</span></span>
+  {% else %}
+  <span class="is-active">{{ gb_flag() }}<span>EN</span></span>
+  <a hreflang="lv" href="{{ alt_path }}">{{ lv_flag() }}<span>LV</span></a>
+  {% endif %}
+</div>

@@ -78,7 +78,7 @@ export function drawChart(chart, rows, planSchedule) {
 
   chart.data.datasets = [
     {
-      label: "1. līmenis",
+      label: t("1st pillar"),
       data: rows.map((r) => r.cum1),
       fill: "origin",
       backgroundColor: "rgba(99,102,241,0.35)",
@@ -88,7 +88,7 @@ export function drawChart(chart, rows, planSchedule) {
       pointRadius: 0,
     },
     {
-      label: "2. līmenis",
+      label: t("2nd pillar"),
       data: rows.map((r) => r.cum2),
       fill: "-1",
       backgroundColor: "rgba(148,163,184,0.45)",
@@ -98,7 +98,7 @@ export function drawChart(chart, rows, planSchedule) {
       pointRadius: 0,
     },
     {
-      label: "3. līmenis",
+      label: t("3rd pillar"),
       data: rows.map((r) => r.cum3),
       fill: "-1",
       backgroundColor: "rgba(167,139,250,0.35)",
@@ -108,7 +108,7 @@ export function drawChart(chart, rows, planSchedule) {
       pointRadius: 0,
     },
     {
-      label: "Nekustamais īpašums",
+      label: t("Property"),
       data: rows.map((r) => r.cum4),
       fill: "-1",
       backgroundColor: "rgba(251,191,36,0.35)",
@@ -118,7 +118,7 @@ export function drawChart(chart, rows, planSchedule) {
       pointRadius: 0,
     },
     {
-      label: "Šodienas naudā",
+      label: t("In today's money"),
       data: rows.map((r) => r.realTotal),
       fill: false,
       borderColor: "rgba(100,116,139,0.5)",
@@ -141,7 +141,7 @@ export function drawChart(chart, rows, planSchedule) {
       borderDash: [6, 3],
       label: {
         display: true,
-        content: "Pensija",
+        content: t("Retirement"),
         position: "end",
         color: "#64748b",
         backgroundColor: "rgba(241,245,249,0.9)",
@@ -157,7 +157,7 @@ export function drawChart(chart, rows, planSchedule) {
       borderColor: "#64748b", borderWidth: 1, borderDash: [4, 4],
       label: {
         display: true,
-        content: `Maiņa: ${entry.startsAtAge}`,
+        content: `${t("Switch:")} ${entry.startsAtAge}`,
         position: "start",
         color: "#64748b",
         font: { size: 11 },

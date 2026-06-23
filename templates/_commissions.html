@@ -1,7 +1,7 @@
 <!-- Lifetime commission estimate card -->
 <div class="rounded-3xl border border-slate-200 bg-white shadow-sm">
   <div class="p-5">
-    <h3 class="text-lg font-semibold">Aptuvenās komisijas</h3>
+    <h3 class="text-lg font-semibold">{{ t("Estimated fees") }}</h3>
 
     <!-- Commission total — populated by JS (depends on plan fee data) -->
     <div id="commissionTotal" class="mt-3 text-3xl font-semibold tracking-tight text-slate-900">
@@ -10,16 +10,12 @@
 
     <!-- Explanation of what the estimate covers -->
     <p class="mt-3 text-sm leading-6 text-slate-600">
-      Aptuvens maksimālais komisiju apjoms līdz pensijas vecumam plāniem,
-      kuriem kalkulatorā ir pievienota publiski pieejamā kopējā komisijas
-      likme. Ja ieslēgta plānu maiņa, komisiju aprēķins pagaidām izmanto
-      sākuma plāna komisijas likmi kā vienkāršotu pieņēmumu.
+      {{ t("Approximate maximum total fees to retirement age for plans where the publicly available total fee rate is included in the calculator. When plan switching is enabled, the fee calculation currently uses the starting plan's fee rate as a simplified assumption.") }}
     </p>
 
     <!-- Disclaimer: fees are already baked into historical returns -->
     <p class="mt-3 text-xs leading-5 text-slate-500">
-      Šī summa netiek papildus atņemta no kalkulatora gala rezultāta, jo
-      vēsturiskais ienesīgums jau ir norādīts pēc komisijām.
+      {{ t("This amount is not additionally deducted from the calculator's final result, because the historical return is already reported net of fees.") }}
     </p>
   </div>
 </div>

@@ -1,6 +1,14 @@
 # Personal config — NEVER commit
 local_config.py
 
+# Runtime download counter (persisted state, not source)
+download_count.json
+download_count.lock
+
+# Runtime AI daily-budget counter (persisted state, not source)
+ai_budget.json
+ai_budget.lock
+
 # Claude Code project instructions — personal dev tool
 CLAUDE.md
 .env

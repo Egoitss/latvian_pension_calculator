@@ -11,6 +11,10 @@ LATVIJA_LV_P2L_URL = "https://latvija.gov.lv/Services/45686"
 MANAPENSIJA_STATS_URL = (
     "https://www.manapensija.lv/en/2nd-pension-pillar/statistics/"
 )
+# VISS e-service to check 1st-pillar (State pension) NDC capital
+STATE_PENSION_URL = (
+    "https://eservices.viss.gov.lv/eserviceplatform.ep222/eservice/"
+)
 
 # Pension plan dataset — sourced from public manapensija.lv statistics.
 # Keys: category, name, return_3y, return_5y, fee_total (real plans);
@@ -20,7 +24,7 @@ PLANS = [
     # Custom manual entry — user sets return via slider
     {
         "category": "Custom",
-        "name": "Manuāls pieņēmums",
+        "name": "Manual assumption",
         "return_3y": DEFAULT_RETURN,
         "return_5y": DEFAULT_RETURN,
         "manual": True,
@@ -28,138 +32,138 @@ PLANS = [
 
     # Market benchmark assumptions — long-run historical averages
     {
-        "category": "Globālie tirgus indeksi",
-        "name": "S&P 500 ilgtermiņa vidējais",
+        "category": "Global market indices",
+        "name": "S&P 500 long-term average",
         "assumption_return": 10.0,
         "benchmark": True,
     },
     {
-        "category": "Globālie tirgus indeksi",
-        "name": "MSCI World ilgtermiņa vidējais",
+        "category": "Global market indices",
+        "name": "MSCI World long-term average",
         "assumption_return": 8.6,
         "benchmark": True,
     },
     {
-        "category": "Globālie tirgus indeksi",
-        "name": "NASDAQ-100 ilgtermiņa vidējais",
+        "category": "Global market indices",
+        "name": "NASDAQ-100 long-term average",
         "assumption_return": 13.5,
         "benchmark": True,
     },
     {
-        "category": "Globālie tirgus indeksi",
-        "name": "Stoxx Europe 600 ilgtermiņa vidējais",
+        "category": "Global market indices",
+        "name": "Stoxx Europe 600 long-term average",
         "assumption_return": 7.2,
         "benchmark": True,
     },
 
     # Passive / index-tracking plans
     {
-        "category": "Pasīvie / indeksu plāni",
+        "category": "Passive / index plans",
         "name": "SEB indeksu plāns 15-54",
         "return_3y": 14.63, "return_5y": 11.49, "fee_total": 0.30,
     },
     {
-        "category": "Pasīvie / indeksu plāni",
+        "category": "Passive / index plans",
         "name": "INDEXO plāns Jauda 16-55",
         "return_3y": 13.71, "return_5y": 11.15, "fee_total": 0.39,
     },
     {
-        "category": "Pasīvie / indeksu plāni",
+        "category": "Passive / index plans",
         "name": "INDEXO Izaugsme 16-55",
         "return_3y": 12.42, "return_5y": 9.82, "fee_total": 0.46,
     },
 
     # Actively managed aggressive plans
     {
-        "category": "Aktīvie plāni",
+        "category": "Active plans",
         "name": "SEB izaugsmes plāns 15-54",
         "return_3y": 12.99, "return_5y": 10.05, "fee_total": 0.38,
     },
     {
-        "category": "Aktīvie plāni",
+        "category": "Active plans",
         "name": "INVL MAKSIMĀLAIS 16+",
         "return_3y": 12.08, "return_5y": 9.34, "fee_total": 0.74,
     },
     {
-        "category": "Aktīvie plāni",
+        "category": "Active plans",
         "name": "CBL Aktīvais plāns",
         "return_3y": 10.87, "return_5y": 8.74, "fee_total": 0.79,
     },
     {
-        "category": "Aktīvie plāni",
+        "category": "Active plans",
         "name": "Luminor Aktīvais plāns",
         "return_3y": 10.14, "return_5y": 8.02, "fee_total": 0.72,
     },
 
     # Lifecycle plans — gradually shift to conservative as retirement nears
     {
-        "category": "Dzīves cikla plāni",
+        "category": "Lifecycle plans",
         "name": "Swedbank dzīves cikla plāns 1990+",
         "return_3y": 11.61, "return_5y": 9.19, "fee_total": 0.37,
     },
     {
-        "category": "Dzīves cikla plāni",
+        "category": "Lifecycle plans",
         "name": "Swedbank dzīves cikla plāns 1980+",
         "return_3y": 11.42, "return_5y": 9.09, "fee_total": 0.37,
     },
     {
-        "category": "Dzīves cikla plāni",
+        "category": "Lifecycle plans",
         "name": "Swedbank dzīves cikla plāns 1970+",
         "return_3y": 10.88, "return_5y": 8.61, "fee_total": 0.37,
     },
     {
-        "category": "Dzīves cikla plāni",
+        "category": "Lifecycle plans",
         "name": "SEB dzīves cikla plāns",
         "return_3y": 10.77, "return_5y": 8.54, "fee_total": 0.63,
     },
 
     # Conservative / classic low-risk plans
     {
-        "category": "Klasiskie / konservatīvie",
+        "category": "Conservative / classic",
         "name": "Swedbank Stabilitāte",
         "return_3y": 2.91, "return_5y": 1.87, "fee_total": 0.58,
     },
     {
-        "category": "Klasiskie / konservatīvie",
+        "category": "Conservative / classic",
         "name": "SEB konservatīvais plāns",
         "return_3y": 2.74, "return_5y": 1.65, "fee_total": 0.32,
     },
     {
-        "category": "Klasiskie / konservatīvie",
+        "category": "Conservative / classic",
         "name": "Luminor Konservatīvais plāns",
         "return_3y": 2.43, "return_5y": 1.54, "fee_total": 0.67,
     },
     {
-        "category": "Klasiskie / konservatīvie",
+        "category": "Conservative / classic",
         "name": "CBL Konservatīvais plāns",
         "return_3y": 2.18, "return_5y": 1.42, "fee_total": 0.73,
     },
 
     # Balanced plans — mix of equity and fixed income
     {
-        "category": "Sabalansētie plāni",
+        "category": "Balanced plans",
         "name": "SEB Sabalansētais plāns",
         "return_3y": 6.81, "return_5y": 4.92, "fee_total": 0.40,
     },
     {
-        "category": "Sabalansētie plāni",
+        "category": "Balanced plans",
         "name": "Swedbank Sabalansētais plāns",
         "return_3y": 6.54, "return_5y": 4.61, "fee_total": 0.39,
     },
     {
-        "category": "Sabalansētie plāni",
+        "category": "Balanced plans",
         "name": "Luminor Sabalansētais plāns",
         "return_3y": 6.12, "return_5y": 4.22,
     },
 
     # ESG / sustainability-focused balanced plans
     {
-        "category": "Ilgtspējas / sabalansētie",
+        "category": "Sustainable / ESG",
         "name": "C Ilgtspējas plāns 15-50",
         "return_3y": 8.91, "return_5y": 6.24,
     },
     {
-        "category": "Ilgtspējas / sabalansētie",
+        "category": "Sustainable / ESG",
         "name": "Luminor Ilgtspējīgais plāns",
         "return_3y": 8.33, "return_5y": 6.01,
     },

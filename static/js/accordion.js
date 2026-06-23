@@ -1,5 +1,6 @@
-// Generic accordion controller: cards collapsed by default, expand on
-// (1) click of the header, or (2) when the trigger input has a value.
+// Generic accordion controller: cards expanded by default. A card opts
+// out with data-accordion-collapsed (starts collapsed, expands on header
+// click or when its trigger input receives a value).
 
 // Read value from an input/select element as a number; empty → 0
 function readValue(el) {
@@ -16,8 +17,10 @@ function initAccordion(card) {
   const trigger = triggerId ? document.getElementById(triggerId) : null;
   const header = card.querySelector(".accordion-header");
 
-  // Start expanded if the trigger already has a value (server-rendered default)
-  if (trigger && readValue(trigger) > 0) {
+  // Expanded by default. Cards marked data-accordion-collapsed start
+  // closed, but still auto-expand when their trigger holds a value.
+  const optOut = card.hasAttribute("data-accordion-collapsed");
+  if (!optOut || (trigger && readValue(trigger) > 0)) {
     card.classList.add("is-expanded");
   }
 

@@ -95,6 +95,15 @@ function recalc() {
 
   if (balance <= 0 && monthly <= 0) {
     g("p3Results").classList.add("hidden");
+    // Emit zeroed result so scenarios.js can still update the sticky bar
+    document.dispatchEvent(new CustomEvent("pillarResult", {
+      detail: {
+        pillar: 3,
+        finalBalance: 0, realBalance: 0, netPayout: 0,
+        gains: 0, totalOwnContrib: 0,
+        monthlyPayout: 0, realMonthlyPayout: 0, rows: [],
+      },
+    }));
     return;
   }
 

@@ -1,0 +1,148 @@
+# graders.py — code-based graders for the AI-review prompt eval.
+# Each grader: (output, facts, lang) -> (status, note),
+# status in {"pass", "fail", "skip"}. Skips mean "criterion N/A for
+# this case" and are excluded from the score. Graders are bilingual.
+import re
+
+PASS, FAIL, SKIP = "pass", "fail", "skip"
+
+_RELOCATE = {
+    "en": ["relocat", "lower-cost countr", "cheaper countr",
+           "move abroad", "another country", "leave latvia"],
+    "lv": ["pārcel", "lētāku valst", "zemākām izmaksām",
+           "citā valstī", "uz ārzem", "pamest latviju"],
+}
+_PILLAR3 = {
+    "en": ["3rd-pillar", "3rd pillar", "third pillar", "voluntary"],
+    "lv": ["3. pensiju", "3. līmeņ", "3.līmeņ", "brīvprātīg",
+           "trešā līmeņ", "trešo līmeņ", "trešajā līmen"],
+}
+# Downsizing must be PROPERTY-specific. In LV that means a "make
+# smaller / sell" verb stem co-occurring with a property noun — a bare
+# "samazin*" (reduce) on its own (e.g. "reduce expenses") is NOT it.
+_DOWNSIZE_EN = ["downsiz", "smaller home", "smaller propert",
+                "sell the home", "sell your home", "sell the propert"]
+_DOWN_VERB_LV = ["mazāk", "mazin", "pārdo", "izmēr", "main"]
+_PROP_NOUN_LV = ["mājokl", "īpašum"]
+
+
+def _downsize_advice(text, lang):
+    if lang == "en":
+        return _has(text, _DOWNSIZE_EN)
+    return _has(text, _DOWN_VERB_LV) and _has(text, _PROP_NOUN_LV)
+_INFLATION = {
+    "en": ["inflation", "purchasing power"],
+    "lv": ["inflācij", "pirktspēj"],
+}
+_LIVING = {
+    "en": ["living cost", "cost of living", "expenses",
+           "cover", "1200", "1800"],
+    "lv": ["izdevum", "dzīves izmaks", "iztik", "1200", "1800"],
+}
+_BANDS = {
+    "WEAK": {"en": ["weak"], "lv": ["vāj"]},
+    "MODERATE": {"en": ["moderate"], "lv": ["mēren", "vidēj"]},
+    "STRONG": {"en": ["strong"], "lv": ["stipr", "spēcīg", "laba"]},
+    "EXCELLENT": {"en": ["excellent"], "lv": ["izcil", "teicam"]},
+}
+_LV_DIACRITICS = set("āčēģīķļņōŗšūž")
+
+
+def _has(text, keys):
+    low = text.lower()
+    return any(k in low for k in keys)
+
+
+def grade_band(out, f, lang):
+    # Verdict should reflect the deterministic replacement-rate band.
+    want = f["band"]
+    if _has(out, _BANDS[want][lang]):
+        return PASS, want
+    if lang == "lv":
+        return SKIP, "LV band word not detected"
+    return FAIL, f"missing '{want}'"
+
+
+def grade_relocation(out, f, lang):
+    # GUARDRAIL: relocation may appear only for a WEAK outlook.
+    present = _has(out, _RELOCATE[lang])
+    if f["band"] == "WEAK":
+        return PASS, "weak: allowed"
+    return (FAIL, "relocation in non-weak") if present else (PASS, "—")
+
+
+def grade_pillar3(out, f, lang):
+    # 3rd-pillar top-ups are recommendation priority #1.
+    if f["band"] == "EXCELLENT":
+        return SKIP, "excellent: improvement optional"
+    return (PASS, "—") if _has(out, _PILLAR3[lang]) \
+        else (FAIL, "no 3rd-pillar advice")
+
+
+def grade_downsize(out, f, lang):
+    # Oversized property → must suggest downsizing.
+    if not (f["heavy"] and f["prop"] > 0):
+        return SKIP, "not oversized"
+    return (PASS, "—") if _downsize_advice(out, lang) \
+        else (FAIL, "no downsizing advice")
+
+
+def grade_no_phantom(out, f, lang):
+    # No property entered → must not invent downsizing advice.
+    if f["prop"] > 0 or f["size"] > 0:
+        return SKIP, "property present"
+    return (FAIL, "phantom downsizing") if _downsize_advice(out, lang) \
+        else (PASS, "—")
+
+
+def grade_size(out, f, lang):
+    # Reference size/occupancy only when the home is oversized — for a
+    # right-sized home, spelling out the m² is noise in a 2-3 sentence
+    # verdict.
+    if f["size"] <= 0 or not f["heavy"]:
+        return SKIP, "size not actionable"
+    refs = [str(f["size"]), "m²", "m2", "people", "person",
+            "cilvēk", "residents", "iedzīvotāj"]
+    return (PASS, "—") if _has(out, refs) else (FAIL, "size not referenced")
+
+
+def grade_inflation(out, f, lang):
+    # Material erosion (real << nominal) → mention inflation risk.
+    if f["nominal"] <= 0 or f["real"] >= 0.85 * f["nominal"]:
+        return SKIP, "no material erosion"
+    return (PASS, "—") if _has(out, _INFLATION[lang]) \
+        else (FAIL, "no inflation note")
+
+
+def grade_living(out, f, lang):
+    # WEAK outlook → flag Latvian living-cost shortfall.
+    if f["band"] != "WEAK":
+        return SKIP, "not weak"
+    return (PASS, "—") if _has(out, _LIVING[lang]) \
+        else (FAIL, "no living-cost note")
+
+
+def grade_language(out, f, lang):
+    # Output must be in the requested language.
+    has_lv = any(ch in _LV_DIACRITICS for ch in out.lower())
+    if lang == "lv":
+        return (PASS, "—") if has_lv else (FAIL, "not Latvian")
+    return (FAIL, "Latvian chars in EN") if has_lv else (PASS, "—")
+
+
+def grade_no_markdown(out, f, lang):
+    # Plain text only — no Markdown reaches the PDF.
+    bad = re.search(r"\*\*|__|`", out) or re.search(r"(?m)^\s*#+\s", out)
+    return (FAIL, "markdown present") if bad else (PASS, "—")
+
+
+def grade_not_truncated(out, f, lang):
+    # Must end on terminal punctuation (no mid-sentence cut-off).
+    return (PASS, "—") if out.rstrip().endswith((".", "!", "?", "…")) \
+        else (FAIL, "looks truncated")
+
+
+def grade_length(out, f, lang):
+    # Concise: 2-3 short sentences ≈ ≤ 80 words.
+    n = len(out.split())
+    return (PASS, f"{n}w") if n <= 80 else (FAIL, f"{n}w > 80")

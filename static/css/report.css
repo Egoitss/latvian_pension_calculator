@@ -1,0 +1,217 @@
+/* report.css — Swiss editorial styling for the OATS PDF report.
+   Minimal black/white, accent #8B0000, warm bg #F7F6F3. */
+
+@font-face {
+  font-family: "Inter"; font-weight: 400; font-style: normal;
+  src: url("../fonts/Inter-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter"; font-weight: 600; font-style: normal;
+  src: url("../fonts/Inter-600.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter"; font-weight: 700; font-style: normal;
+  src: url("../fonts/Inter-700.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Plex Mono"; font-weight: 400; font-style: normal;
+  src: url("../fonts/PlexMono-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Plex Mono"; font-weight: 500; font-style: normal;
+  src: url("../fonts/PlexMono-500.woff2") format("woff2");
+}
+
+@page {
+  size: A4;
+  margin: 15mm 15mm 16mm 15mm;
+  background: #F7F6F3;
+  @bottom-left {
+    content: "OATS SIA";
+    font-family: "Plex Mono", monospace; font-size: 7pt;
+    color: #8A857B; letter-spacing: 0.06em;
+  }
+  @bottom-right {
+    content: "info@oats.lv";
+    font-family: "Plex Mono", monospace; font-size: 7pt;
+    color: #8A857B; letter-spacing: 0.06em;
+  }
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { background: #F7F6F3; }
+body {
+  font-family: "Inter", sans-serif; color: #14110E;
+  font-size: 10pt; line-height: 1.45; hyphens: none;
+}
+
+.mono { font-family: "Plex Mono", monospace; }
+.accent { color: #8B0000; }
+
+/* ── Brand lockup ───────────────────────────────────────────── */
+.brand { display: flex; align-items: center; gap: 8px; }
+.brand .mark { width: 18px; height: 18px; display: block; }
+.brand .word {
+  font-weight: 700; font-size: 12pt; letter-spacing: 0.02em;
+}
+
+/* ── Header: brand + title (left) · hero metric (right) ─────── */
+.brand { margin-bottom: 11px; }
+.head {
+  display: flex; justify-content: space-between;
+  align-items: flex-end; gap: 18px;
+}
+.head-left { flex: 1 1 auto; }
+.head-right {
+  flex: 0 0 auto; text-align: right;
+  border-left: 2px solid #14110E; padding-left: 16px;
+}
+.eyebrow {
+  font-family: "Plex Mono", monospace; font-size: 8pt;
+  letter-spacing: 0.22em; color: #8B0000; margin-bottom: 8px;
+}
+.title {
+  font-size: 25pt; font-weight: 700; line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.sub { font-size: 10.5pt; color: #5C574F; margin-top: 6px; }
+.date {
+  font-family: "Plex Mono", monospace; font-size: 8.5pt;
+  color: #8A857B; margin-top: 9px; letter-spacing: 0.04em;
+}
+.hero-label {
+  font-family: "Plex Mono", monospace; font-size: 8pt;
+  letter-spacing: 0.14em; text-transform: uppercase; color: #5C574F;
+}
+.hero-figure {
+  font-size: 40pt; font-weight: 700; letter-spacing: -0.03em;
+  line-height: 1; margin-top: 2px; color: #8B0000;
+}
+.hero-sub {
+  font-family: "Plex Mono", monospace; font-size: 8pt;
+  letter-spacing: 0.04em; color: #5C574F; margin-top: 3px;
+}
+.hero-note {
+  font-family: "Plex Mono", monospace; font-size: 9pt;
+  font-weight: 700; color: #14110E; margin-top: 5px;
+}
+.hero-note .hero-nom { font-size: 10pt; }
+.rule {
+  border: 0; border-top: 2px solid #14110E; margin: 9px 0 10px;
+}
+
+/* ── Section headings ───────────────────────────────────────── */
+.section-head {
+  font-family: "Plex Mono", monospace; font-size: 8.5pt;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: #14110E; border-bottom: 1px solid #14110E;
+  padding-bottom: 4px; margin: 0 0 7px;
+}
+.block { margin-bottom: 7px; }
+
+/* ── Meta line ──────────────────────────────────────────────── */
+.meta {
+  font-size: 8pt; letter-spacing: 0.04em; color: #5C574F;
+  margin-bottom: 13px;
+}
+
+/* ── Contribution bars ──────────────────────────────────────── */
+.bar-row { margin-bottom: 7px; }
+.bar-top {
+  display: flex; justify-content: space-between;
+  align-items: baseline; margin-bottom: 5px;
+}
+.bar-name { font-weight: 600; font-size: 10pt; }
+.bar-val {
+  font-family: "Plex Mono", monospace; font-size: 9.5pt;
+}
+.bar-track { height: 9px; background: #E7E4DD; }
+.bar-fill { height: 9px; background: #8B0000; }
+.bar-fill.muted { background: #14110E; }
+.bar-fill.soft { background: #B0726F; }
+
+/* ── Scenario comparison (three cards) ──────────────────────── */
+.scn-cards { display: flex; gap: 12px; }
+.scn-card {
+  flex: 1; border: 1px solid #DEDBD3; background: #FFFEFB;
+  padding: 11px 13px 8px;
+}
+.scn-card.active { border-color: #8B0000; }
+.scn-label {
+  font-family: "Plex Mono", monospace; font-size: 8pt;
+  letter-spacing: 0.1em; text-transform: uppercase; color: #5C574F;
+  margin-bottom: 6px;
+}
+.scn-card.active .scn-label { color: #8B0000; }
+.scn-big {
+  font-size: 22pt; font-weight: 700; letter-spacing: -0.02em;
+  line-height: 1; color: #14110E;
+}
+.scn-card.active .scn-big { color: #8B0000; }
+.scn-note { font-size: 7pt; color: #8A857B; margin-top: 3px; }
+/* Stacked metrics: caption above value — width-proof, consistent */
+.scn-m { border-top: 1px solid #ECEAE4; margin-top: 7px; padding-top: 5px; }
+.scn-m .mk {
+  font-family: "Plex Mono", monospace; font-size: 6.5pt;
+  letter-spacing: 0.07em; text-transform: uppercase; color: #8A857B;
+}
+.scn-m .mv {
+  font-size: 10pt; font-weight: 600; margin-top: 1px;
+  white-space: nowrap;
+}
+
+/* ── Insight / outlook ──────────────────────────────────────── */
+.insight {
+  border: 1px solid #DEDBD3; background: #FFFEFB; padding: 8px 13px;
+}
+.outlook {
+  display: flex; align-items: baseline; gap: 12px;
+  margin-bottom: 7px;
+}
+.outlook .badge {
+  font-family: "Plex Mono", monospace; font-size: 8pt;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 4px 10px; color: #fff; background: #8B0000;
+}
+.outlook .badge.moderate { background: #14110E; }
+.outlook .badge.weak { background: #8A857B; }
+.outlook .rate { font-size: 22pt; font-weight: 700; }
+.outlook .rate small {
+  font-size: 9pt; font-weight: 400; color: #8A857B;
+}
+.insight p { font-size: 9.5pt; color: #3A352E; margin-top: 5px; }
+.facts { display: flex; margin-top: 7px; }
+.facts .f {
+  width: 33.33%; border-left: 2px solid #8B0000; padding-left: 8px;
+}
+.facts .f:first-child { border-left-color: #14110E; }
+.facts .fk {
+  font-family: "Plex Mono", monospace; font-size: 7pt;
+  letter-spacing: 0.08em; text-transform: uppercase; color: #8A857B;
+}
+.facts .fv { font-size: 12pt; font-weight: 600; margin-top: 2px; }
+.disclaimer {
+  font-family: "Plex Mono", monospace; font-size: 7pt;
+  color: #A39E94; margin-top: 7px;
+}
+
+/* ── AI Review box (DeepSeek) ───────────────────────────────── */
+.ai-review {
+  border: 1px solid #14110E; background: #FBFAF7; padding: 6px 12px;
+}
+.ai-head {
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid #ECEAE4; padding-bottom: 3px;
+}
+.ai-eyebrow {
+  font-family: "Plex Mono", monospace; font-size: 8.5pt;
+  letter-spacing: 0.2em; text-transform: uppercase; color: #14110E;
+}
+.ai-badge {
+  font-size: 7pt; letter-spacing: 0.08em; color: #fff;
+  background: #8B0000; padding: 2px 7px; border-radius: 2px;
+}
+.ai-text {
+  font-size: 9pt; line-height: 1.4; color: #3A352E; margin-top: 5px;
+}

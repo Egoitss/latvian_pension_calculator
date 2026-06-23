@@ -48,7 +48,7 @@ function readScenario() {
 
 // Read gender from the styled male/female toggle
 function readGender() {
-  return g("genderMale")?.classList.contains("bg-slate-900") ? "vīrietis" : "sieviete";
+  return g("genderMale")?.classList.contains("bg-slate-900") ? "male" : "female";
 }
 
 // Build the payload the Flask endpoint expects
@@ -103,15 +103,15 @@ async function generateRecommendation() {
     const data = await resp.json();
     if (!resp.ok) throw new Error(data.error || `HTTP ${resp.status}`);
 
-    output.textContent = data.text || "(tukša atbilde)";
+    output.textContent = data.text || t("(empty response)");
     output.classList.remove("hidden");
     if (data.usage) {
       usage.textContent =
-        `${data.usage.input_tokens} ievades + ${data.usage.output_tokens} izvades token. · `;
+        `${data.usage.input_tokens} ${t("input +")} ${data.usage.output_tokens} ${t("output tokens")} · `;
       usage.classList.remove("hidden");
     }
   } catch (err) {
-    error.textContent = `Kļūda: ${err.message}`;
+    error.textContent = `${t("Error:")} ${err.message}`;
     error.classList.remove("hidden");
   } finally {
     btn.disabled = false;

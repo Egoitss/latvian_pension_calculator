@@ -1,22 +1,23 @@
 <!-- Property value estimator — pure client-side, reads main calculator + loan widget values -->
 <div class="rounded-3xl border border-slate-200 bg-white shadow-sm"
      data-prop-type="{{ defaults.get('prop_type', 'city') }}"
-     data-accordion data-accordion-trigger="propPrice">
+     data-accordion data-accordion-collapsed
+     data-accordion-trigger="propPrice">
 
   <!-- Accordion header -->
   <button type="button"
           class="accordion-header w-full p-3 flex items-center justify-between gap-3 text-left">
     <div class="flex items-center gap-1.5 min-w-0">
-      <h3 class="text-sm font-semibold text-slate-900">Nekustamā īpašuma prognoze</h3>
+      <h3 class="text-sm font-semibold text-slate-900">{{ t("Property value forecast") }}</h3>
       <span id="propScenarioBadge"
             class="rounded-full bg-slate-100 px-1.5 py-0.5 text-[10px]
                    font-medium text-slate-600">
-        Mērenais
+        {{ t("Moderate") }}
       </span>
     </div>
     <div class="flex items-center gap-2 shrink-0">
       <span class="accordion-preview text-[11px] text-slate-400">
-        Ievadi vērtību →
+        {{ t("Enter value →") }}
       </span>
       <svg class="accordion-chevron h-4 w-4 text-slate-500" viewBox="0 0 24 24"
            fill="none" stroke="currentColor" stroke-width="2"
@@ -33,7 +34,7 @@
       <button id="propTypeCity"
               class="rounded-xl border border-slate-900 bg-slate-900 px-2.5 py-1
                      text-[11px] font-medium text-white transition">
-        Rīga / pilsēta
+        {{ t("Riga / city") }}
       </button>
       <button id="propTypeValmiera"
               class="rounded-xl border border-slate-200 bg-white px-2.5 py-1
@@ -45,47 +46,56 @@
               class="rounded-xl border border-slate-200 bg-white px-2.5 py-1
                      text-[11px] font-medium text-slate-600 transition
                      hover:border-slate-400">
-        Lauki
+        {{ t("Rural") }}
       </button>
     </div>
     <div id="propRateNote" class="mt-0.5 text-[10px] text-slate-400">
-      ~6.2% gadā nominālais (Rīga, 2010–2024 · Arco Real Estate / Latio)
+      {{ t("~6.2% per year nominal (Riga, 2010–2024 · Arco Real Estate / Latio)") }}
     </div>
 
-    <!-- Price input -->
-    <div class="mt-2">
-      <div class="mb-1 text-[10px] font-medium text-slate-400">Īpašuma pašreizējā vērtība (€)</div>
-      <input id="propPrice" type="number" step="1000" min="0" placeholder="150 000"
-             {% if defaults.get('prop_price') %}
-             value="{{ defaults.get('prop_price') }}"
-             {% endif %}
-             class="w-full rounded-2xl border border-slate-200 bg-white px-3 py-1.5
-                    text-sm outline-none transition focus:border-slate-500
-                    focus:ring-2 focus:ring-slate-200" />
+    <!-- Price + size inputs -->
+    <div class="mt-2 flex gap-2">
+      <div class="flex-1">
+        <div class="mb-1 text-[10px] font-medium text-slate-400">{{ t("Current property value (€)") }}</div>
+        <input id="propPrice" type="number" step="1000" min="0" placeholder="150000"
+               {% if defaults.get('prop_price') %}
+               value="{{ defaults.get('prop_price') }}"
+               {% endif %}
+               class="w-full rounded-2xl border border-slate-200 bg-white px-3 py-1.5
+                      text-sm outline-none transition focus:border-slate-500
+                      focus:ring-2 focus:ring-slate-200" />
+      </div>
+      <div class="w-24">
+        <div class="mb-1 text-[10px] font-medium text-slate-400">{{ t("Size (m²)") }}</div>
+        <input id="propSize" type="number" step="1" min="0" placeholder="70"
+               class="w-full rounded-2xl border border-slate-200 bg-white px-3 py-1.5
+                      text-sm outline-none transition focus:border-slate-500
+                      focus:ring-2 focus:ring-slate-200" />
+      </div>
     </div>
 
     <!-- Projection results (hidden until price entered) -->
     <div id="propResults" class="mt-2 hidden">
 
       <div class="mb-1.5 flex items-center justify-between px-1 text-[10px] text-slate-400">
-        <span>Prognoze pensijai</span>
+        <span>{{ t("Forecast at retirement") }}</span>
         <span id="propRetYearHeader" class="font-medium text-slate-500"></span>
       </div>
 
       <div class="grid grid-cols-2 gap-2">
         <div class="rounded-2xl bg-emerald-50 border border-emerald-100 px-3 py-3 text-center">
-          <div class="text-[10px] text-slate-400 mb-1">Vērtība</div>
+          <div class="text-[10px] text-slate-400 mb-1">{{ t("Value") }}</div>
           <div id="propRetNominal" class="text-xl font-bold text-emerald-800">—</div>
         </div>
         <div class="rounded-2xl bg-slate-50 px-3 py-3 text-center">
-          <div class="text-[10px] text-slate-400 mb-1">Šodienas naudā</div>
+          <div class="text-[10px] text-slate-400 mb-1">{{ t("In today's money") }}</div>
           <div id="propRetReal" class="text-base font-bold text-slate-600">—</div>
         </div>
       </div>
 
       <div id="propCrashNote"
            class="mt-1 hidden px-1 text-[10px] text-red-400">
-        ⚠ Ietver 2007–2010 tipa krīzi (−60%) sākotnējā vērtībā.
+        {{ t("⚠ Includes a 2007–2010-style crash (−60%) applied to the starting value.") }}
       </div>
 
     </div>

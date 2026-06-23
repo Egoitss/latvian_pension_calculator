@@ -9,37 +9,37 @@
         <th class="px-4 pt-3 pb-1 font-medium normal-case">
           <div class="flex gap-6 justify-center">
             <div class="text-center">
-              <div class="text-[10px] font-medium text-slate-400">Iemaksas kopā</div>
+              <div class="text-[10px] font-medium text-slate-400">{{ t("Total contributions") }}</div>
               <div id="headerIemaksas" class="text-xs font-bold text-slate-900"></div>
             </div>
             <div class="text-center">
-              <div class="text-[10px] font-medium text-slate-400">Aptuvenās komisijas **</div>
+              <div class="text-[10px] font-medium text-slate-400">{{ t("Estimated fees **") }}</div>
               <div id="headerCommission" class="text-xs font-semibold text-slate-500"></div>
             </div>
           </div>
         </th>
         <th colspan="2"
             class="px-4 pt-3 pb-1 text-center font-medium border-r border-slate-200">
-          Uzkrājums
+          {{ t("Savings") }}
         </th>
         <th colspan="2"
             class="px-4 pt-3 pb-1 text-center font-medium border-r border-slate-200">
-          Ieguldījumu peļņa
+          {{ t("Investment earnings") }}
         </th>
         <th colspan="2" class="px-4 pt-3 pb-1 text-center font-medium">
-          Ikmēneša izmaksa *
+          {{ t("Monthly payout *") }}
         </th>
       </tr>
 
       <!-- Row B: individual column names -->
       <tr class="border-b border-slate-200 text-left text-xs text-slate-500">
-        <th class="px-4 py-2 font-medium">Scenārijs</th>
-        <th class="px-4 py-2 font-medium text-center">Kopā</th>
-        <th class="px-4 py-2 font-medium text-center border-r border-slate-200">Šodienas naudā</th>
-        <th class="px-4 py-2 font-medium text-center">Summa</th>
+        <th class="px-4 py-2 font-medium">{{ t("Scenario") }}</th>
+        <th class="px-4 py-2 font-medium text-center">{{ t("Total") }}</th>
+        <th class="px-4 py-2 font-medium text-center border-r border-slate-200">{{ t("Today's money") }}</th>
+        <th class="px-4 py-2 font-medium text-center">{{ t("Amount") }}</th>
         <th class="px-4 py-2 font-medium text-center border-r border-slate-200">%</th>
-        <th class="px-4 py-2 font-medium text-center">Pēc nodokļiem</th>
-        <th class="px-4 py-2 font-medium text-center">Šodienas naudā</th>
+        <th class="px-4 py-2 font-medium text-center">{{ t("After tax") }}</th>
+        <th class="px-4 py-2 font-medium text-center">{{ t("Today's money") }}</th>
       </tr>
 
     </thead>
@@ -49,8 +49,8 @@
       <!-- Row 1: Normal projection — emerald left stripe marks it as the baseline -->
       <tr class="border-b border-slate-100">
         <td class="px-4 py-3 border-l-[3px] border-l-emerald-400">
-          <div class="text-sm font-semibold text-slate-800">Parastā prognoze</div>
-          <div id="normalRowSub" class="mt-0.5 text-[11px] text-slate-400">Aprēķināts</div>
+          <div class="text-sm font-semibold text-slate-800">{{ t("Your base scenario") }}</div>
+          <div id="normalRowSub" class="mt-0.5 text-[11px] text-slate-400">{{ t("With current assumptions") }}</div>
         </td>
         <td id="normalTotal" class="px-4 py-3 text-center font-semibold text-slate-900">
           {{ "{:,.0f}".format(projection.final.total) }} €
@@ -76,11 +76,11 @@
       <tr class="border-b border-amber-100 bg-amber-50">
         <td class="px-4 py-3">
           <div class="flex items-center gap-2">
-            <span class="text-xs font-semibold text-amber-800">Dot-com sabrukums</span>
+            <span class="text-xs font-semibold text-amber-800">{{ t("Dot-com crash") }}</span>
             <span class="rounded-full bg-amber-200 px-2 py-0.5 text-[10px] font-bold
                          text-amber-900">−49%</span>
           </div>
-          <div class="mt-0.5 text-[11px] text-amber-600">Zemākais punkts: 2002. g. marts</div>
+          <div class="mt-0.5 text-[11px] text-amber-600">{{ t("Trough: March 2002") }}</div>
         </td>
         <td id="dotcomTotal" class="px-4 py-3 text-center font-semibold text-amber-900">
           {{ "{:,.0f}".format(projection.final.total * 0.51) }} €
@@ -106,11 +106,11 @@
       <tr class="border-b border-red-100 bg-red-50">
         <td class="px-4 py-3">
           <div class="flex items-center gap-2">
-            <span class="text-xs font-semibold text-red-800">Mājokļu tirgus krīze</span>
+            <span class="text-xs font-semibold text-red-800">{{ t("Housing market crisis") }}</span>
             <span class="rounded-full bg-red-200 px-2 py-0.5 text-[10px] font-bold
                          text-red-900">−54%</span>
           </div>
-          <div class="mt-0.5 text-[11px] text-red-600">Zemākais punkts: 2009. g. marts</div>
+          <div class="mt-0.5 text-[11px] text-red-600">{{ t("Trough: March 2009") }}</div>
         </td>
         <td id="crisisTotal" class="px-4 py-3 text-center font-semibold text-red-900">
           {{ "{:,.0f}".format(projection.final.total * 0.46) }} €
@@ -135,9 +135,9 @@
       <!-- Row 4: historical implied return — always visible, "—" until data entered -->
       <tr class="bg-slate-50">
         <td class="px-4 py-3">
-          <div class="text-xs font-medium text-slate-700">Ar vēsturisko ienesīgumu</div>
+          <div class="text-xs font-medium text-slate-700">{{ t("With actual historical return") }}</div>
           <div id="histRowSub" class="mt-0.5 text-[11px] text-slate-400">
-            Ievadi vēstures analīzi
+            {{ t("Enter your historical data analysis") }}
           </div>
         </td>
         <td id="histTotal"       class="px-4 py-3 text-center font-semibold text-slate-500">—</td>
@@ -160,6 +160,6 @@
       <div>* <span id="metricMonthlyNote"></span></div>
       <div>** <span id="metricCommissionNote"></span></div>
     </div>
-    <span id="chartPeriod">Periods: {{ projection.years }} gadi</span>
+    <span id="chartPeriod">{{ t("Period:") }} {{ projection.years }} {{ t("years") }}</span>
   </div>
 </div>

@@ -1,0 +1,143 @@
+<!doctype html>
+<!-- OATS PDF retirement report — single page, rendered by WeasyPrint -->
+<html>
+<head><meta charset="utf-8"></head>
+<body>
+
+  <!-- ── Header: brand + title (left), hero metric (right) ───── -->
+  <div class="brand">
+    <svg class="mark" viewBox="0 0 100 100" aria-hidden="true">
+      <path fill="#14110E" fill-rule="evenodd"
+            d="M0 0H100V100H0Z
+               M76 50A26 26 0 1 1 24 50A26 26 0 1 1 76 50Z
+               M62 50A12 12 0 1 1 38 50A12 12 0 1 1 62 50Z"/>
+    </svg>
+    <span class="word">OATS SIA</span>
+  </div>
+  <div class="head">
+    <div class="head-left">
+      <div class="eyebrow">{{ t("RETIREMENT REPORT") }}</div>
+      <h1 class="title">{{ t("Pension Scenario Report") }}</h1>
+      <p class="sub">
+        {{ t("Retirement projection and scenario analysis") }}
+      </p>
+      <div class="date">{{ t("Generated") }} · {{ date }}</div>
+    </div>
+    <div class="head-right">
+      <div class="hero-label">{{ t("Expected Monthly Pension") }}</div>
+      <div class="hero-figure mono">{{ hero_real }}</div>
+      <div class="hero-sub">{{ t("in today's money") }}</div>
+      <div class="hero-note">
+        <span class="hero-nom">{{ hero_nominal }}</span>
+        {{ t("nominal") }}
+      </div>
+    </div>
+  </div>
+  <hr class="rule">
+
+  <!-- ── Meta line ───────────────────────────────────────────── -->
+  <div class="meta mono">
+    {{ t("Retirement age") }} {{ ret_age }} &nbsp;·&nbsp;
+    {{ t("Gross monthly") }} {{ gross_fmt }} &nbsp;·&nbsp;
+    {{ t("Scenario") }}: {{ active_label }}
+  </div>
+
+  <!-- ── Scenario comparison (three detailed cards) ──────────── -->
+  {% if scenarios %}
+  <div class="block">
+    <div class="section-head">{{ t("Scenario comparison") }}</div>
+    <div class="scn-cards">
+      {% for s in scenarios %}
+      <div class="scn-card{% if s.active %} active{% endif %}">
+        <div class="scn-label">{{ s.label }}</div>
+        <div class="scn-big mono">{{ s.real }}</div>
+        <div class="scn-note">{{ t("in today's money") }}</div>
+        <div class="scn-m">
+          <div class="mk">{{ t("Actual monthly payout") }}</div>
+          <div class="mv mono">{{ s.nominal }}</div>
+        </div>
+        <div class="scn-m">
+          <div class="mk">{{ t("Capital at retirement") }}</div>
+          <div class="mv mono">{{ s.capital }}</div>
+        </div>
+        {% if s.property %}
+        <div class="scn-m">
+          <div class="mk">{{ t("Property at retirement") }}</div>
+          <div class="mv mono">{{ s.property }}</div>
+        </div>
+        {% endif %}
+        <div class="scn-m">
+          <div class="mk">{{ t("Replacement rate") }}</div>
+          <div class="mv mono">{{ s.rate }}%</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ── Pillar breakdown bars ───────────────────────────────── -->
+  <div class="block">
+    <div class="section-head">{{ t("Pillar breakdown") }}</div>
+    {% for b in bars %}
+    <div class="bar-row">
+      <div class="bar-top">
+        <span class="bar-name">{{ b.name }}</span>
+        <span class="bar-val">{{ b.val }}</span>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill {{ b.cls }}"
+             style="width: {{ b.pct }}%"></div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- ── Retirement outlook (active scenario) ────────────────── -->
+  <div class="block">
+    <div class="section-head">{{ t("Retirement outlook") }}</div>
+    <div class="insight">
+      <div class="outlook">
+        <span class="badge {{ outlook }}">{{ outlook_label }}</span>
+        <span class="rate mono">{{ rate }}%
+          <small>{{ t("of current gross income") }}</small></span>
+      </div>
+      {% if not ai_review %}<p>{{ verdict }}</p>{% endif %}
+      <div class="facts">
+        <div class="f">
+          <div class="fk">{{ t("Replacement rate") }}</div>
+          <div class="fv mono">{{ rate }}%</div>
+        </div>
+        <div class="f">
+          <div class="fk">{{ t("Inflation impact") }}</div>
+          <div class="fv mono">−{{ erosion }}%</div>
+        </div>
+        <div class="f">
+          <div class="fk">{{ t("Market exposure") }}</div>
+          <div class="fv mono">{{ exposure }}</div>
+        </div>
+      </div>
+      <div class="disclaimer">
+        {{ t("Simulation model — not financial advice.") }}
+      </div>
+    </div>
+  </div>
+
+  <!-- ── AI Review (DeepSeek) — only when a verdict was returned ── -->
+  {% if ai_review %}
+  <div class="block">
+    <div class="ai-review">
+      <div class="ai-head">
+        <span class="ai-eyebrow">{{ t("AI Review") }}</span>
+        <span class="ai-badge mono">DeepSeek</span>
+      </div>
+      <p class="ai-text">{{ ai_review }}</p>
+      <div class="disclaimer">
+        {{ t("AI-generated · not financial advice") }}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+</body>
+</html>

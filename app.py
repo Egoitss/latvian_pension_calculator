@@ -2,19 +2,65 @@ import json
 import os
 import time
 from datetime import date as _date
-from flask import Flask, jsonify, make_response, render_template, request
+
+from dotenv import load_dotenv
+
+load_dotenv()  # load DEEPSEEK_API_KEY / ANTHROPIC_API_KEY from .env
+
+from flask import (
+    Flask, jsonify, make_response, redirect,
+    render_template, request, url_for,
+)
 from data import (
     PLANS, VSAOI_CEILING, P2L_RATE, DEFAULT_RETURN,
     PENSION_TAX_FREE_THRESHOLD, PENSION_TAX_RATE,
-    LATVIJA_LV_P2L_URL, MANAPENSIJA_STATS_URL,
+    LATVIJA_LV_P2L_URL, MANAPENSIJA_STATS_URL, STATE_PENSION_URL,
     P3_PLANS,
 )
 from calculator import (
     build_plan_schedule, should_apply_vsaoi_ceiling,
     calculate_projection,
 )
+from i18n import (
+    lang_from_path, make_t, js_catalog,
+)
+from report_pdf import build_report_pdf
+import ai_review
+import download_counter
+import rate_limit
 
 app = Flask(__name__)
+
+# Max PDF exports per IP per hour (each may trigger one AI call).
+try:
+    EXPORT_LIMIT = int(os.environ.get("EXPORT_RATE_LIMIT", "20"))
+except ValueError:
+    EXPORT_LIMIT = 20
+
+
+def _alt_path(path: str, lang: str) -> str:
+    # Path to the same page in the other language (for the switcher).
+    if lang == "lv":
+        return path[3:] or "/"          # strip leading "/lv"
+    return "/lv" + ("" if path == "/" else path)
+
+
+@app.context_processor
+def inject_i18n():
+    # Expose t(), lang, the alt-language path and the JS override map
+    # to every template, derived from the current request path.
+    lang = lang_from_path(request.path)
+    return {
+        "t": make_t(lang),
+        "lang": lang,
+        "alt_path": _alt_path(request.path, lang),
+        "js_i18n": js_catalog(lang),
+    }
+
+
+@app.route('/favicon.ico')
+def favicon():
+    return redirect(url_for('static', filename='favicon.svg'), 301)
 
 
 @app.context_processor
@@ -69,7 +115,8 @@ DEFAULTS = {
     "p1_capital": "",
     "p1_record_years": "",
     "p1_record_months": "",
-    "p1_revaluation_rate": 5.0,
+    # Conservative neutral baseline; the active scenario shifts it ±2pp.
+    "p1_revaluation_rate": 3.0,
     # 3rd-pillar voluntary pension inputs
     "p3_balance": "",
     "p3_monthly": "",
@@ -96,6 +143,7 @@ LOCAL_DATA = {
 
 
 @app.route("/")
+@app.route("/lv")
 def index():
     # Compute the initial projection using default inputs
     d = DEFAULTS
@@ -141,6 +189,7 @@ def index():
     urls = {
         "latvija_lv": LATVIJA_LV_P2L_URL,
         "manapensija": MANAPENSIJA_STATS_URL,
+        "state_pension": STATE_PENSION_URL,
     }
 
     resp = make_response(render_template(
@@ -160,6 +209,7 @@ def index():
 
 
 @app.route("/loans")
+@app.route("/lv/loans")
 def loans():
     resp = make_response(render_template(
         "loans.html",
@@ -259,6 +309,46 @@ def api_recommend():
             "output_tokens": msg.usage.output_tokens,
         },
     })
+
+
+def _client_ip() -> str:
+    # First hop in X-Forwarded-For (set by a proxy) else the peer addr.
+    fwd = request.headers.get("X-Forwarded-For", "")
+    return (fwd.split(",")[0].strip() if fwd
+            else (request.remote_addr or "unknown"))
+
+
+@app.route("/export/pdf", methods=["POST"])
+@app.route("/lv/export/pdf", methods=["POST"])
+def export_pdf():
+    # Build the PDF retirement report from the posted calculator
+    # state, localized to the request path's language, and count it.
+    # Per-IP throttle in front of the AI call (see rate_limit).
+    if not rate_limit.allow(f"pdf:{_client_ip()}", EXPORT_LIMIT, 3600):
+        return make_response(("Too many requests, try later.", 429))
+    lang = lang_from_path(request.path)
+    payload = request.get_json(silent=True) or {}
+    date_str = _date.today().isoformat()
+    # Short DeepSeek verdict; None (graceful fallback) if key/API absent.
+    review = ai_review.generate_review(payload, lang)
+    blob = build_report_pdf(payload, make_t(lang), date_str, review)
+    total = download_counter.increment()
+    app.logger.info("pdf export #%d", total)
+
+    resp = make_response(blob)
+    resp.headers["Content-Type"] = "application/pdf"
+    resp.headers["Content-Disposition"] = (
+        f'attachment; filename="pension-report-{date_str}.pdf"'
+    )
+    resp.headers["X-Download-Count"] = str(total)
+    resp.headers["Cache-Control"] = "no-store"
+    return resp
+
+
+@app.route("/api/download-count")
+def api_download_count():
+    # Read-only total downloads — handy once the app is live.
+    return jsonify({"count": download_counter.read_count()})
 
 
 if __name__ == "__main__":
