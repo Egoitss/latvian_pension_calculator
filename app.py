@@ -95,7 +95,7 @@ DEFAULTS = {
     "gross_monthly": 1750,
     "selected_plan_name": "Swedbank dzīves cikla plāns 1990+",
     "manual_return": DEFAULT_RETURN,
-    "salary_growth": 2,
+    "salary_growth": 5,
     "inflation": 2.5,
     "payout_years": 18,
     "enable_switching": False,
@@ -115,8 +115,9 @@ DEFAULTS = {
     "p1_capital": "",
     "p1_record_years": "",
     "p1_record_months": "",
-    # Conservative neutral baseline; the active scenario shifts it ±2pp.
-    "p1_revaluation_rate": 3.0,
+    # Forward-sustainable: wage-sum growth net of a shrinking workforce
+    # (below salary growth). The active scenario shifts it ±2pp.
+    "p1_revaluation_rate": 4.5,
     # 3rd-pillar voluntary pension inputs
     "p3_balance": "",
     "p3_monthly": "",

@@ -6,12 +6,18 @@ import re
 
 PASS, FAIL, SKIP = "pass", "fail", "skip"
 
-_RELOCATE = {
-    "en": ["relocat", "lower-cost countr", "cheaper countr",
-           "move abroad", "another country", "leave latvia"],
-    "lv": ["pārcel", "lētāku valst", "zemākām izmaksām",
-           "citā valstī", "uz ārzem", "pamest latviju"],
-}
+_RELOCATE_EN = ["relocat", "lower-cost countr", "cheaper countr",
+                "move abroad", "another country", "leave latvia"]
+# LV: a move/cheaper word that co-occurs with a country reference, so
+# "pārcelt pensionēšanos" (delay retirement) isn't a false positive.
+_RELO_VERB_LV = ["pārcel", "pamest", "lētāk", "zemāk"]
+_COUNTRY_LV = ["valst", "ārzem", "latvij"]
+
+
+def _relocation_advice(text, lang):
+    if lang == "en":
+        return _has(text, _RELOCATE_EN)
+    return _has(text, _RELO_VERB_LV) and _has(text, _COUNTRY_LV)
 _PILLAR3 = {
     "en": ["3rd-pillar", "3rd pillar", "third pillar", "voluntary"],
     "lv": ["3. pensiju", "3. līmeņ", "3.līmeņ", "brīvprātīg",
@@ -65,7 +71,7 @@ def grade_band(out, f, lang):
 
 def grade_relocation(out, f, lang):
     # GUARDRAIL: relocation may appear only for a WEAK outlook.
-    present = _has(out, _RELOCATE[lang])
+    present = _relocation_advice(out, lang)
     if f["band"] == "WEAK":
         return PASS, "weak: allowed"
     return (FAIL, "relocation in non-weak") if present else (PASS, "—")
@@ -93,6 +99,15 @@ def grade_no_phantom(out, f, lang):
         return SKIP, "property present"
     return (FAIL, "phantom downsizing") if _downsize_advice(out, lang) \
         else (PASS, "—")
+
+
+def grade_no_downsize_rightsized(out, f, lang):
+    # Home sized for a couple (size given, not oversized) → no
+    # downsizing advice (the "optimal for 1-2, not a couple" bug).
+    if f["size"] <= 0 or f["heavy"]:
+        return SKIP, "not a right-sized case"
+    return (FAIL, "downsizing a right-sized home") \
+        if _downsize_advice(out, lang) else (PASS, "—")
 
 
 def grade_size(out, f, lang):

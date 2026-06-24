@@ -53,6 +53,18 @@
       {{ t("~6.2% per year nominal (Riga, 2010–2024 · Arco Real Estate / Latio)") }}
     </div>
 
+    <!-- Annual appreciation rate slider (location/scenario set it;
+         the user can fine-tune) -->
+    <div class="mt-2 space-y-1">
+      <div class="flex justify-between text-xs">
+        <span class="text-slate-500">{{ t("Annual appreciation") }}</span>
+        <span id="propRateDisplay"
+              class="font-semibold text-slate-900">—</span>
+      </div>
+      <input id="propRate" type="range" min="0" max="12" step="0.1"
+             class="w-full accent-slate-900" />
+    </div>
+
     <!-- Price + size inputs -->
     <div class="mt-2 flex gap-2">
       <div class="flex-1">

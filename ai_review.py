@@ -50,9 +50,10 @@ _SYSTEM = (
     "4. Sell non-essential assets\n"
     "5. Relocate to lower-cost country (last resort only)\n\n"
     "Property logic:\n"
-    "- If property is flagged oversized, mention downsizing.\n"
-    "- If home size is given, mention how many residents it optimally "
-    "suits versus a retiring couple.\n"
+    "- Suggest downsizing ONLY when the home is flagged OVERSIZED; "
+    "then reference how many people it suits versus a couple of 2.\n"
+    "- If the home is right-sized for a couple (suited to 1-2 "
+    "people), do NOT suggest downsizing — it is appropriately sized.\n"
     "- If no property value is given, do not mention property, "
     "downsizing, or selling assets at all.\n\n"
     "Weak outlook rule:\n"
@@ -144,9 +145,17 @@ def _user_prompt(f):
         lines.append("- Property: NONE entered — do NOT mention "
                      "property, downsizing, or selling assets")
     if f["size"] > 0:
-        lines.append(
-            f"- Home size: {f['size']} m2 — comfortably fits about "
-            f"{f['optimal']} people (a retiring couple = {_COUPLE})")
+        if f["heavy"]:
+            lines.append(
+                f"- Home: {f['size']} m2, fits about {f['optimal']} "
+                f"people — LARGER than a couple of 2 needs (oversized)")
+        else:
+            lines.append(
+                f"- Home: {f['size']} m2, fits about {f['optimal']} "
+                f"people — right-sized for a couple; do NOT downsize")
+    if f["band"] != "WEAK":
+        lines.append("- Outlook is not WEAK — do NOT mention "
+                     "relocation or moving to another country")
     return "\n".join(lines)
 
 

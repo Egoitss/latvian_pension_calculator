@@ -36,9 +36,9 @@ Gender: Dzimums
 Male: Vīrietis
 Female: Sieviete
 Annual salary growth: Algas pieaugums gadā
-'Latvia nominal salary growth 2001–2024: €226 → €1,685 = 9.1% per year (CSP stat.gov.lv)': 'Latvijas nominālais algas pieaugums 2001.–2024. g.: 226 € → 1 685 € = 9,1% gadā (CSP stat.gov.lv)'
+'Latvia nominal salary growth 2016–2026: ~8% per year (CSB stat.gov.lv) · forward default lower as catch-up fades': 'Latvijas nominālais algas pieaugums 2016.–2026. g.: ~8% gadā (CSP stat.gov.lv) · noklusējums zemāks, izsīkstot izlīdzināšanai'
 Inflation: Inflācija
-'Latvia avg 2001–2024: ~4.0% (CSP/Eurostat) · ECB long-term target 2% · used for purchasing-power calculations': Latvijā 2001.–2024. g. vidēji ~4,0% (CSP/Eurostat) · ECB ilgtermiņa mērķis 2% · pirktspējas aprēķinam
+'Latvia avg 2016–2026: ~4% (CSP/Eurostat) · ECB long-term target 2% · used for purchasing-power calculations': Latvijā 2016.–2026. g. vidēji ~4% (CSP/Eurostat) · ECB ilgtermiņa mērķis 2% · pirktspējas aprēķinam
 Mortgage: Hipotekārais kredīts
 Consumer loan: Patēriņa kredīts
 Enter balance: Ievadi atlikumu
@@ -82,7 +82,7 @@ Accumulated capital (€): Uzkrātais kapitāls (€)
 Service record (yrs): Stāžs (g.)
 Months: Mēn.
 Annual capital indexation: Kapitāla indeksācija gadā
-'Historical avg 2020–2025: ~8.9% · Conservative: 4–5%': 'Vēst. vidējais 2020–2025: ~8.9% · Konservatīvs: 4–5%'
+'Recent 2020–2025: ~8.9% · long-run ~4–5% (workforce shrinking)': 'Pēdējos gados (2020–2025): ~8,9% · ilgtermiņā ~4–5% (sarūkošs darbaspēks)'
 'Annual contribution to Pillar 1 (14% × gross):': 'Gada iemaksa 1. līmenī (14% × bruto):'
 Capital at retirement: Kapitāls pensijai
 Property at retirement: Īpašums pensijai
@@ -109,7 +109,8 @@ no data: nav datu
 Manual annual return: Manuālais gada ienesīgums
 'Latvia P2L funds historical: ~6–9% (manapensija.lv) · Global equity markets: ~8–10% nominal': 'Latvijas P2L fondi vēst.: ~6–9% (manapensija.lv) · Pasaules akciju tirgi: ~8–10% nominālais'
 P2L contribution rate: Iemaksu likme P2L
-'current: 6% | historical avg: 4.3%': 'pašreizējā: 6% | vēst. vidējā: 4.3%'
+'current: 6% | historical avg: 4.3%': 'pašreizējā: 6% | vēst. vidējā: 4,3%'
+Annual appreciation: Gada vērtības pieaugums
 'Current rate: 6% (since 2021) · Historical range: 2–8% · Set by law': 'Spēkā esošā: 6% (no 2021. g.) · Vēsturiski: 2–8% · Maina ar likumu'
 Add plan switches over your lifetime: Pievienot plāna maiņu dzīves laikā
 Model a more aggressive plan early on and a more conservative one near retirement.: Modelē agresīvāku plānu sākumā un konservatīvāku tuvāk pensijai.
