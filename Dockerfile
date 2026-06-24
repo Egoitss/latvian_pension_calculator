@@ -5,9 +5,11 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
+# The PDF report bundles its own fonts (woff2 via @font-face), so no
+# system fonts are needed — just WeasyPrint's native rendering libs.
 RUN apt-get update && apt-get install -y --no-install-recommends \
       libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf-2.0-0 \
-      libffi-dev libcairo2 libharfbuzz0b fonts-ibm-plex \
+      libffi-dev libcairo2 libharfbuzz0b \
   && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt ./
