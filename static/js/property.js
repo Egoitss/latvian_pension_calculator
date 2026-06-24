@@ -41,7 +41,7 @@ function recalc() {
     return;
   }
 
-  const rate      = PROPERTY_SCENARIO_RATES[activeScenario][locType];
+  const rate      = (parseFloat(g("propRate")?.value) || 0) / 100;
   const inflRate  = (parseFloat((g("inflation") || {}).value) || 4.16) / 100;
   const yRet      = yrsToRetirement();
   // Negative scenario: apply 2007–2010-style crash at t=0 before appreciation
@@ -109,6 +109,22 @@ function buildRateNote(scenario, loc) {
   return `~${pct}% ${t("per year")} (${label})`;
 }
 
+// Show the slider's current % in the label.
+function updatePropRateDisplay() {
+  const el = g("propRate"), disp = g("propRateDisplay");
+  if (el && disp) disp.textContent = `${parseFloat(el.value).toFixed(1)}%`;
+}
+
+// Point the slider at the current scenario × location rate. The user
+// can then fine-tune it; the projection always reads the slider.
+function syncRateSlider() {
+  const el = g("propRate");
+  if (!el) return;
+  el.value = (PROPERTY_SCENARIO_RATES[activeScenario][locType] * 100)
+    .toFixed(1);
+  updatePropRateDisplay();
+}
+
 function setLocType(type) {
   locType = type;
   savePropType(type);
@@ -117,6 +133,7 @@ function setLocType(type) {
   g("propTypeRural").className    = type === "rural"    ? PILL_ON : PILL_OFF;
   g("propRateNote").textContent = buildRateNote(activeScenario, type);
   updateScenarioBadge();
+  syncRateSlider();
   recalc();
 }
 
@@ -132,6 +149,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const el = g(id);
     if (el) ["input", "change"].forEach(evt => el.addEventListener(evt, recalc));
   });
+
+  // Slider: user fine-tunes the appreciation rate → redisplay + recalc.
+  const slider = g("propRate");
+  if (slider) ["input", "change"].forEach(evt =>
+    slider.addEventListener(evt, () => {
+      updatePropRateDisplay();
+      recalc();
+    }));
 
   document.addEventListener("scenarioChange", ({ detail }) => {
     activeScenario = detail.name;

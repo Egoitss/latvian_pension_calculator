@@ -36,9 +36,9 @@ Gender: Dzimums
 Male: Vīrietis
 Female: Sieviete
 Annual salary growth: Algas pieaugums gadā
-'Latvia nominal salary growth 2001–2024: €226 → €1,685 = 9.1% per year (CSP stat.gov.lv)': 'Latvijas nominālais algas pieaugums 2001.–2024. g.: 226 € → 1 685 € = 9,1% gadā (CSP stat.gov.lv)'
+'Latvia nominal salary growth 2014–2024: €765 → €1,685 ≈ 8.2% per year (CSB stat.gov.lv)': 'Latvijas nominālais algas pieaugums 2014.–2024. g.: 765 € → 1 685 € ≈ 8,2% gadā (CSP stat.gov.lv)'
 Inflation: Inflācija
-'Latvia avg 2001–2024: ~4.0% (CSP/Eurostat) · ECB long-term target 2% · used for purchasing-power calculations': Latvijā 2001.–2024. g. vidēji ~4,0% (CSP/Eurostat) · ECB ilgtermiņa mērķis 2% · pirktspējas aprēķinam
+'Latvia avg 2015–2024: ~3.9% (CSP/Eurostat) · ECB long-term target 2% · used for purchasing-power calculations': Latvijā 2015.–2024. g. vidēji ~3,9% (CSP/Eurostat) · ECB ilgtermiņa mērķis 2% · pirktspējas aprēķinam
 Mortgage: Hipotekārais kredīts
 Consumer loan: Patēriņa kredīts
 Enter balance: Ievadi atlikumu
@@ -109,7 +109,8 @@ no data: nav datu
 Manual annual return: Manuālais gada ienesīgums
 'Latvia P2L funds historical: ~6–9% (manapensija.lv) · Global equity markets: ~8–10% nominal': 'Latvijas P2L fondi vēst.: ~6–9% (manapensija.lv) · Pasaules akciju tirgi: ~8–10% nominālais'
 P2L contribution rate: Iemaksu likme P2L
-'current: 6% | historical avg: 4.3%': 'pašreizējā: 6% | vēst. vidējā: 4.3%'
+'current: 6% | 2015–2024 avg: 5.9%': 'pašreizējā: 6% | 2015.–2024. g. vidēji: 5,9%'
+Annual appreciation: Gada vērtības pieaugums
 'Current rate: 6% (since 2021) · Historical range: 2–8% · Set by law': 'Spēkā esošā: 6% (no 2021. g.) · Vēsturiski: 2–8% · Maina ar likumu'
 Add plan switches over your lifetime: Pievienot plāna maiņu dzīves laikā
 Model a more aggressive plan early on and a more conservative one near retirement.: Modelē agresīvāku plānu sākumā un konservatīvāku tuvāk pensijai.
