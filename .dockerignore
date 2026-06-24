@@ -1,0 +1,13 @@
+.git/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.superpowers/
+.DS_Store
+.env
+local_config.py
+download_count.json
+download_count.lock
+ai_budget.json
+ai_budget.lock
