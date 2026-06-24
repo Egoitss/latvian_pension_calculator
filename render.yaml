@@ -1,0 +1,18 @@
+# Render Blueprint — one-click deploy of the pension calculator.
+# In Render: New → Blueprint → connect this repo → set DEEPSEEK_API_KEY.
+# Free plan sleeps after ~15 min idle (cold start); switch to "starter"
+# in the dashboard for an always-on demo.
+services:
+  - type: web
+    name: pension-calc
+    runtime: docker
+    plan: free
+    region: frankfurt          # close to Latvia
+    healthCheckPath: /
+    envVars:
+      - key: DEEPSEEK_API_KEY   # secret — set its value in the dashboard
+        sync: false
+      - key: AI_DAILY_LIMIT
+        value: "1000"
+      - key: EXPORT_RATE_LIMIT
+        value: "20"
