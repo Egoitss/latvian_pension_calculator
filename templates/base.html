@@ -45,7 +45,7 @@
 
   <!-- OATS brand nav — update href attrs for production deployment -->
   <nav class="oats-nav">
-    <a class="oats-logo" href="http://localhost:8000/home.html">
+    <a class="oats-logo" href="https://oats.lv">
       <svg class="oats-logo-mark" viewBox="0 0 100 100"
            role="img" aria-label="OATS">
         <path fill="currentColor" fill-rule="evenodd"
@@ -62,7 +62,7 @@
     {# Return to wherever the visitor came from (file://, localhost,
        or live domain). Falls back to the hardcoded URL only when
        opened with no history (direct load / fresh tab). #}
-    <a class="oats-back" href="http://localhost:8000/home.html"
+    <a class="oats-back" href="https://oats.lv"
        onclick="if (history.length > 1) {
                   history.back(); return false; }">
       ← {{ t("Portfolio") }}

@@ -188,3 +188,14 @@ thead th {
   background: rgba(0, 0, 0, .06);
 }
 .oats-flag { border-radius: 2px; display: block; }
+
+/* Mobile: the brand nav must not overflow on phones. Hide the long
+   simulator title, shrink padding/logo, and allow wrapping. */
+@media (max-width: 640px) {
+  .oats-nav { padding: 10px 14px; gap: 8px 10px; flex-wrap: wrap; }
+  .oats-crumb { display: none; }
+  .oats-logo { font-size: 15px; gap: 8px; }
+  .oats-logo-mark { width: 26px; height: 26px; }
+  .oats-lang, .oats-back { font-size: 11px; }
+  .oats-lang a, .oats-lang span { padding: 3px 5px; gap: 4px; }
+}
