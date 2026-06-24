@@ -1,0 +1,9 @@
+# Caddy auto-provisions a Let's Encrypt certificate for this domain,
+# as long as pension.oats.lv resolves to the server and 80/443 are open.
+{
+	email info@oats.lv
+}
+
+pension.oats.lv {
+	reverse_proxy pension:5001
+}

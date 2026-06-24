@@ -1,0 +1,26 @@
+# Runs the pension calculator behind Caddy (auto-HTTPS) on a VPS.
+# Caddy terminates TLS for pension.oats.lv and proxies to the app.
+# When BMX/METL join, add a service each + a block in the Caddyfile
+# (and ideally move this to a dedicated deploy repo).
+services:
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+  pension:
+    build: ..                 # repo root holds the Dockerfile
+    restart: unless-stopped
+    env_file: ../.env         # DEEPSEEK_API_KEY etc. (not committed)
+    expose:
+      - "5001"
+
+volumes:
+  caddy_data: {}
+  caddy_config: {}
