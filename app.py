@@ -95,8 +95,8 @@ DEFAULTS = {
     "gross_monthly": 1750,
     "selected_plan_name": "Swedbank dzīves cikla plāns 1990+",
     "manual_return": DEFAULT_RETURN,
-    "salary_growth": 8.2,
-    "inflation": 3.9,
+    "salary_growth": 5,
+    "inflation": 2.5,
     "payout_years": 18,
     "enable_switching": False,
     "switch_one_age": 50,
@@ -110,13 +110,14 @@ DEFAULTS = {
     "p2l_start_year": "",
     "p2l_start_salary": "",
     "p2l_actual_contributions": "",
-    "p2l_rate": 5.9,
+    "p2l_rate": 6.0,
     # 1st-pillar NDC inputs — set via browser localStorage, empty by default
     "p1_capital": "",
     "p1_record_years": "",
     "p1_record_months": "",
-    # Conservative neutral baseline; the active scenario shifts it ±2pp.
-    "p1_revaluation_rate": 3.0,
+    # Forward-sustainable: wage-sum growth net of a shrinking workforce
+    # (below salary growth). The active scenario shifts it ±2pp.
+    "p1_revaluation_rate": 4.5,
     # 3rd-pillar voluntary pension inputs
     "p3_balance": "",
     "p3_monthly": "",
