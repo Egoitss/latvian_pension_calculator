@@ -42,7 +42,7 @@
 
     <!-- Page header: compact title + disclaimer tooltip -->
     <div class="flex items-center gap-2">
-      <h1 class="text-sm font-semibold text-slate-700">{{ t("Pension Scenario Simulator") }}</h1>
+      <h1 class="text-base font-semibold text-slate-800">{{ t("Pension Scenario Simulator") }}</h1>
       <div class="relative group">
         <span class="cursor-default select-none text-[11px] text-slate-400">ⓘ</span>
         <div class="pointer-events-none absolute top-full left-0 mt-1.5
@@ -59,6 +59,12 @@
     <!-- Unified single-column flow: controls → scenarios → hero → pillars → loans → AI → chart -->
     {% include "_controls.html" %}
     {% include "_scenarios.html" %}
+
+    <!-- Nudge — matches the page heading style, no frame -->
+    <p class="text-base font-semibold text-slate-800">
+      {{ t("For a more complete report, open the sections below and fill in your details.") }}
+    </p>
+
     {% include "_pension1.html" %}
     {% include "_pension2.html" %}
 
@@ -88,6 +94,17 @@
 
   </div>
 </main>
+
+<!-- Mobile sticky bottom bar: live monthly pension + quick PDF download -->
+<div class="mobile-bar">
+  <span class="mb-label">{{ t("Monthly pension") }}</span>
+  <div class="mb-right">
+    <span id="mobileBarValue" class="mb-value">—</span>
+    <button id="mobileDownloadBtn" type="button" class="mb-download">
+      <span class="js-dl-label">{{ t("Download report PDF") }}</span>
+    </button>
+  </div>
+</div>
 {% endblock %}
 
 {% block scripts %}

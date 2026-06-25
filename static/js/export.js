@@ -120,8 +120,9 @@ function saveBlob(blob, filename) {
 }
 
 async function downloadDocx(btn) {
-  // Update only the label span so the button icon is preserved.
-  const label = g("downloadDocxLabel") || btn;
+  // Update the label of whichever button was clicked (preserving its
+  // icon). Mobile bar button carries its own .js-dl-label.
+  const label = btn.querySelector(".js-dl-label") || g("downloadDocxLabel") || btn;
   const original = label.textContent;
   btn.disabled = true;
   label.textContent = t("Preparing…");
@@ -161,4 +162,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   const btn = g("downloadDocxBtn");
   if (btn) btn.addEventListener("click", () => downloadDocx(btn));
+  const mbBtn = g("mobileDownloadBtn");
+  if (mbBtn) mbBtn.addEventListener("click", () => downloadDocx(mbBtn));
 });

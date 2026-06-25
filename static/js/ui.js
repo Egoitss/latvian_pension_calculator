@@ -103,14 +103,9 @@ function onInputChange(chart) {
   updateSwitchRowsVisibility(inputs.enableSwitching);
   el("computedAge").textContent = inputs.age;
 
-  // Retirement year display
-  const bYear  = toNumber(el("birthYear").value,  new Date().getFullYear() - 30);
-  const bMonth = toNumber(el("birthMonth").value, 1);
-  const MONTHS_EN = [t("January"),t("February"),t("March"),t("April"),t("May"),
-                     t("June"),t("July"),t("August"),t("September"),t("October"),
-                     t("November"),t("December")];
-  el("retirementYearDisplay").textContent =
-    `${MONTHS_EN[bMonth - 1]}, ${bYear + inputs.retirementAge}`;
+  // Retirement year display (year only — month dropped)
+  const bYear = toNumber(el("birthYear").value, new Date().getFullYear() - 30);
+  el("retirementYearDisplay").textContent = `${bYear + inputs.retirementAge}`;
 
   // Slider display labels
   el("manualReturnDisplay").textContent = formatPct(inputs.manualReturn);
