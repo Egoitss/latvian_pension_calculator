@@ -9,7 +9,7 @@ load_dotenv()  # load DEEPSEEK_API_KEY / ANTHROPIC_API_KEY from .env
 
 from flask import (
     Flask, jsonify, make_response, redirect,
-    render_template, request, url_for,
+    render_template, request, send_from_directory, url_for,
 )
 from data import (
     PLANS, VSAOI_CEILING, P2L_RATE, DEFAULT_RETURN,
@@ -60,18 +60,25 @@ def inject_i18n():
 
 @app.route('/favicon.ico')
 def favicon():
-    return redirect(url_for('static', filename='favicon.svg'), 301)
+    # Serve a real PNG (not a 301 to the SVG) so Chrome shows the icon.
+    return send_from_directory(app.static_folder, 'favicon-32.png',
+                               mimetype='image/png')
 
 
 @app.context_processor
 def inject_js_version():
-    js_dir = os.path.join(app.static_folder, 'js')
+    # Cache-bust static assets: newest mtime across JS and CSS, so an
+    # edit to either bumps ?v= and clients fetch the fresh file.
+    static = app.static_folder
+    dirs = [('js', '.js'), ('css', '.css')]
     try:
-        max_mtime = max(
-            os.path.getmtime(os.path.join(js_dir, f))
-            for f in os.listdir(js_dir) if f.endswith('.js')
-        )
-        js_v = int(max_mtime)
+        mtimes = [
+            os.path.getmtime(os.path.join(static, sub, f))
+            for sub, ext in dirs
+            for f in os.listdir(os.path.join(static, sub))
+            if f.endswith(ext)
+        ]
+        js_v = int(max(mtimes))
     except Exception:
         js_v = int(time.time())
     return {"js_v": js_v}

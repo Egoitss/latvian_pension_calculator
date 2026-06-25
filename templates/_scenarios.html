@@ -76,7 +76,7 @@
   <!-- Hero: monthly pension number -->
   <div class="px-5 pt-5 pb-4">
     <div class="flex items-start justify-between mb-1">
-      <div class="text-xs font-medium text-emerald-600 uppercase tracking-wide">
+      <div class="text-xs font-medium text-slate-400 uppercase tracking-wide">
         {{ t("Your retirement income") }}
       </div>
       <span id="activeScenarioLabel"
@@ -157,6 +157,16 @@
     <span id="chartPeriod"></span>
   </div>
 
-  <!-- Download moved to the sticky footer bar (see index.html) -->
+  <!-- Download note: the button itself lives in the sticky footer bar. -->
+  <div class="border-t border-slate-100 px-5 py-3 flex items-start gap-2">
+    <svg class="w-4 h-4 mt-0.5 shrink-0 text-emerald-600" fill="none"
+         viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" />
+    </svg>
+    <p class="text-[11px] leading-relaxed text-slate-500">
+      {{ t("Download a full PDF report — including an AI review of your retirement plan with personalised suggestions.") }}
+    </p>
+  </div>
 
 </div>

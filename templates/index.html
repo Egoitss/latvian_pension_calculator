@@ -2,39 +2,12 @@
 
 {% block content %}
 
-<!-- Sticky pension summary bar -->
-<header class="sticky top-0 z-50 border-b border-slate-100 bg-white/95 backdrop-blur-sm">
-  <div class="mx-auto max-w-4xl px-4 md:px-6 py-2 flex items-center gap-3 md:gap-6">
-    <span class="shrink-0 text-[10px] font-semibold tracking-widest text-slate-300 uppercase">
-      {{ t("Outcome") }}
-    </span>
-    <div class="flex flex-1 items-center gap-5 md:gap-8 min-w-0">
-      <div class="min-w-0">
-        <div class="text-[9px] text-slate-400 uppercase tracking-wide">{{ t("Monthly at retirement") }}</div>
-        <div id="summaryMonthly" class="text-xl font-semibold text-slate-600 leading-tight">—</div>
-      </div>
-      <div class="min-w-0">
-        <div class="text-[9px] text-slate-400 uppercase tracking-wide">{{ t("In today's money") }}</div>
-        <div id="summaryRealMonthly" class="text-xl font-semibold text-emerald-600 leading-tight">—</div>
-      </div>
-      <div class="min-w-0 hidden sm:block">
-        <div id="summaryCapitalLabel" class="text-[9px] text-slate-400 uppercase tracking-wide">{{ t("Total savings") }}</div>
-        <div id="summaryCapital" class="text-xl font-semibold text-slate-600 leading-tight">—</div>
-      </div>
-      <div class="ml-auto shrink-0">
-        <span id="summaryScenarioLabel"
-              class="inline-flex rounded-full px-2.5 py-1 text-[10px] font-medium
-                     bg-slate-100 text-slate-500">
-          {{ t("Moderate") }}
-        </span>
-      </div>
-    </div>
-    <!-- Copy feedback message (shown by ui.js after clipboard action) -->
-    <div id="copyFeedback"
-         class="hidden absolute right-4 top-full mt-1 rounded-xl px-3 py-1.5
-                text-xs font-medium shadow-sm z-10"></div>
-  </div>
-</header>
+<!-- The live summary moved to the sticky bottom footer (end of file). -->
+
+<!-- Copy feedback toast (relocated from the old top bar) -->
+<div id="copyFeedback"
+     class="hidden fixed left-1/2 bottom-20 z-[110] -translate-x-1/2
+            rounded-xl px-3 py-1.5 text-xs font-medium shadow-sm"></div>
 
 <!-- Page wrapper — single column, max-w-4xl for embeddable readable width -->
 <main class="p-3 md:p-6">
@@ -95,11 +68,36 @@
   </div>
 </main>
 
-<!-- Mobile sticky bottom bar: live monthly pension + quick PDF download -->
+<!-- Sticky footer: mirrors the old "Outcome" header — three equal
+     summary numbers (today's money in red) + the chosen-scenario chip +
+     the report download with its AI review. Mobile keeps only the
+     pension (today's money) and the download button. -->
 <div class="mobile-bar">
-  <span class="mb-label">{{ t("Monthly pension") }}</span>
+  <div class="flex flex-1 items-center gap-5 md:gap-8 min-w-0">
+    <div class="min-w-0 mb-desktop">
+      <div class="text-[9px] text-slate-400 uppercase tracking-wide">{{ t("Monthly at retirement") }}</div>
+      <div id="summaryMonthly"
+           class="text-xl font-semibold text-slate-600 leading-tight">—</div>
+    </div>
+    <div class="min-w-0">
+      <div class="text-[9px] text-slate-400 uppercase tracking-wide">{{ t("In today's money") }}</div>
+      <div id="mobileBarValue"
+           class="text-xl font-semibold text-emerald-600 leading-tight">—</div>
+    </div>
+    <div class="min-w-0 mb-desktop">
+      <div id="summaryCapitalLabel" class="text-[9px] text-slate-400 uppercase tracking-wide">{{ t("Total savings") }}</div>
+      <div id="summaryCapital"
+           class="text-xl font-semibold text-slate-600 leading-tight">—</div>
+    </div>
+    <!-- Chosen scenario chip beside the numbers (desktop only); colour
+         mirrors the active scenario button via scenarios.js. -->
+    <div class="mb-desktop">
+      <span id="summaryScenarioLabel"
+            class="scenario-chip is-moderate">{{ t("Moderate") }}</span>
+    </div>
+  </div>
   <div class="mb-right">
-    <span id="mobileBarValue" class="mb-value">—</span>
+    <span class="mb-dl-note">{{ t("incl. AI review") }}</span>
     <button id="mobileDownloadBtn" type="button" class="mb-download">
       <span class="js-dl-label">{{ t("Download report PDF") }}</span>
     </button>

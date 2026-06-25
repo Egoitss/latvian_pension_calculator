@@ -1,5 +1,6 @@
-// localStorage persistence for all calculator inputs.
+// sessionStorage persistence for all calculator inputs.
 // Imported by ui.js and property.js — runs once (ES module singleton).
+// Scope: survives tab switches within a session; clears when tab closes.
 
 // All tracked input IDs mapped to the element property to read/write.
 // "value" covers text, number, range, and select elements.
@@ -38,7 +39,12 @@ const KEY          = "pensija_v1";
 const GENDER_KEY   = "pensija_gender";
 const PROPTYPE_KEY = "pensija_proptype";
 
-// Read all tracked inputs and persist to localStorage.
+// One-time migration: erase old localStorage data (was personal).
+["pensija_v1", "pensija_gender", "pensija_proptype"].forEach(k => {
+  try { localStorage.removeItem(k); } catch (_) {}
+});
+
+// Read all tracked inputs and persist to sessionStorage.
 export function saveInputs() {
   const data = {};
   for (const [id, prop] of Object.entries(INPUTS)) {
@@ -49,15 +55,15 @@ export function saveInputs() {
     if (val === "" || val === null || val === undefined) continue;
     data[id] = val;
   }
-  try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (_) {}
+  try { sessionStorage.setItem(KEY, JSON.stringify(data)); } catch (_) {}
 }
 
-// Fill all tracked inputs from localStorage without firing DOM events.
+// Fill all tracked inputs from sessionStorage without firing DOM events.
 // Must be called before onInputChange() so the first calc uses saved values.
 export function loadInputs() {
   let data;
   try {
-    data = JSON.parse(localStorage.getItem(KEY) || "null");
+    data = JSON.parse(sessionStorage.getItem(KEY) || "null");
   } catch (_) { return; }
   if (!data) return;
   for (const [id, prop] of Object.entries(INPUTS)) {
@@ -68,20 +74,20 @@ export function loadInputs() {
 }
 
 export function saveGender(gender) {
-  try { localStorage.setItem(GENDER_KEY, gender); } catch (_) {}
+  try { sessionStorage.setItem(GENDER_KEY, gender); } catch (_) {}
 }
 export function loadGender() {
   try {
-    const v = localStorage.getItem(GENDER_KEY);
+    const v = sessionStorage.getItem(GENDER_KEY);
     return (v === "men" || v === "women") ? v : "men";
   } catch (_) { return "men"; }
 }
 
 export function savePropType(type) {
-  try { localStorage.setItem(PROPTYPE_KEY, type); } catch (_) {}
+  try { sessionStorage.setItem(PROPTYPE_KEY, type); } catch (_) {}
 }
 export function loadPropType() {
-  try { return localStorage.getItem(PROPTYPE_KEY) || null; }
+  try { return sessionStorage.getItem(PROPTYPE_KEY) || null; }
   catch (_) { return null; }
 }
 
