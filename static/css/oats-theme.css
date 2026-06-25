@@ -41,6 +41,12 @@ input, select, label, th, code,
 }
 .border-emerald-400,
 .border-l-emerald-400 { border-color: var(--ob) !important; }
+/* Remaining shades — so ALL green becomes the brand red. */
+.text-emerald-700 { color: var(--ob) !important; }
+.text-emerald-900 { color: var(--ob-d) !important; }
+.bg-emerald-200, .bg-emerald-700 { background-color: var(--ob) !important; }
+.border-emerald-200, .border-emerald-300 { border-color: var(--ob) !important; }
+.ring-emerald-100, .ring-emerald-200 { --tw-ring-color: var(--ob) !important; }
 
 /* ── Amber crisis rows — keep amber but soften ──────────────────── */
 .bg-amber-50  { background-color: #FEFCE8 !important; }
@@ -99,19 +105,6 @@ thead th {
   font-size: 10.5px !important;
   letter-spacing: .12em !important;
   text-transform: uppercase !important;
-}
-
-/* ── Scenario badge ─────────────────────────────────────────────── */
-#summaryScenarioLabel {
-  border: 1px solid var(--ol);
-  background: var(--ob-t);
-  color: var(--ob);
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 10px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  border-radius: 0 !important;
-  padding: 4px 10px;
 }
 
 /* ── OATS nav (custom, not Tailwind overrides) ──────────────────── */
@@ -207,13 +200,19 @@ thead th {
   left: 0; width: 100%; height: 64px; background: #fff;
   border-top: 1px solid #e5e5e5; z-index: 100; padding: 0 24px; gap: 12px;
 }
-.mobile-bar .mb-label { font-size: 12px; color: #6b7280; }
 .mobile-bar .mb-right {
-  display: flex; align-items: center; gap: 12px; margin-left: auto;
+  display: flex; align-items: center; gap: 16px; margin-left: auto;
 }
-.mobile-bar .mb-value {
-  font-size: 20px; font-weight: 500; color: var(--oi);
-  white-space: nowrap;
+/* Desktop-only blocks (extra numbers + scenario chip): hidden on phones,
+   where only the pension + download remain. */
+.mobile-bar .mb-desktop { display: none; }
+@media (min-width: 641px) {
+  .mobile-bar .mb-desktop { display: block; }
+}
+/* "incl. AI review" caption — sits inline, just left of the button. */
+.mobile-bar .mb-dl-note {
+  font-size: 11px; font-weight: 600; color: #475569;
+  letter-spacing: .01em; white-space: nowrap; text-align: right;
 }
 .mobile-bar .mb-download {
   height: 40px; border: 1px solid #9D2235; border-radius: 8px;
@@ -222,8 +221,21 @@ thead th {
 }
 .mobile-bar .mb-download:hover { background: #7A1A29; border-color: #7A1A29; }
 .mobile-bar .mb-download:disabled { opacity: .6; cursor: default; }
-.mobile-bar .mb-value.mb-flash { animation: mbFade 200ms ease; }
+.mobile-bar .mb-flash { animation: mbFade 200ms ease; }
 @keyframes mbFade { from { opacity: 0; } to { opacity: 1; } }
+
+/* Scenario indicator chip — fill mirrors the active scenario button, so
+   Negative reads red, Moderate navy, Positive brand red. Defined here
+   (not via Tailwind utilities) so JS-applied colours always render. */
+.scenario-chip {
+  display: inline-flex; align-items: center; padding: 4px 10px;
+  font-family: "IBM Plex Mono", monospace; font-size: 10px;
+  font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+  color: #fff; white-space: nowrap;
+}
+.scenario-chip.is-positive { background: var(--ob); }   /* brand red */
+.scenario-chip.is-moderate { background: #0f172a; }     /* navy */
+.scenario-chip.is-negative { background: #dc2626; }     /* red-600 */
 
 body { padding-bottom: 72px; }   /* keep content clear of the footer bar */
 

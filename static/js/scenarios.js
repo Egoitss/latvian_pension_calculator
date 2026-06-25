@@ -44,11 +44,6 @@ const LABEL_COLORS = {
   negative: "text-xs font-medium text-red-600",
 };
 
-const SUMMARY_BADGE_COLORS = {
-  positive: "inline-flex rounded-full px-2.5 py-1 text-[10px] font-semibold bg-emerald-100 text-emerald-700",
-  moderate: "inline-flex rounded-full px-2.5 py-1 text-[10px] font-semibold bg-slate-100 text-slate-600",
-  negative: "inline-flex rounded-full px-2.5 py-1 text-[10px] font-semibold bg-red-100 text-red-600",
-};
 
 // Write the active return to the shared-state div and fire change so
 // ui.js and pension3.js (which listen to this element ID) recalculate.
@@ -68,7 +63,7 @@ function activateScenario(name) {
   }
   const summaryBadge = g("summaryScenarioLabel");
   if (summaryBadge) {
-    summaryBadge.className = SUMMARY_BADGE_COLORS[name];
+    summaryBadge.className = "scenario-chip is-" + name;
     summaryBadge.textContent =
       name === "positive" ? t("Positive") :
       name === "negative" ? t("Negative") : t("Moderate");

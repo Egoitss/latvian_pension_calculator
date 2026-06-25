@@ -5,8 +5,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pension Scenario Simulator — OATS</title>
+  <!-- Cross-browser favicons: SVG for modern, PNG fallback for Chrome -->
   <link rel="icon" type="image/svg+xml"
-        href="{{ url_for('static', filename='favicon.svg') }}?v=2" />
+        href="{{ url_for('static', filename='favicon.svg') }}?v=3" />
+  <link rel="icon" type="image/png" sizes="32x32"
+        href="{{ url_for('static', filename='favicon-32.png') }}?v=3" />
+  <link rel="icon" type="image/png" sizes="16x16"
+        href="{{ url_for('static', filename='favicon-16.png') }}?v=3" />
+  <link rel="apple-touch-icon"
+        href="{{ url_for('static', filename='apple-touch-icon.png') }}?v=3" />
 
   <!-- OATS typeface stack: Space Grotesk + IBM Plex Sans + IBM Plex Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -36,10 +43,10 @@
 
   <!-- Base custom styles -->
   <link rel="stylesheet"
-        href="{{ url_for('static', filename='css/style.css') }}" />
+        href="{{ url_for('static', filename='css/style.css', v=js_v) }}" />
   <!-- OATS theme — loaded after Tailwind to override design tokens -->
   <link rel="stylesheet"
-        href="{{ url_for('static', filename='css/oats-theme.css') }}" />
+        href="{{ url_for('static', filename='css/oats-theme.css', v=js_v) }}" />
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900 font-sans antialiased">
 
