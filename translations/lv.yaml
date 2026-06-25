@@ -19,10 +19,13 @@ Estimated fees: Aptuvenās komisijas
 Assumptions: Tavi dati
 Change anything — results update instantly: Personīgie parametri visam aprēķinam
 Birth month and year: Dzimšanas gads un mēnesis
+Birth year: Dzimšanas gads
+Advanced assumptions: Papildu pieņēmumi
+'For a more complete report, open the sections below and fill in your details.': Pilnīgākam pārskatam atveriet zemāk esošās sadaļas un aizpildiet savus datus.
 'Age:': 'Vecums:'
 Retirement age: Pensionēšanās vecums
 'Retiring:': 'Pensijā:'
-'LV statutory: 65 (2025) · trend +~1 yr/decade · Your generation: ~': 'LV likumīgais: 65 g. (2025) · tendence +~1 g./10 g. · Tavai paaudzei: ~'
+'LV statutory: 65 (2025) · trend +~1 yr/decade': 'LV likumīgais: 65 g. (2025) · tendence +~1 g./10 g.'
 Gross monthly salary: Bruto alga mēnesī
 / month: / mēnesi
 Payout period: Izmaksas periods
@@ -278,6 +281,8 @@ Weak: Vāja
 Higher: Augstāks
 Lower: Zemāks
 Download report (.pdf): Lejupielādēt pārskatu (.pdf)
+Download PDF: Lejupielādēt PDF
+Download report PDF: Lejupielādēt pārskatu PDF
 On track — your pension covers a strong share of today's income.: Uz pareizā ceļa — pensija sedz būtisku daļu no šodienas ienākumiem.
 Reasonable — there is room to strengthen your pension.: Pieņemami — ir iespēja nostiprināt pensiju.
 Below target — extra voluntary saving would help significantly.: Zem mērķa — papildu brīvprātīgie uzkrājumi būtiski palīdzētu.

@@ -1,6 +1,7 @@
 <!-- 2nd-pillar funded pension card — inputs + outputs in the right panel -->
 <div class="rounded-3xl border border-slate-200 bg-white shadow-sm"
-     data-accordion data-accordion-trigger="balance">
+     data-accordion data-accordion-collapsed
+     data-accordion-trigger="balance">
 
   <!-- Accordion header (click toggles; auto-expanded when balance has default) -->
   <button type="button"
@@ -48,7 +49,7 @@
           </button>
         </div>
       </div>
-      <div class="grid grid-cols-2 gap-2">
+      <div class="grid grid-cols-1 gap-2">
         <div>
           <div class="mb-0.5 text-[10px] text-slate-400">{{ t("Total (€)") }}</div>
           <input id="balance" type="number" step="1"
@@ -57,7 +58,7 @@
                         text-sm outline-none transition focus:border-slate-500
                         focus:ring-2 focus:ring-slate-200" />
         </div>
-        <div>
+        <div class="hidden">
           <div class="mb-0.5 text-[10px] text-slate-400">{{ t("Already earned (€)") }}</div>
           <input id="p2AlreadyEarned" type="number" step="1" min="0"
                  placeholder="0"

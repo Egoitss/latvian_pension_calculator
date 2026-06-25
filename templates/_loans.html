@@ -7,7 +7,8 @@
   ] %}
   {% for loan in loans %}
   <div class="rounded-3xl border border-slate-200 bg-white shadow-sm"
-       data-accordion data-accordion-trigger="{{ loan.id }}Balance">
+       data-accordion data-accordion-collapsed
+       data-accordion-trigger="{{ loan.id }}Balance">
 
     <!-- Accordion header (P2L toggle stays accessible but not in header button) -->
     <button type="button"

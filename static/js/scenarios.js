@@ -4,6 +4,16 @@ import { bootstrapScenarioReturns } from "./calc.js";
 
 function g(id) { return document.getElementById(id); }
 
+// Update the mobile bottom-bar value, fading it in only when it changes.
+function setMobileBarValue(text) {
+  const el = g("mobileBarValue");
+  if (!el || el.textContent === text) return;
+  el.textContent = text;
+  el.classList.remove("mb-flash");
+  void el.offsetWidth;            // restart the 200ms fade animation
+  el.classList.add("mb-flash");
+}
+
 function fmtEur(v) {
   return new Intl.NumberFormat("lv-LV", {
     style: "currency", currency: "EUR", maximumFractionDigits: 0,
@@ -72,8 +82,8 @@ const BTN_BASE =
 function applyButtonStyles(active) {
   const styles = {
     positive: {
-      on:  BTN_BASE + " border-emerald-600 bg-emerald-600 text-white",
-      off: BTN_BASE + " border-emerald-300 bg-white text-emerald-700" +
+      on:  BTN_BASE + " border-emerald-400 bg-emerald-600 text-white",
+      off: BTN_BASE + " border-emerald-400 bg-white text-emerald-600" +
            " hover:bg-emerald-50",
     },
     moderate: {
@@ -143,6 +153,7 @@ function updateCombinedDisplay() {
   // Sticky bar
   if (g("summaryMonthly")) g("summaryMonthly").textContent = fmtEur(monthly);
   if (g("summaryRealMonthly")) g("summaryRealMonthly").textContent = fmtEur(realMonthly);
+  setMobileBarValue(fmtEur(realMonthly));   // mobile bottom bar (today's money)
 
   // P2 investment return (gains €)
   if (g("combinedP2Earnings"))

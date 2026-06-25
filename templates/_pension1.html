@@ -1,6 +1,7 @@
 <!-- 1st-pillar NDC pension estimator — pure client-side, reads shared main-form inputs -->
 <div class="rounded-3xl border border-slate-200 bg-white shadow-sm"
-     data-accordion data-accordion-trigger="p1Capital">
+     data-accordion data-accordion-collapsed
+     data-accordion-trigger="p1Capital">
 
   <!-- Accordion header (click toggles, auto-expands on p1Capital data) -->
   <button type="button"
@@ -78,7 +79,7 @@
         />
       </div>
 
-      <div class="flex-1 space-y-1">
+      <div class="hidden">
         <label class="text-[10px] font-medium text-slate-500" for="p1RecordMonths">
           {{ t("Months") }}
         </label>

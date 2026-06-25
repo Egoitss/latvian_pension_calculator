@@ -18,9 +18,10 @@ function initAccordion(card) {
   const header = card.querySelector(".accordion-header");
 
   // Expanded by default. Cards marked data-accordion-collapsed start
-  // closed, but still auto-expand when their trigger holds a value.
+  // closed (regardless of any default value) but still auto-expand
+  // when the user types into their trigger.
   const optOut = card.hasAttribute("data-accordion-collapsed");
-  if (!optOut || (trigger && readValue(trigger) > 0)) {
+  if (!optOut) {
     card.classList.add("is-expanded");
   }
 
