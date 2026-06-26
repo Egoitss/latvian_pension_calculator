@@ -13,14 +13,23 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
+      - caddy_logs:/var/log/caddy   # access logs (visit data)
 
   pension:
     build: ..                 # repo root holds the Dockerfile
     restart: unless-stopped
     env_file: ../.env         # DEEPSEEK_API_KEY etc. (not committed)
+    # Persist the download counter outside the container so a rebuild
+    # (docker compose up --build) no longer resets the running total.
+    environment:
+      - DOWNLOAD_COUNT_FILE=/data/download_count.json
+    volumes:
+      - pension_data:/data
     expose:
       - "5001"
 
 volumes:
   caddy_data: {}
   caddy_config: {}
+  caddy_logs: {}
+  pension_data: {}
