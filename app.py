@@ -84,6 +84,12 @@ def inject_js_version():
     return {"js_v": js_v}
 
 
+@app.context_processor
+def inject_analytics():
+    # GoatCounter code (public, cookieless). Empty → script omitted.
+    return {"goatcounter": os.environ.get("GOATCOUNTER_CODE", "")}
+
+
 def _age_from_birth(birth_year, birth_month):
     today = _date.today()
     age = today.year - birth_year

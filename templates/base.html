@@ -87,5 +87,19 @@
 
   <!-- JS modules loaded after DOM is ready -->
   {% block scripts %}{% endblock %}
+
+  <!-- GoatCounter: cookieless analytics, emitted only when the
+       GOATCOUNTER_CODE env var is set. Host-prefixed path keeps
+       pension.oats.lv distinct from oats.lv in one dashboard. -->
+  {% if goatcounter %}
+  <script>
+    window.goatcounter = {
+      path: function (p) { return location.host + p; }
+    };
+  </script>
+  <script
+    data-goatcounter="https://{{ goatcounter }}.goatcounter.com/count"
+    async src="//gc.zgo.at/count.js"></script>
+  {% endif %}
 </body>
 </html>
