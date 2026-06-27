@@ -142,8 +142,8 @@ def test_download_count_endpoint(tmp_path, monkeypatch):
     monkeypatch.setenv(
         "DOWNLOAD_COUNT_FILE", str(tmp_path / "count.json"))
     client = _client()
-    client.post("/export/pdf", json=SAMPLE)
-    client.post("/lv/export/pdf", json=SAMPLE)
+    client.post("/export/pdf", json=SAMPLE)         # LV (default)
+    client.post("/en/export/pdf", json=SAMPLE)      # English
     assert client.get("/api/download-count").get_json()["count"] == 2
 
 

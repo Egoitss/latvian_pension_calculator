@@ -40,9 +40,10 @@ except ValueError:
 
 def _alt_path(path: str, lang: str) -> str:
     # Path to the same page in the other language (for the switcher).
-    if lang == "lv":
-        return path[3:] or "/"          # strip leading "/lv"
-    return "/lv" + ("" if path == "/" else path)
+    # Latvian is the default (bare paths); English lives under /en.
+    if lang == "en":
+        return path[3:] or "/"          # strip leading "/en"
+    return "/en" + ("" if path == "/" else path)
 
 
 @app.context_processor
@@ -156,8 +157,15 @@ LOCAL_DATA = {
 }
 
 
-@app.route("/")
 @app.route("/lv")
+@app.route("/lv/loans")
+def _legacy_lv():
+    # Pre-swap Latvian URLs → new bare paths (Latvian is now default).
+    return redirect(request.path[3:] or "/", code=301)
+
+
+@app.route("/")
+@app.route("/en")
 def index():
     # Compute the initial projection using default inputs
     d = DEFAULTS
@@ -223,7 +231,7 @@ def index():
 
 
 @app.route("/loans")
-@app.route("/lv/loans")
+@app.route("/en/loans")
 def loans():
     resp = make_response(render_template(
         "loans.html",
@@ -333,7 +341,7 @@ def _client_ip() -> str:
 
 
 @app.route("/export/pdf", methods=["POST"])
-@app.route("/lv/export/pdf", methods=["POST"])
+@app.route("/en/export/pdf", methods=["POST"])
 def export_pdf():
     # Build the PDF retirement report from the posted calculator
     # state, localized to the request path's language, and count it.

@@ -132,8 +132,8 @@ async function downloadDocx(btn) {
     const payload = buildPayload();
     payload.activeScenario = active;
     payload.scenarios = scenarios;
-    // Respect the /lv prefix so the report is in the page language.
-    const base = window.location.pathname.startsWith("/lv") ? "/lv" : "";
+    // Respect the /en prefix so the report is in the page language.
+    const base = window.location.pathname.startsWith("/en") ? "/en" : "";
     const resp = await fetch(`${base}/export/pdf`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

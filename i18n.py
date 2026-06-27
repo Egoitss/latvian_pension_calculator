@@ -33,8 +33,8 @@ def _load(lang: str) -> dict[str, str]:
 
 
 def lang_from_path(path: str) -> str:
-    # "/lv" or "/lv/..." selects Latvian; everything else English.
-    return "lv" if path == "/lv" or path.startswith("/lv/") else "en"
+    # Latvian is the default (bare paths); "/en" or "/en/..." → English.
+    return "en" if path == "/en" or path.startswith("/en/") else "lv"
 
 
 def _norm(text: str) -> str:
