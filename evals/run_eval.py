@@ -17,6 +17,7 @@ CRITERIA = [
     ("relocation gating", graders.grade_relocation, 100),
     ("3rd-pillar rec", graders.grade_pillar3, 95),
     ("downsize oversized", graders.grade_downsize, 90),
+    ("no over-advice strong", graders.grade_no_overadvice, 100),
     ("no phantom property", graders.grade_no_phantom, 100),
     ("no downsize right-sized", graders.grade_no_downsize_rightsized, 100),
     ("size/occupancy", graders.grade_size, 90),

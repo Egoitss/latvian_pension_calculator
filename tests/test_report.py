@@ -39,7 +39,8 @@ def test_replacement_rate_basis_is_gross():
 
 
 def test_outlook_bands():
-    assert insights.outlook(45) == "strong"
+    assert insights.outlook(45) == "excellent"
+    assert insights.outlook(44.9) == "strong"
     assert insights.outlook(30) == "strong"
     assert insights.outlook(29.9) == "moderate"
     assert insights.outlook(20) == "moderate"
@@ -60,6 +61,15 @@ def test_salary_at_retirement_prefers_projected():
         {"grossMonthly": 1750, "grossAtRetirement": 9000}) == 9000
     assert insights.salary_at_retirement({"grossMonthly": 1750}) == 1750
     assert insights.salary_at_retirement({}) == 0.0
+
+
+def test_salary_at_retirement_derives_from_growth():
+    # No grossAtRetirement → derive from salary growth (future EUR), not
+    # today's pay, so the rate's denominator stays consistent.
+    s = insights.salary_at_retirement(
+        {"grossMonthly": 2000, "salaryGrowth": 5, "age": 30,
+         "retirementAge": 65})
+    assert 10000 <= s <= 10800       # 2000 * 1.05^34 ≈ 10510
 
 
 def test_summarize_rate_uses_retirement_salary():
@@ -87,9 +97,9 @@ def test_market_share_and_risk():
 
 
 def test_summarize_shape():
-    # SAMPLE: nominal 1380 / grossMonthly 1750 = 78.9% → strong
+    # SAMPLE: nominal 1380 / salary-at-retirement 1750 = 78.9% → excellent
     s = insights.summarize(SAMPLE)
-    assert s["outlook"] == "strong"
+    assert s["outlook"] == "excellent"
     assert s["replacement_rate"] == 78.9
 
 
@@ -306,8 +316,8 @@ def test_report_html_shows_ai_box_when_present():
 def test_report_html_falls_back_without_ai():
     html = render_report_html(SAMPLE, make_t("en"), "2026-06-22")
     assert 'class="ai-review"' not in html   # no AI box
-    # Deterministic verdict still present (SAMPLE outlook is strong).
-    assert "On track" in html
+    # Deterministic verdict still present (SAMPLE outlook is excellent).
+    assert "Comfortably ahead" in html
 
 
 def test_report_uses_retirement_salary_basis():

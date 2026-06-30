@@ -38,3 +38,6 @@ Thumbs.db
 .idea/
 .vscode/
 *.swp
+
+# Superpowers scratch (brainstorm servers, ledgers)
+.superpowers/

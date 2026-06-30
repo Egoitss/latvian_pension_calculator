@@ -47,6 +47,7 @@ function buildPayload() {
       retirementAge: readNum("retirementAge"),
       grossMonthly: readNum("grossMonthly"),
       grossAtRetirement: n(p2.grossAtRetirement),
+      salaryGrowth: readNum("salaryGrowth"),
       scenario: readScenario(),
       homeSize: readNum("propSize"),
     },

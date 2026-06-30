@@ -58,6 +58,28 @@ def test_no_downsize_when_rightsized():
     assert ok == graders.PASS
 
 
+def test_downsize_optional_when_strong():
+    # Oversized but STRONG → downsizing is optional, absence is fine.
+    s, _ = graders.grade_downsize(
+        "Keep everything as is.",
+        _f(band="STRONG", heavy=True, prop=300000), "en")
+    assert s == graders.SKIP
+
+
+def test_no_overadvice_flags_downsize_at_excellent():
+    # The regression: pushing downsizing at EXCELLENT is a failure.
+    s, _ = graders.grade_no_overadvice(
+        "Consider downsizing your home.",
+        _f(band="EXCELLENT", heavy=True, prop=300000), "en")
+    assert s == graders.FAIL
+
+
+def test_no_overadvice_clean_at_strong_passes():
+    s, _ = graders.grade_no_overadvice(
+        "Your pension is on track.", _f(band="STRONG"), "en")
+    assert s == graders.PASS
+
+
 # ── format + language ──────────────────────────────────────────
 
 def test_markdown_detected():

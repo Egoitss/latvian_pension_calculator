@@ -50,22 +50,26 @@ _SYSTEM = (
     "2. Compare projected pension with inflation-adjusted purchasing "
     "power and mention inflation risk if purchasing power drops "
     "materially.\n"
-    "3. Always recommend raising voluntary 3rd-pillar contributions "
-    "as the primary action; when the property is oversized, also "
-    "recommend downsizing it.\n\n"
-    "Priority of recommendations:\n"
-    "1. Increase voluntary 3rd-pillar contributions\n"
-    "2. Delay retirement\n"
-    "3. Downsize oversized property\n"
-    "4. Sell non-essential assets\n"
-    "5. Relocate to lower-cost country (last resort only)\n\n"
+    "3. Recommendations depend ENTIRELY on the outlook band:\n"
+    "   - STRONG or EXCELLENT: there is NO shortfall (EXCELLENT = "
+    "comfortably exceeds typical needs). Your reply must contain NO "
+    "advice to downsize, sell property or assets, relocate, delay "
+    "retirement, or raise contributions — the words downsize, sell, "
+    "and relocate must NOT appear. Affirm the position in 2-3 "
+    "sentences and stop.\n"
+    "   - WEAK or MODERATE: recommend concrete improvements — primarily "
+    "raising voluntary 3rd-pillar contributions, then delaying "
+    "retirement, then downsizing ONLY if the property is OVERSIZED, "
+    "then selling non-essential assets; relocation only as a last "
+    "resort and only when WEAK.\n\n"
     "Property logic:\n"
-    "- Suggest downsizing ONLY when the home is flagged OVERSIZED; "
-    "then reference how many people it suits versus a couple of 2.\n"
-    "- If the home is right-sized for a couple (suited to 1-2 "
-    "people), do NOT suggest downsizing — it is appropriately sized.\n"
-    "- If no property value is given, do not mention property, "
-    "downsizing, or selling assets at all.\n\n"
+    "- Mention downsizing ONLY for a WEAK or MODERATE outlook AND only "
+    "when the home is flagged OVERSIZED; then reference how many "
+    "people it suits versus a couple of 2.\n"
+    "- For STRONG or EXCELLENT, do NOT suggest downsizing even if the "
+    "home is large — the pension does not need it.\n"
+    "- If the home is right-sized, or no property value is given, do "
+    "not mention property, downsizing, or selling assets at all.\n\n"
     "Weak outlook rule:\n"
     "If outlook is WEAK, state clearly that pension may struggle to "
     "cover typical Latvian retirement living costs (~1200-1800 "
@@ -143,15 +147,18 @@ def _user_prompt(f):
         f"(outlook: {f['band']})",
         f"- Capital at retirement: EUR {f['capital']}",
     ]
-    if f["prop"] > 0:
+    # At STRONG/EXCELLENT there is no shortfall, so the home is never a
+    # lever — hide its size/oversized framing so no downsizing is urged.
+    strong = f["band"] in ("STRONG", "EXCELLENT")
+    if f["prop"] > 0 and not strong:
         flag = "OVERSIZED" if f["heavy"] else "modest"
         lines.append(
             f"- Property value at retirement: EUR {f['prop']} "
             f"(today's money EUR {f['prop_real']}) — {flag}")
     else:
-        lines.append("- Property: NONE entered — do NOT mention "
-                     "property, downsizing, or selling assets")
-    if f["size"] > 0:
+        lines.append("- Property: do NOT mention property, downsizing, "
+                     "or selling assets")
+    if f["size"] > 0 and not strong:
         if f["heavy"]:
             lines.append(
                 f"- Home: {f['size']} m2, fits about {f['optimal']} "

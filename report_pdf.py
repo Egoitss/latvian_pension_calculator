@@ -27,13 +27,17 @@ _env = Environment(
     autoescape=select_autoescape(["html"]),
 )
 
-_OUTLOOK = {"strong": "Strong", "moderate": "Moderate", "weak": "Weak"}
+_OUTLOOK = {"excellent": "Excellent", "strong": "Strong",
+            "moderate": "Moderate", "weak": "Weak"}
 _SCENARIO = {"positive": "Positive", "moderate": "Moderate",
              "negative": "Negative"}
 # Worst → best, left to right in the comparison strip.
 _SCN_ORDER = [("negative", "Negative"), ("moderate", "Moderate"),
               ("positive", "Positive")]
 _VERDICT = {
+    "excellent":
+        "Comfortably ahead — your pension is set to exceed typical "
+        "retirement needs.",
     "strong":
         "On track — your pension covers a strong share of your "
         "salary at retirement.",

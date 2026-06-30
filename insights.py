@@ -29,7 +29,10 @@ def replacement_rate(pension_monthly, salary_monthly):
 
 
 def outlook(rate):
-    # Band the replacement rate into strong / moderate / weak.
+    # Band the replacement rate (excellent/strong/moderate/weak). Shared
+    # by the deterministic box AND the AI verdict so labels never differ.
+    if rate >= STRONG_MAX:
+        return "excellent"
     if rate >= MODERATE_MAX:
         return "strong"
     if rate >= WEAK_MAX:
@@ -38,22 +41,28 @@ def outlook(rate):
 
 
 def band(rate):
-    # Four-way band (adds EXCELLENT) used by the AI prompt + verdict.
-    if rate < WEAK_MAX:
-        return "WEAK"
-    if rate < MODERATE_MAX:
-        return "MODERATE"
-    if rate < STRONG_MAX:
-        return "STRONG"
-    return "EXCELLENT"
+    # Uppercase band label for the AI prompt — same source as outlook()
+    # so the box and the AI verdict can never disagree.
+    return outlook(rate).upper()
 
 
 def salary_at_retirement(inputs):
-    # Projected gross monthly salary at retirement; fall back to the
-    # current salary when the projected value is absent (old payloads).
+    # Projected gross monthly salary at retirement — the rate's
+    # denominator, kept in FUTURE EUR to match the nominal pension.
+    # Prefer the frontend's value; else derive it from salary growth.
+    # Never silently use today's salary, which would inflate the rate
+    # (future pension / today's pay).
     data = inputs or {}
     projected = _num(data.get("grossAtRetirement"))
-    return projected if projected > 0 else _num(data.get("grossMonthly"))
+    if projected > 0:
+        return projected
+    gross = _num(data.get("grossMonthly"))
+    growth = _num(data.get("salaryGrowth")) / 100
+    years = max(0, round(_num(data.get("retirementAge")))
+                - round(_num(data.get("age"))))
+    if gross > 0 and years > 0:
+        return round(gross * (1 + growth) ** max(0, years - 1))
+    return gross
 
 
 def inflation_erosion(nominal_monthly, real_monthly):

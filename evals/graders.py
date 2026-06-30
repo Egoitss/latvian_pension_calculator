@@ -78,19 +78,32 @@ def grade_relocation(out, f, lang):
 
 
 def grade_pillar3(out, f, lang):
-    # 3rd-pillar top-ups are recommendation priority #1.
-    if f["band"] == "EXCELLENT":
-        return SKIP, "excellent: improvement optional"
+    # 3rd-pillar top-ups are the primary fix for WEAK/MODERATE; for a
+    # STRONG/EXCELLENT outlook improvement is optional — don't require it.
+    if f["band"] in ("STRONG", "EXCELLENT"):
+        return SKIP, "strong/excellent: improvement optional"
     return (PASS, "—") if _has(out, _PILLAR3[lang]) \
         else (FAIL, "no 3rd-pillar advice")
 
 
 def grade_downsize(out, f, lang):
-    # Oversized property → must suggest downsizing.
+    # Oversized property → must suggest downsizing, but ONLY for a
+    # WEAK/MODERATE outlook; a strong/excellent pension needs no fix.
     if not (f["heavy"] and f["prop"] > 0):
         return SKIP, "not oversized"
+    if f["band"] in ("STRONG", "EXCELLENT"):
+        return SKIP, "strong/excellent: downsizing not required"
     return (PASS, "—") if _downsize_advice(out, lang) \
         else (FAIL, "no downsizing advice")
+
+
+def grade_no_overadvice(out, f, lang):
+    # GUARDRAIL: a STRONG/EXCELLENT outlook must NOT be told to downsize —
+    # pushing a "fix" when there is no shortfall contradicts the verdict.
+    if f["band"] not in ("STRONG", "EXCELLENT"):
+        return SKIP, "not strong/excellent"
+    return (FAIL, "downsizing pushed at strong/excellent") \
+        if _downsize_advice(out, lang) else (PASS, "—")
 
 
 def grade_no_phantom(out, f, lang):
@@ -111,10 +124,11 @@ def grade_no_downsize_rightsized(out, f, lang):
 
 
 def grade_size(out, f, lang):
-    # Reference size/occupancy only when the home is oversized — for a
-    # right-sized home, spelling out the m² is noise in a 2-3 sentence
-    # verdict.
-    if f["size"] <= 0 or not f["heavy"]:
+    # Reference size/occupancy only when the home is oversized AND the
+    # outlook is WEAK/MODERATE — at strong/excellent the home isn't
+    # discussed, and for a right-sized home the m² is just noise.
+    if (f["size"] <= 0 or not f["heavy"]
+            or f["band"] in ("STRONG", "EXCELLENT")):
         return SKIP, "size not actionable"
     refs = [str(f["size"]), "m²", "m2", "people", "person",
             "cilvēk", "residents", "iedzīvotāj"]
