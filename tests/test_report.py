@@ -308,3 +308,20 @@ def test_report_html_falls_back_without_ai():
     assert 'class="ai-review"' not in html   # no AI box
     # Deterministic verdict still present (SAMPLE outlook is strong).
     assert "On track" in html
+
+
+def test_report_uses_retirement_salary_basis():
+    scn = {"monthly": 1800, "realMonthly": 900, "capital": 423000}
+    data = {
+        "inputs": {"grossMonthly": 1750, "grossAtRetirement": 9000,
+                   "retirementAge": 65, "scenario": "moderate"},
+        "totals": {"monthly": 1800, "realMonthly": 900, "capital": 423000},
+        "pillars": {"p1": {"monthly": 900}, "p2": {"monthly": 600},
+                    "p3": {"monthly": 300}},
+        "activeScenario": "moderate",
+        "scenarios": {"moderate": scn, "positive": scn, "negative": scn},
+    }
+    html = render_report_html(data, make_t("en"), "2026-06-30")
+    assert "20.0%" in html                 # 1800 / 9000
+    assert "salary at retirement" in html
+    assert "current gross income" not in html

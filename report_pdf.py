@@ -35,8 +35,8 @@ _SCN_ORDER = [("negative", "Negative"), ("moderate", "Moderate"),
               ("positive", "Positive")]
 _VERDICT = {
     "strong":
-        "On track — your pension covers a strong share of today's "
-        "income.",
+        "On track — your pension covers a strong share of your "
+        "salary at retirement.",
     "moderate":
         "Reasonable — there is room to strengthen your pension.",
     "weak":
@@ -83,12 +83,12 @@ def _scenarios(t, data):
     if not s:
         return []
     active = data.get("activeScenario", "moderate")
-    gross = (data.get("inputs") or {}).get("grossMonthly")
+    inputs = data.get("inputs") or {}
+    salary = insights.salary_at_retirement(inputs)
     out = []
     for key, label in _SCN_ORDER:
         v = s.get(key) or {}
-        rate = insights.replacement_rate(v.get("realMonthly"), gross)
-        band = insights.outlook(rate)
+        rate = insights.replacement_rate(v.get("monthly"), salary)
         prop = _num(v.get("propEquity"))
         out.append({
             "label": t(label),
@@ -96,7 +96,6 @@ def _scenarios(t, data):
             "nominal": _eur(v.get("monthly")),
             "capital": _eur(v.get("capital")),
             "rate": rate,
-            # Property is opt-in: only surfaced when a value was entered.
             "property": _eur(prop) if prop > 0 else None,
             "active": key == active,
         })
