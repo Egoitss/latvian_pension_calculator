@@ -1,11 +1,14 @@
 # ai_review.py — short, cheap AI verdict for the PDF report, via the
 # DeepSeek API (OpenAI-compatible). Always returns text or None; never
 # raises, so a flaky API can never break the PDF download.
+import logging
 import os
 import re
 
 import ai_budget
 import insights
+
+_log = logging.getLogger(__name__)
 
 _API_BASE = "https://api.deepseek.com"
 _MODEL = "deepseek-chat"          # cheap V3 tier
@@ -15,6 +18,15 @@ _MAX_TOKENS = 300
 _TIMEOUT_S = 8.0
 
 _LANG_NAME = {"lv": "Latvian", "en": "English"}
+
+# Scoring table generated from the single source of truth in insights,
+# so the prompt can never drift from the code's banding.
+_BAND_TABLE = (
+    f"- <{insights.WEAK_MAX:g}% = WEAK\n"
+    f"- {insights.WEAK_MAX:g}-{insights.MODERATE_MAX:g}% = MODERATE\n"
+    f"- {insights.MODERATE_MAX:g}-{insights.STRONG_MAX:g}% = STRONG\n"
+    f"- >{insights.STRONG_MAX:g}% = EXCELLENT\n\n"
+)
 
 # Comfortable living space and the assumed retiring household size.
 # Used to judge whether a home is larger than a couple needs.
@@ -30,11 +42,9 @@ _SYSTEM = (
     "Do not use legal disclaimers, motivational language, or generic "
     "financial-advisor phrasing.\n\n"
     "Use ONLY the MODERATE scenario figures.\n\n"
-    "Replacement rate scoring:\n"
-    "- <45% = WEAK\n"
-    "- 45-60% = MODERATE\n"
-    "- 60-75% = STRONG\n"
-    "- >75% = EXCELLENT\n\n"
+    "Replacement rate scoring (rate = pension vs gross salary AT "
+    "RETIREMENT):\n"
+    + _BAND_TABLE +
     "Instructions:\n"
     "1. Open with a one-line verdict based on replacement rate.\n"
     "2. Compare projected pension with inflation-adjusted purchasing "
@@ -67,14 +77,8 @@ _SYSTEM = (
 
 
 def _score(rate):
-    # Replacement-rate band, matching the scoring table in _SYSTEM.
-    if rate < 45:
-        return "WEAK"
-    if rate < 60:
-        return "MODERATE"
-    if rate < 75:
-        return "STRONG"
-    return "EXCELLENT"
+    # Replacement-rate band — delegates to the shared scorer.
+    return insights.band(rate)
 
 
 def _clean(text):
@@ -101,15 +105,16 @@ def _moderate(data):
 def _facts(data):
     # Deterministic, grounded inputs so the model can't invent numbers.
     mod = _moderate(data)
-    gross = (data.get("inputs") or {}).get("grossMonthly")
+    inputs = data.get("inputs") or {}
+    gross_ret = insights.salary_at_retirement(inputs)
     real = _num(mod.get("realMonthly"))
     nominal = _num(mod.get("monthly"))
-    rate = insights.replacement_rate(real, gross)
+    rate = insights.replacement_rate(nominal, gross_ret)
     band = _score(rate)
     capital = _num(mod.get("capital"))
     prop = _num(mod.get("propEquity"))
     prop_real = _num(mod.get("propEquityReal"))
-    size = _num((data.get("inputs") or {}).get("homeSize"))
+    size = _num(inputs.get("homeSize"))
     optimal = round(size / _M2_PER_PERSON) if size > 0 else 0
     # Prefer the measured size: a home that comfortably fits more than
     # a couple is oversized. Without a size, fall back to value share.
@@ -119,7 +124,7 @@ def _facts(data):
         heavy = prop > 0 and prop >= capital and prop_real >= 150000
     return {
         "real": round(real), "nominal": round(nominal),
-        "rate": rate, "band": band,
+        "rate": rate, "band": band, "gross_ret": round(gross_ret),
         "capital": round(capital), "prop": round(prop),
         "prop_real": round(prop_real), "heavy": heavy,
         "size": round(size), "optimal": optimal,
@@ -132,8 +137,9 @@ def _user_prompt(f):
         f"- Monthly pension nominal (future EUR): EUR {f['nominal']}",
         f"- Monthly pension real (today's purchasing power): "
         f"EUR {f['real']}",
-        f"- Replacement rate: {f['rate']}% of gross  (outlook: "
-        f"{f['band']})",
+        f"- Gross salary at retirement: EUR {f['gross_ret']}",
+        f"- Replacement rate: {f['rate']}% of salary at retirement  "
+        f"(outlook: {f['band']})",
         f"- Capital at retirement: EUR {f['capital']}",
     ]
     if f["prop"] > 0:
@@ -163,14 +169,18 @@ def generate_review(data, lang="en"):
     """Return a short AI verdict string, or None if unavailable."""
     key = os.environ.get("DEEPSEEK_API_KEY")
     if not key:
+        _log.warning("DeepSeek review skipped: DEEPSEEK_API_KEY not set")
         return None
     try:
         from openai import OpenAI
     except ImportError:
+        _log.warning("DeepSeek review skipped: openai not installed")
         return None
     # Hard daily spend cap: once exhausted, skip the API and let the
     # PDF fall back to the deterministic verdict.
     if not ai_budget.try_consume():
+        _log.warning(
+            "DeepSeek review skipped: daily AI budget exhausted")
         return None
 
     facts = _facts(data)
@@ -188,5 +198,6 @@ def generate_review(data, lang="en"):
         )
         text = _clean(resp.choices[0].message.content or "")
         return text or None
-    except Exception:
+    except Exception as exc:
+        _log.warning("DeepSeek review failed: %s", exc)
         return None

@@ -255,6 +255,42 @@ def test_generate_review_swallows_api_errors(monkeypatch):
     assert ai_review.generate_review(AI_DATA, "en") is None
 
 
+def test_facts_rate_uses_retirement_salary():
+    data = {
+        "scenarios": {"moderate": {"monthly": 1800, "realMonthly": 900,
+                                   "capital": 200000}},
+        "inputs": {"grossMonthly": 1750, "grossAtRetirement": 9000},
+    }
+    f = ai_review._facts(data)
+    assert f["gross_ret"] == 9000
+    assert f["rate"] == 20.0          # 1800 / 9000
+    assert f["band"] == "MODERATE"
+
+
+def test_user_prompt_mentions_retirement_salary():
+    data = {
+        "scenarios": {"moderate": {"monthly": 1800, "realMonthly": 900,
+                                   "capital": 200000}},
+        "inputs": {"grossMonthly": 1750, "grossAtRetirement": 9000},
+    }
+    prompt = ai_review._user_prompt(ai_review._facts(data))
+    assert "salary at retirement" in prompt
+    assert "9000" in prompt
+
+
+def test_scoring_table_matches_constants():
+    assert f"<{insights.WEAK_MAX:g}% = WEAK" in ai_review._SYSTEM
+    assert f">{insights.STRONG_MAX:g}% = EXCELLENT" in ai_review._SYSTEM
+
+
+def test_missing_key_logs_and_returns_none(monkeypatch, caplog):
+    import logging
+    monkeypatch.delenv("DEEPSEEK_API_KEY", raising=False)
+    with caplog.at_level(logging.WARNING):
+        assert ai_review.generate_review({}, "en") is None
+    assert "DEEPSEEK_API_KEY not set" in caplog.text
+
+
 # ── AI box rendering in the report ─────────────────────────────
 
 def test_report_html_shows_ai_box_when_present():
