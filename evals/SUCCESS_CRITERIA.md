@@ -10,8 +10,9 @@ change.
 A 2-3 sentence Latvian/English verdict on a retirement projection,
 grounded ONLY in the supplied facts (no invented numbers), driven by
 the replacement-rate band. Rate = nominal pension ÷ gross salary AT
-retirement. Bands: WEAK <20%, MODERATE 20-30%, STRONG 30-45%,
-EXCELLENT ≥45% — the SAME 4 bands the deterministic box uses.
+retirement. Bands (anchored to income adequacy — the ~70% "keep your
+lifestyle" rule): WEAK <45%, MODERATE 45-60%, STRONG 60-75%,
+EXCELLENT ≥75% — the SAME 4 bands the deterministic box uses.
 
 ## Criteria
 

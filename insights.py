@@ -4,9 +4,11 @@
 
 # Replacement-rate bands, % of gross salary AT RETIREMENT. Tunable;
 # single source of truth — ai_review imports these for its prompt.
-WEAK_MAX = 20.0       # rate < WEAK_MAX             -> weak
-MODERATE_MAX = 30.0   # WEAK_MAX <= rate < MOD_MAX  -> moderate
-STRONG_MAX = 45.0     # MOD_MAX <= rate < STRONG    -> strong; >= excellent
+# Anchored to income adequacy (the ~70% "keep your lifestyle" rule):
+# a high rate means a small income drop in retirement.
+WEAK_MAX = 45.0       # rate < WEAK_MAX             -> weak
+MODERATE_MAX = 60.0   # WEAK_MAX <= rate < MOD_MAX  -> moderate
+STRONG_MAX = 75.0     # MOD_MAX <= rate < STRONG    -> strong; >= excellent
 
 # Market-pillar share thresholds (% of monthly pension from P2+P3).
 RISK_HIGH_MIN = 55.0

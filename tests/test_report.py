@@ -39,21 +39,21 @@ def test_replacement_rate_basis_is_gross():
 
 
 def test_outlook_bands():
-    assert insights.outlook(45) == "excellent"
-    assert insights.outlook(44.9) == "strong"
-    assert insights.outlook(30) == "strong"
-    assert insights.outlook(29.9) == "moderate"
-    assert insights.outlook(20) == "moderate"
-    assert insights.outlook(19.9) == "weak"
+    assert insights.outlook(75) == "excellent"
+    assert insights.outlook(74.9) == "strong"
+    assert insights.outlook(60) == "strong"
+    assert insights.outlook(59.9) == "moderate"
+    assert insights.outlook(45) == "moderate"
+    assert insights.outlook(44.9) == "weak"
 
 
 def test_band_four_way():
-    assert insights.band(19.9) == "WEAK"
-    assert insights.band(20) == "MODERATE"
-    assert insights.band(29.9) == "MODERATE"
-    assert insights.band(30) == "STRONG"
-    assert insights.band(44.9) == "STRONG"
-    assert insights.band(45) == "EXCELLENT"
+    assert insights.band(44.9) == "WEAK"
+    assert insights.band(45) == "MODERATE"
+    assert insights.band(59.9) == "MODERATE"
+    assert insights.band(60) == "STRONG"
+    assert insights.band(74.9) == "STRONG"
+    assert insights.band(75) == "EXCELLENT"
 
 
 def test_salary_at_retirement_prefers_projected():
@@ -79,7 +79,7 @@ def test_summarize_rate_uses_retirement_salary():
         "pillars": {},
     }
     assert insights.summarize(data)["replacement_rate"] == 20.0
-    assert insights.summarize(data)["outlook"] == "moderate"
+    assert insights.summarize(data)["outlook"] == "weak"
 
 
 def test_inflation_erosion():
@@ -274,7 +274,7 @@ def test_facts_rate_uses_retirement_salary():
     f = ai_review._facts(data)
     assert f["gross_ret"] == 9000
     assert f["rate"] == 20.0          # 1800 / 9000
-    assert f["band"] == "MODERATE"
+    assert f["band"] == "WEAK"
 
 
 def test_user_prompt_mentions_retirement_salary():
