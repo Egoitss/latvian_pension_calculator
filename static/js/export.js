@@ -46,7 +46,7 @@ function buildPayload() {
       age: readAge(),
       retirementAge: readNum("retirementAge"),
       grossMonthly: readNum("grossMonthly"),
-      grossAtRetirement: n((pillarCache.p2 || {}).grossAtRetirement),
+      grossAtRetirement: n(p2.grossAtRetirement),
       scenario: readScenario(),
       homeSize: readNum("propSize"),
     },

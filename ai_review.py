@@ -132,6 +132,7 @@ def _facts(data):
 
 
 def _user_prompt(f):
+    # Grounded MODERATE-scenario facts the model reasons from.
     lines = [
         "MODERATE scenario:",
         f"- Monthly pension nominal (future EUR): EUR {f['nominal']}",
