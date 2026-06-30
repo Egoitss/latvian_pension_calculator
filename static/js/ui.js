@@ -156,6 +156,7 @@ function onInputChange(chart) {
       monthlyAfterTax:     Math.round(projection.monthlyPayoutAfterTax),
       realMonthlyAfterTax: Math.round(projection.realMonthlyAfterTax),
       rows:                projection.rows,
+      grossAtRetirement:   Math.round(projection.final.annualGross / 12),
     },
   }));
   el("p2FinalBalance").textContent = formatEur(projection.final.total);
