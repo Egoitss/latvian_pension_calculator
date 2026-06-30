@@ -68,12 +68,14 @@ def remaining() -> int:
     return max(0, _limit() - _read_today(_path()))
 
 
-def try_consume() -> bool:
+def try_consume(limit=None, path=None) -> bool:
     # Atomically reserve one AI call for today. True if within budget.
-    limit = _limit()
+    # Optional limit/path override the DeepSeek defaults so another paid
+    # endpoint (e.g. /api/recommend) gets an independent daily budget.
+    limit = _limit() if limit is None else int(limit)
     if limit <= 0:
         return False
-    path = _path()
+    path = _path() if path is None else Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     lock = path.with_suffix(".lock")
     with open(lock, "w") as lf:

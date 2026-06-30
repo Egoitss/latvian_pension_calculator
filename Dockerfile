@@ -17,6 +17,14 @@ RUN pip install --no-cache-dir -r requirements.txt gunicorn
 
 COPY . .
 
+# Run as a non-root user so a runtime flaw can't act as root in the
+# container. The app writes budget/counter files under /app and /data,
+# so both must be owned by the runtime user.
+RUN useradd -u 10001 -m app \
+  && mkdir -p /data \
+  && chown -R app /app /data
+USER app
+
 # Hosts (Render, etc.) inject $PORT; default to 5001 for local docker run.
 EXPOSE 5001
 CMD ["sh", "-c", "gunicorn -w 2 -t 120 -b 0.0.0.0:${PORT:-5001} app:app"]

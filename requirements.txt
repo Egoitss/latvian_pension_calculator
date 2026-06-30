@@ -1,8 +1,15 @@
-flask
-anthropic
-openai
-python-dotenv
-pytest
-pyyaml
-deep-translator
-weasyprint
+# Pinned for reproducible builds and a controlled CVE surface.
+# Re-run `osv-scanner` after any bump. Direct dependencies:
+Flask==3.1.3
+anthropic==0.105.2
+openai==2.43.0
+python-dotenv==1.2.1
+pytest==8.4.2
+PyYAML==6.0.3
+deep-translator==1.11.4
+weasyprint==66.0
+# Transitive deps pinned to patched versions (flagged by osv-scanner):
+Pillow==11.3.0
+idna==3.18
+Pygments==2.20.0
+tqdm==4.68.3

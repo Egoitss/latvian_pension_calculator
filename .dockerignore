@@ -11,3 +11,6 @@ download_count.json
 download_count.lock
 ai_budget.json
 ai_budget.lock
+rec_budget.json
+rec_budget.lock
+.security/

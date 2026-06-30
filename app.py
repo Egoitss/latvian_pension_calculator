@@ -25,6 +25,7 @@ from i18n import (
     lang_from_path, make_t, js_catalog,
 )
 from report_pdf import build_report_pdf
+import ai_budget
 import ai_review
 import download_counter
 import rate_limit
@@ -36,6 +37,47 @@ try:
     EXPORT_LIMIT = int(os.environ.get("EXPORT_RATE_LIMIT", "20"))
 except ValueError:
     EXPORT_LIMIT = 20
+
+# /api/recommend is a paid LLM call (Anthropic); throttle it like the
+# PDF export — a per-IP hourly cap plus an independent daily budget.
+try:
+    REC_LIMIT = int(os.environ.get("RECOMMEND_RATE_LIMIT", "10"))
+except ValueError:
+    REC_LIMIT = 10
+try:
+    REC_DAILY_LIMIT = int(os.environ.get("RECOMMEND_DAILY_LIMIT", "200"))
+except ValueError:
+    REC_DAILY_LIMIT = 200
+REC_BUDGET_FILE = os.environ.get(
+    "RECOMMEND_BUDGET_FILE",
+    os.path.join(os.path.dirname(__file__), "rec_budget.json"),
+)
+
+# Defense-in-depth headers on every response. The CSP is permissive
+# (the Tailwind runtime CDN needs inline + eval); it still allowlists
+# origins and blocks framing, base-uri, and object embedding.
+_CSP = (
+    "default-src 'self'; "
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' "
+    "https://cdn.tailwindcss.com https://cdn.jsdelivr.net "
+    "https://gc.zgo.at; "
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+    "font-src 'self' https://fonts.gstatic.com data:; "
+    "img-src 'self' data: https://*.goatcounter.com; "
+    "connect-src 'self' https://*.goatcounter.com; "
+    "frame-ancestors 'none'; base-uri 'self'; object-src 'none'"
+)
+
+
+@app.after_request
+def _security_headers(resp):
+    # Set hardening headers without clobbering route-set ones.
+    resp.headers.setdefault("X-Frame-Options", "DENY")
+    resp.headers.setdefault("X-Content-Type-Options", "nosniff")
+    resp.headers.setdefault(
+        "Referrer-Policy", "strict-origin-when-cross-origin")
+    resp.headers.setdefault("Content-Security-Policy", _CSP)
+    return resp
 
 
 def _alt_path(path: str, lang: str) -> str:
@@ -289,6 +331,9 @@ def _build_recommend_prompt(d: dict) -> str:
 
 @app.route("/api/recommend", methods=["POST"])
 def api_recommend():
+    # Per-IP hourly cap: this is an unauthenticated, paid LLM endpoint.
+    if not rate_limit.allow(f"rec:{_client_ip()}", REC_LIMIT, 3600):
+        return jsonify({"error": "Too many requests, try later."}), 429
     # Lazy import: keep app boot fast even if anthropic isn't installed
     try:
         from anthropic import Anthropic
@@ -308,6 +353,12 @@ def api_recommend():
 
     prompt = _build_recommend_prompt(payload)
 
+    # Global daily ceiling on paid calls (independent of the DeepSeek
+    # budget), reserved only once we're about to hit the API.
+    if not ai_budget.try_consume(
+            limit=REC_DAILY_LIMIT, path=REC_BUDGET_FILE):
+        return jsonify(
+            {"error": "Daily recommendation limit reached."}), 429
     client = Anthropic()
     try:
         msg = client.messages.create(
@@ -374,4 +425,4 @@ def api_download_count():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    app.run(debug=os.environ.get("FLASK_DEBUG") == "1", port=5001)
