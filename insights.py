@@ -2,9 +2,11 @@
 # replacement rate, outlook band, inflation erosion, and a market-
 # risk label derived purely from the projected numbers.
 
-# Replacement-rate thresholds, % of gross income. Tunable.
-STRONG_MIN = 60.0
-MODERATE_MIN = 40.0
+# Replacement-rate bands, % of gross salary AT RETIREMENT. Tunable;
+# single source of truth — ai_review imports these for its prompt.
+WEAK_MAX = 20.0       # rate < WEAK_MAX             -> weak
+MODERATE_MAX = 30.0   # WEAK_MAX <= rate < MOD_MAX  -> moderate
+STRONG_MAX = 45.0     # MOD_MAX <= rate < STRONG    -> strong; >= excellent
 
 # Market-pillar share thresholds (% of monthly pension from P2+P3).
 RISK_HIGH_MIN = 55.0
@@ -18,21 +20,40 @@ def _num(value, default=0.0):
         return default
 
 
-def replacement_rate(real_monthly, gross_monthly):
-    # Real (today's-money) pension as a % of current gross income.
-    gross = _num(gross_monthly)
-    if gross <= 0:
+def replacement_rate(pension_monthly, salary_monthly):
+    # Nominal pension as a % of gross salary at retirement.
+    salary = _num(salary_monthly)
+    if salary <= 0:
         return 0.0
-    return round(_num(real_monthly) / gross * 100, 1)
+    return round(_num(pension_monthly) / salary * 100, 1)
 
 
 def outlook(rate):
     # Band the replacement rate into strong / moderate / weak.
-    if rate >= STRONG_MIN:
+    if rate >= MODERATE_MAX:
         return "strong"
-    if rate >= MODERATE_MIN:
+    if rate >= WEAK_MAX:
         return "moderate"
     return "weak"
+
+
+def band(rate):
+    # Four-way band (adds EXCELLENT) used by the AI prompt + verdict.
+    if rate < WEAK_MAX:
+        return "WEAK"
+    if rate < MODERATE_MAX:
+        return "MODERATE"
+    if rate < STRONG_MAX:
+        return "STRONG"
+    return "EXCELLENT"
+
+
+def salary_at_retirement(inputs):
+    # Projected gross monthly salary at retirement; fall back to the
+    # current salary when the projected value is absent (old payloads).
+    data = inputs or {}
+    projected = _num(data.get("grossAtRetirement"))
+    return projected if projected > 0 else _num(data.get("grossMonthly"))
 
 
 def inflation_erosion(nominal_monthly, real_monthly):
@@ -73,7 +94,7 @@ def summarize(data):
     inputs = data.get("inputs", {})
     pillars = data.get("pillars", {})
     rate = replacement_rate(
-        totals.get("realMonthly"), inputs.get("grossMonthly"))
+        totals.get("monthly"), salary_at_retirement(inputs))
     return {
         "replacement_rate": rate,
         "outlook": outlook(rate),

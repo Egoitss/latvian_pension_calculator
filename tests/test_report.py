@@ -39,11 +39,37 @@ def test_replacement_rate_basis_is_gross():
 
 
 def test_outlook_bands():
-    assert insights.outlook(75) == "strong"
-    assert insights.outlook(60) == "strong"
-    assert insights.outlook(59.9) == "moderate"
-    assert insights.outlook(40) == "moderate"
-    assert insights.outlook(39.9) == "weak"
+    assert insights.outlook(45) == "strong"
+    assert insights.outlook(30) == "strong"
+    assert insights.outlook(29.9) == "moderate"
+    assert insights.outlook(20) == "moderate"
+    assert insights.outlook(19.9) == "weak"
+
+
+def test_band_four_way():
+    assert insights.band(19.9) == "WEAK"
+    assert insights.band(20) == "MODERATE"
+    assert insights.band(29.9) == "MODERATE"
+    assert insights.band(30) == "STRONG"
+    assert insights.band(44.9) == "STRONG"
+    assert insights.band(45) == "EXCELLENT"
+
+
+def test_salary_at_retirement_prefers_projected():
+    assert insights.salary_at_retirement(
+        {"grossMonthly": 1750, "grossAtRetirement": 9000}) == 9000
+    assert insights.salary_at_retirement({"grossMonthly": 1750}) == 1750
+    assert insights.salary_at_retirement({}) == 0.0
+
+
+def test_summarize_rate_uses_retirement_salary():
+    data = {
+        "totals": {"monthly": 1800, "realMonthly": 900},
+        "inputs": {"grossMonthly": 1750, "grossAtRetirement": 9000},
+        "pillars": {},
+    }
+    assert insights.summarize(data)["replacement_rate"] == 20.0
+    assert insights.summarize(data)["outlook"] == "moderate"
 
 
 def test_inflation_erosion():
@@ -61,9 +87,10 @@ def test_market_share_and_risk():
 
 
 def test_summarize_shape():
+    # SAMPLE: nominal 1380 / grossMonthly 1750 = 78.9% → strong
     s = insights.summarize(SAMPLE)
-    assert s["outlook"] == "weak"        # 39.4% < 40
-    assert s["replacement_rate"] == 39.4
+    assert s["outlook"] == "strong"
+    assert s["replacement_rate"] == 78.9
 
 
 # ── PDF builder ────────────────────────────────────────────────
@@ -236,12 +263,12 @@ def test_report_html_shows_ai_box_when_present():
     assert "Consider downsizing." in html
     assert 'class="ai-review"' in html and "Consider downsizing." in html
     assert "ai-badge" in html               # DeepSeek badge rendered
-    # AI prose replaces the deterministic verdict sentence (SAMPLE=weak).
-    assert "voluntary saving" not in html
+    # AI prose replaces the deterministic verdict sentence (SAMPLE=strong).
+    assert "On track" not in html
 
 
 def test_report_html_falls_back_without_ai():
     html = render_report_html(SAMPLE, make_t("en"), "2026-06-22")
     assert 'class="ai-review"' not in html   # no AI box
-    # Deterministic verdict still present (SAMPLE outlook is weak).
-    assert "voluntary saving" in html
+    # Deterministic verdict still present (SAMPLE outlook is strong).
+    assert "On track" in html
