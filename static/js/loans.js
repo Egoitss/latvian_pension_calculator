@@ -138,6 +138,10 @@ const PILL_ACTIVE   = "rounded-xl border border-slate-900 bg-slate-900 px-3 py-1
 const PILL_INACTIVE = "rounded-xl border border-slate-200 bg-white px-3 py-1 text-[11px] font-medium text-slate-600 transition hover:border-slate-400";
 
 function initCard(prefix) {
+  // Guard: only wire up cards whose elements exist on this page, so
+  // loading this file on a page without loan cards is harmless.
+  if (!g(`${prefix}Balance`)) return;
+
   loanState[prefix] = emptyLoanRecord();
 
   const balanceEl    = g(`${prefix}Balance`);
