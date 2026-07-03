@@ -20,6 +20,17 @@ pension.oats.lv {
 			roll_keep 5
 		}
 	}
+	# Reject methods the app doesn't use. POST must stay: the PDF
+	# export (/export/pdf) and AI review (/api/recommend) are POST.
+	# NOTE: this also rejects CORS preflight (OPTIONS) — if the API
+	# is ever opened cross-origin, exempt /api/* from this matcher
+	# and answer preflights with proper CORS headers.
+	@badMethod not method GET HEAD POST
+	handle @badMethod {
+		header Allow "GET, HEAD, POST"
+		respond "Method Not Allowed" 405
+	}
+
 	reverse_proxy pension:5001
 }
 
@@ -28,5 +39,14 @@ pension.oats.lv {
 # because this Caddyfile is the single front proxy for the host.
 bmx.oats.lv {
 	header Permissions-Policy "accelerometer=(), autoplay=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), usb=(), interest-cohort=(), browsing-topics=()"
+
+	# Same method allowlist as pension: bmx uses POST for
+	# /generate and /generate.pdf. See CORS note above.
+	@badMethod not method GET HEAD POST
+	handle @badMethod {
+		header Allow "GET, HEAD, POST"
+		respond "Method Not Allowed" 405
+	}
+
 	reverse_proxy bmx-web:8000
 }
