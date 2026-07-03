@@ -4,6 +4,19 @@
 	email info@oats.lv
 }
 
+# RFC 9116 security.txt, served from the proxy so neither app needs
+# a route for it. {args[0]} is the site's canonical URL.
+(security_txt) {
+	handle /.well-known/security.txt {
+		header Content-Type "text/plain; charset=utf-8"
+		respond `Contact: mailto:info@oats.lv
+Expires: 2027-06-30T00:00:00.000Z
+Preferred-Languages: lv, en
+Canonical: {args[0]}
+` 200
+	}
+}
+
 pension.oats.lv {
 	# HSTS: force HTTPS for 2 years (flagged missing by
 	# securityheaders.com)
@@ -31,6 +44,8 @@ pension.oats.lv {
 		respond "Method Not Allowed" 405
 	}
 
+	import security_txt https://pension.oats.lv/.well-known/security.txt
+
 	reverse_proxy pension:5001
 }
 
@@ -47,6 +62,8 @@ bmx.oats.lv {
 		header Allow "GET, HEAD, POST"
 		respond "Method Not Allowed" 405
 	}
+
+	import security_txt https://bmx.oats.lv/.well-known/security.txt
 
 	reverse_proxy bmx-web:8000
 }
