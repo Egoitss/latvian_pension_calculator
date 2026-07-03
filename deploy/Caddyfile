@@ -68,6 +68,15 @@ bmx.oats.lv {
 		-Via
 	}
 
+	# Cross-origin isolation. Safe because bmx's only cross-origin
+	# loads are Google Fonts, whose responses carry CORP:
+	# cross-origin + ACAO:* (verified 2026-07-03). Any future
+	# third-party embed (script, iframe, image) must also send CORP
+	# or CORS headers, or COEP will block it — check the console.
+	header Cross-Origin-Opener-Policy "same-origin"
+	header Cross-Origin-Embedder-Policy "require-corp"
+	header Cross-Origin-Resource-Policy "same-origin"
+
 	# Same method allowlist as pension: bmx uses POST for
 	# /generate and /generate.pdf. See CORS note above.
 	@badMethod not method GET HEAD POST
