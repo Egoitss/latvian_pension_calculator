@@ -51,17 +51,10 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-  /* Pre-fill P2L balance from ?p2l= query param if present */
-  (function () {
-    const params = new URLSearchParams(window.location.search);
-    const v = params.get("p2l");
-    if (v) {
-      const el = document.getElementById("p2lBalance");
-      if (el) { el.value = v; el.dispatchEvent(new Event("input")); }
-    }
-  })();
-</script>
+{# Pre-fill P2L balance from ?p2l= — external file so the CSP
+   allows no inline scripts. #}
+<script src="{{ url_for('static', filename='js/loans_prefill.js',
+                        v=js_v) }}"></script>
 <script src="{{ url_for('static', filename='js/loans.js',
                         v=js_v) }}"></script>
 <script src="{{ url_for('static', filename='js/accordion.js',

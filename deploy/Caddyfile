@@ -5,6 +5,10 @@
 }
 
 pension.oats.lv {
+	# HSTS: force HTTPS for 2 years (flagged missing by
+	# securityheaders.com)
+	header Strict-Transport-Security "max-age=63072000; includeSubDomains"
+
 	# Access log (JSON) for visit counts. Rotated so it can't fill
 	# the disk; persisted via the caddy_logs volume in compose.
 	log {
@@ -14,4 +18,11 @@ pension.oats.lv {
 		}
 	}
 	reverse_proxy pension:5001
+}
+
+# BMX report app — separate repo (/srv/oats/bmx on the server); its
+# containers join this Caddy's docker network. This block lives here
+# because this Caddyfile is the single front proxy for the host.
+bmx.oats.lv {
+	reverse_proxy bmx-web:8000
 }

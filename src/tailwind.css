@@ -1,0 +1,5 @@
+/* Tailwind entry point — compiled to static/css/tailwind.css.
+   See tailwind.config.js for the build command. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

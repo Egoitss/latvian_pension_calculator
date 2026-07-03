@@ -47,29 +47,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
         rel="stylesheet" />
 
-  <!-- Tailwind CSS utility framework (CDN, no build step) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ["IBM Plex Sans", "system-ui", "sans-serif"],
-          },
-        },
-      },
-    };
-  </script>
+  <!-- Tailwind CSS, compiled at build time (see tailwind.config.js).
+       Replaces the CDN runtime so the CSP needs no 'unsafe-eval'. -->
+  <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/tailwind.css', v=js_v) }}" />
 
-  <!-- Chart.js for the accumulation line chart (SRI-pinned) -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"
-          integrity="sha384-NrKB+u6Ts6AtkIhwPixiKTzgSKNblyhlk0Sohlgar9UHUBzai/sgnNNWWd291xqt"
-          crossorigin="anonymous"></script>
-
-  <!-- Annotation plugin for plan-switch vertical reference lines (SRI-pinned) -->
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"
-          integrity="sha384-oNtu+d18330MVFpltUTve1DatxCkkctlpA2AC3GulbVFOSqhHdDat3qHse/Lbuek"
-          crossorigin="anonymous"></script>
+  <!-- Chart.js 4.4.4 + annotation plugin 3.0.1, self-hosted from
+       static/js/vendor/ (downloads verified against the previous
+       jsDelivr SRI hashes) so the CSP allows no CDN origins. -->
+  <script src="{{ url_for('static',
+                          filename='js/vendor/chart.umd.min.js') }}"></script>
+  <script src="{{ url_for('static',
+                          filename='js/vendor/chartjs-plugin-annotation.min.js') }}"></script>
 
   <!-- Base custom styles -->
   <link rel="stylesheet"
@@ -96,24 +85,26 @@
     {# Language switch (EN/LV) — links to the same page in the other
        language. Active language is a static span. #}
     {% include "_lang.html" %}
-    {# Return to wherever the visitor came from (file://, localhost,
-       or live domain). Falls back to the hardcoded URL only when
-       opened with no history (direct load / fresh tab). #}
-    <a class="oats-back" href="https://oats.lv"
-       onclick="if (history.length > 1) {
-                  history.back(); return false; }">
+    {# Return to wherever the visitor came from; behaviour lives in
+       static/js/nav.js (CSP: no inline handlers). The href is the
+       fallback when opened with no history (direct load / fresh tab). #}
+    <a class="oats-back" href="https://oats.lv">
       ← {{ t("Portfolio") }}
     </a>
   </nav>
 
   {% block content %}{% endblock %}
 
-  <!-- i18n bridge to JS: current language + LV override map -->
-  <script>
-    window.LANG = "{{ lang }}";
-    window.I18N = {{ js_i18n | tojson }};
-  </script>
+  <!-- i18n bridge to JS: current language + LV override map.
+       Emitted as inert JSON data blocks; globals.js hydrates them
+       onto window so no inline script executes (CSP: 'self' only). -->
+  <script type="application/json"
+          data-global="LANG">{{ lang | tojson }}</script>
+  <script type="application/json"
+          data-global="I18N">{{ js_i18n | tojson }}</script>
+  <script src="{{ url_for('static', filename='js/globals.js', v=js_v) }}"></script>
   <script src="{{ url_for('static', filename='js/i18n.js', v=js_v) }}"></script>
+  <script src="{{ url_for('static', filename='js/nav.js', v=js_v) }}"></script>
 
   <!-- JS modules loaded after DOM is ready -->
   {% block scripts %}{% endblock %}
@@ -122,14 +113,15 @@
        GOATCOUNTER_CODE env var is set. Host-prefixed path keeps
        pension.oats.lv distinct from oats.lv in one dashboard. -->
   {% if goatcounter %}
-  <script>
-    window.goatcounter = {
-      path: function (p) { return location.host + p; }
-    };
-  </script>
+  <script src="{{ url_for('static',
+                          filename='js/goatcounter.js', v=js_v) }}"></script>
+  {# count.js self-hosted from static/js/vendor/ so script-src stays
+     'self' with no third-party origins; the count endpoint itself is
+     allowed via img-src/connect-src *.goatcounter.com. #}
   <script
     data-goatcounter="https://{{ goatcounter }}.goatcounter.com/count"
-    async src="//gc.zgo.at/count.js"></script>
+    async src="{{ url_for('static',
+                          filename='js/vendor/goatcounter-count.js') }}"></script>
   {% endif %}
 </body>
 </html>

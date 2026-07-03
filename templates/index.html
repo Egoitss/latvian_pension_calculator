@@ -103,9 +103,6 @@
     </button>
   </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
 <!-- Pass server-computed data to JS via hidden elements -->
 <div id="planScheduleData"
      class="hidden"
@@ -113,39 +110,21 @@
      data-apply-ceiling="{{ 'true' if apply_ceiling else 'false' }}">
 </div>
 
-<!-- Embed Jinja constants and defaults as a JS config object -->
-<script>
-  /* Constants and default input values from Python */
-  window.P2L_CONFIG = {
-    vsaoi_ceiling: {{ constants.VSAOI_CEILING }},
-    p2l_rate: {{ constants.P2L_RATE }},
-    tax_free_threshold: {{ constants.PENSION_TAX_FREE_THRESHOLD }},
-    tax_rate: {{ constants.PENSION_TAX_RATE }},
-    defaults: {
-      age: {{ defaults.age }},
-      retirement_age: {{ defaults.retirement_age }},
-      balance: {{ defaults.balance }},
-      gross_monthly: {{ defaults.gross_monthly }},
-      manual_return: {{ defaults.manual_return }},
-      salary_growth: {{ defaults.salary_growth }},
-      inflation: {{ defaults.inflation }},
-      payout_years: {{ defaults.payout_years }},
-    },
-    urls: {
-      latvija_lv: "{{ urls.latvija_lv }}",
-      manapensija: "{{ urls.manapensija }}",
-    },
-  };
+{# The former window.P2L_CONFIG block is gone: nothing in static/js
+   ever read it, and its defaults.age reference rendered as a JS
+   syntax error in production. Server data below is emitted as inert
+   JSON, hydrated onto window by globals.js (loaded in base.html).
+   NOTE: data blocks must stay inside the content block — globals.js
+   runs before the scripts block is parsed. #}
+<script type="application/json" data-global="LOCAL_DATA">
+  {{ {
+    "dinamikaPrices": local_data.dinamika_prices,
+    "p3CostBasis": local_data.p3_cost_basis,
+  } | tojson }}
 </script>
+{% endblock %}
 
-<script>
-  /* Personal series data injected by Flask — empty when no local_config */
-  window.LOCAL_DATA = {
-    dinamikaPrices: {{ local_data.dinamika_prices | tojson }},
-    p3CostBasis: {{ local_data.p3_cost_basis | tojson }},
-  };
-</script>
-
+{% block scripts %}
 {# loans-page link sync script — kept here, uncomment with the link above
 <script>
   document.addEventListener("DOMContentLoaded", function () {

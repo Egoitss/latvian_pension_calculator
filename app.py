@@ -53,14 +53,16 @@ REC_BUDGET_FILE = os.environ.get(
     os.path.join(os.path.dirname(__file__), "rec_budget.json"),
 )
 
-# Defense-in-depth headers on every response. The CSP is permissive
-# (the Tailwind runtime CDN needs inline + eval); it still allowlists
-# origins and blocks framing, base-uri, and object embedding.
+# Defense-in-depth headers on every response. Every script is a
+# same-origin file: Tailwind is compiled at build time, Chart.js and
+# GoatCounter's count.js are vendored, and server data reaches JS via
+# inert <script type="application/json"> blocks hydrated by
+# globals.js — so script-src is 'self' with no inline, no eval, and
+# no third-party origins. Styles keep 'unsafe-inline' for Chart.js
+# and inline style= attributes.
 _CSP = (
     "default-src 'self'; "
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' "
-    "https://cdn.tailwindcss.com https://cdn.jsdelivr.net "
-    "https://gc.zgo.at; "
+    "script-src 'self'; "
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
     "font-src 'self' https://fonts.gstatic.com data:; "
     "img-src 'self' data: https://*.goatcounter.com; "
