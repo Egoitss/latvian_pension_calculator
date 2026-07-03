@@ -25,6 +25,13 @@ pension.oats.lv {
 	# never uses (same baseline as oats.lv).
 	header Permissions-Policy "accelerometer=(), autoplay=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), usb=(), interest-cohort=(), browsing-topics=()"
 
+	# Strip tech-fingerprinting headers: gunicorn's Server header,
+	# Caddy's own Server header, and the Via hop added by the proxy.
+	header {
+		-Server
+		-Via
+	}
+
 	# Access log (JSON) for visit counts. Rotated so it can't fill
 	# the disk; persisted via the caddy_logs volume in compose.
 	log {
@@ -54,6 +61,12 @@ pension.oats.lv {
 # because this Caddyfile is the single front proxy for the host.
 bmx.oats.lv {
 	header Permissions-Policy "accelerometer=(), autoplay=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), usb=(), interest-cohort=(), browsing-topics=()"
+
+	# Strip tech-fingerprinting headers (see pension block).
+	header {
+		-Server
+		-Via
+	}
 
 	# Same method allowlist as pension: bmx uses POST for
 	# /generate and /generate.pdf. See CORS note above.
