@@ -32,6 +32,15 @@ pension.oats.lv {
 		-Via
 	}
 
+	# Cross-origin isolation. Safe because pension's only
+	# cross-origin loads are Google Fonts and the GoatCounter count
+	# gif, both verified to send CORP: cross-origin + ACAO:*
+	# (2026-07-03). Any future third-party embed must also send
+	# CORP/CORS headers, or COEP blocks it — check the console.
+	header Cross-Origin-Opener-Policy "same-origin"
+	header Cross-Origin-Embedder-Policy "require-corp"
+	header Cross-Origin-Resource-Policy "same-origin"
+
 	# Access log (JSON) for visit counts. Rotated so it can't fill
 	# the disk; persisted via the caddy_logs volume in compose.
 	log {
