@@ -23,11 +23,25 @@ def _num(value, default=0.0):
 
 
 def replacement_rate(pension_monthly, salary_monthly):
-    # Nominal pension as a % of gross salary at retirement.
+    # Gross replacement rate: gross (pre-tax) pension as a % of gross
+    # salary at retirement. Both sides are before tax so the ratio is a
+    # clean like-for-like — the OECD-style gross replacement rate.
     salary = _num(salary_monthly)
     if salary <= 0:
         return 0.0
     return round(_num(pension_monthly) / salary * 100, 1)
+
+
+def gross_monthly(totals):
+    # Pre-tax pension total for the gross/gross rate: P1 (pre-tax) + P2
+    # pre-tax annuity + P3 pre-gains-tax drawdown, sent as
+    # ``grossMonthly``. Falls back to the net take-home ``monthly`` for
+    # older payloads that never carried a gross figure.
+    data = totals or {}
+    value = data.get("grossMonthly")
+    if value is None:
+        return _num(data.get("monthly"))
+    return _num(value)
 
 
 def outlook(rate):
@@ -105,7 +119,7 @@ def summarize(data):
     inputs = data.get("inputs", {})
     pillars = data.get("pillars", {})
     rate = replacement_rate(
-        totals.get("monthly"), salary_at_retirement(inputs))
+        gross_monthly(totals), salary_at_retirement(inputs))
     return {
         "replacement_rate": rate,
         "outlook": outlook(rate),

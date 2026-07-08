@@ -101,7 +101,8 @@ function recalc() {
         pillar: 3,
         finalBalance: 0, realBalance: 0, netPayout: 0,
         gains: 0, totalOwnContrib: 0,
-        monthlyPayout: 0, realMonthlyPayout: 0, rows: [],
+        monthlyPayout: 0, grossMonthlyPayout: 0,
+        realMonthlyPayout: 0, rows: [],
       },
     }));
     return;
@@ -137,6 +138,11 @@ function recalc() {
   const payoutFactor = result.finalBalance > 0
     ? result.realBalance / result.finalBalance : 1;
   const monthlyPayout     = Math.round(netPayout / (payoutYears * 12));
+  // Pre-gains-tax drawdown — the "gross" P3 figure for the gross/gross
+  // replacement rate (the 25.5% gains tax is added back).
+  const grossMonthlyPayout = Math.round(
+    result.finalBalance / (payoutYears * 12)
+  );
   const realMonthlyPayout = Math.round(
     netPayout * payoutFactor / (payoutYears * 12)
   );
@@ -158,6 +164,7 @@ function recalc() {
       gains:            accurateGains,
       netPayout,
       monthlyPayout,
+      grossMonthlyPayout,
       realMonthlyPayout,
       rows: result.rows,
     },

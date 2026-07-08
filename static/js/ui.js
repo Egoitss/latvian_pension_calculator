@@ -155,6 +155,8 @@ function onInputChange(chart) {
       earnings:            projection.final.earnings + inputs.p2AlreadyEarned,
       monthlyAfterTax:     Math.round(projection.monthlyPayoutAfterTax),
       realMonthlyAfterTax: Math.round(projection.realMonthlyAfterTax),
+      // Pre-tax annuity — feeds the gross/gross replacement rate.
+      monthlyPayout:       Math.round(projection.monthlyPayout),
       rows:                projection.rows,
       grossAtRetirement:   Math.round(projection.final.annualGross / 12),
     },

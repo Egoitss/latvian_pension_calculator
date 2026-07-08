@@ -92,7 +92,8 @@ def _scenarios(t, data):
     out = []
     for key, label in _SCN_ORDER:
         v = s.get(key) or {}
-        rate = insights.replacement_rate(v.get("monthly"), salary)
+        rate = insights.replacement_rate(
+            insights.gross_monthly(v), salary)
         prop = _num(v.get("propEquity"))
         out.append({
             "label": t(label),

@@ -62,6 +62,9 @@ function buildPayload() {
     },
     totals: {
       monthly: n(p1.monthly) + n(p2.monthlyAfterTax) + n(p3.monthlyPayout),
+      // Pre-tax pension total — drives the gross/gross replacement rate.
+      grossMonthly:
+        n(p1.monthly) + n(p2.monthlyPayout) + n(p3.grossMonthlyPayout),
       realMonthly:
         n(p1.realMonthly) + n(p2.realMonthlyAfterTax)
         + n(p3.realMonthlyPayout),
@@ -81,6 +84,9 @@ function captureTotals() {
   const n = (v) => (Number.isFinite(v) ? v : 0);
   return {
     monthly: n(p1.monthly) + n(p2.monthlyAfterTax) + n(p3.monthlyPayout),
+    // Pre-tax pension total per scenario — for the gross/gross rate.
+    grossMonthly:
+      n(p1.monthly) + n(p2.monthlyPayout) + n(p3.grossMonthlyPayout),
     realMonthly:
       n(p1.realMonthly) + n(p2.realMonthlyAfterTax)
       + n(p3.realMonthlyPayout),

@@ -113,7 +113,10 @@ def _facts(data):
     gross_ret = insights.salary_at_retirement(inputs)
     real = _num(mod.get("realMonthly"))
     nominal = _num(mod.get("monthly"))
-    rate = insights.replacement_rate(nominal, gross_ret)
+    # Rate is gross/gross (pre-tax pension vs gross salary); the net
+    # ``nominal`` above is kept only for the take-home line in the prompt.
+    rate = insights.replacement_rate(
+        insights.gross_monthly(mod), gross_ret)
     band = _score(rate)
     capital = _num(mod.get("capital"))
     prop = _num(mod.get("propEquity"))

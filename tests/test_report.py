@@ -97,10 +97,31 @@ def test_market_share_and_risk():
 
 
 def test_summarize_shape():
-    # SAMPLE: nominal 1380 / salary-at-retirement 1750 = 78.9% → excellent
+    # SAMPLE has no grossMonthly → falls back to the net total 1380 /
+    # salary 1750 = 78.9% (backward-compatible with old payloads).
     s = insights.summarize(SAMPLE)
     assert s["outlook"] == "excellent"
     assert s["replacement_rate"] == 78.9
+
+
+def test_gross_monthly_prefers_gross_else_net():
+    # The replacement rate is gross/gross: prefer the pre-tax pension
+    # total, fall back to the net take-home total when it's absent.
+    assert insights.gross_monthly(
+        {"grossMonthly": 1500, "monthly": 1380}) == 1500.0
+    assert insights.gross_monthly({"monthly": 1380}) == 1380.0
+    assert insights.gross_monthly({}) == 0.0
+
+
+def test_summarize_rate_is_gross_basis():
+    # gross pension 1500 / gross salary 1750 = 85.7% (NOT the net 78.9).
+    data = {
+        "totals": {"monthly": 1380, "grossMonthly": 1500,
+                   "realMonthly": 690},
+        "inputs": {"grossMonthly": 1750, "grossAtRetirement": 1750},
+        "pillars": {},
+    }
+    assert insights.summarize(data)["replacement_rate"] == 85.7
 
 
 # ── PDF builder ────────────────────────────────────────────────
@@ -273,8 +294,19 @@ def test_facts_rate_uses_retirement_salary():
     }
     f = ai_review._facts(data)
     assert f["gross_ret"] == 9000
-    assert f["rate"] == 20.0          # 1800 / 9000
+    assert f["rate"] == 20.0          # 1800 / 9000 (net fallback)
     assert f["band"] == "WEAK"
+
+
+def test_facts_rate_is_gross_when_present():
+    # AI-review band must use the same gross/gross basis as the report.
+    data = {
+        "scenarios": {"moderate": {"monthly": 1380, "grossMonthly": 1500,
+                                   "realMonthly": 690, "capital": 200000}},
+        "inputs": {"grossMonthly": 1750, "grossAtRetirement": 1750},
+    }
+    f = ai_review._facts(data)
+    assert f["rate"] == 85.7          # gross 1500 / 1750, not net 78.9
 
 
 def test_user_prompt_mentions_retirement_salary():
@@ -332,6 +364,26 @@ def test_report_uses_retirement_salary_basis():
         "scenarios": {"moderate": scn, "positive": scn, "negative": scn},
     }
     html = render_report_html(data, make_t("en"), "2026-06-30")
-    assert "20.0%" in html                 # 1800 / 9000
+    assert "20.0%" in html                 # 1800 / 9000 (net fallback)
     assert "salary at retirement" in html
     assert "current gross income" not in html
+
+
+def test_report_scenario_rate_uses_gross_monthly():
+    # With grossMonthly present, both the headline and per-scenario
+    # rates use the gross/gross basis.
+    scn = {"monthly": 1380, "grossMonthly": 1500, "realMonthly": 690,
+           "capital": 423000}
+    data = {
+        "inputs": {"grossMonthly": 1750, "grossAtRetirement": 1750,
+                   "retirementAge": 65, "scenario": "moderate"},
+        "totals": {"monthly": 1380, "grossMonthly": 1500,
+                   "realMonthly": 690, "capital": 423000},
+        "pillars": {"p1": {"monthly": 820}, "p2": {"monthly": 470},
+                    "p3": {"monthly": 180}},
+        "activeScenario": "moderate",
+        "scenarios": {"moderate": scn, "positive": scn, "negative": scn},
+    }
+    html = render_report_html(data, make_t("en"), "2026-07-08")
+    assert "85.7%" in html                 # gross 1500 / 1750
+    assert "78.9%" not in html             # not the net-mix rate
