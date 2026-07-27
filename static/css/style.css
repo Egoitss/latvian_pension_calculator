@@ -24,8 +24,10 @@ input[readonly] {
   user-select: all;
 }
 
-/* Suppress browser-native red outline on :invalid number inputs */
-input[type="number"]:invalid {
+/* Suppress the browser-native red outline on :invalid number inputs.
+   Scoped away from :focus-visible so it cannot also swallow the
+   keyboard focus ring, which an invalid field needs most. */
+input[type="number"]:invalid:not(:focus-visible) {
   box-shadow: none;
   outline: none;
 }

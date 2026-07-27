@@ -5,10 +5,18 @@
 /* ── Design tokens ──────────────────────────────────────────────── */
 :root {
   --ob:  #9D2235; --ob-d: #7A1A29; --ob-t: #FBECEE;
-  --oi:  #0A0A0B; --oi2: #2D3138; --om:   #6E7681;
+  --oi:  #0A0A0B; --oi2: #2D3138; --om:   #626974;
   --obg: #FCFCFD; --op:  #FFFFFF;
   --ol:  #E3E4E8; --ol2: #EDEEF1;
+  /* Desktop shell scale — column and gutter widen together so the
+     grid keeps its proportions on large displays. --nav-h is the
+     sticky brand nav's rendered height, measured in the browser at
+     desktop widths; anything pinned below it offsets by this. */
+  --shell-max: 1140px; --pad-x: 48px; --nav-h: 71px;
 }
+@media (min-width: 1440px) { :root { --shell-max: 1280px; --pad-x: 56px; } }
+@media (min-width: 1680px) { :root { --shell-max: 1360px; --pad-x: 64px; } }
+@media (min-width: 1920px) { :root { --shell-max: 1440px; --pad-x: 72px; } }
 
 /* ── Typography ─────────────────────────────────────────────────── */
 body {
@@ -21,6 +29,12 @@ h1, h2, h3, h4, h5, h6 {
   font-family: "Space Grotesk", sans-serif;
   letter-spacing: -.02em;
 }
+/* Heading scale. !important because Tailwind's text-* utilities used
+   to set these per element, which left the page with a 16px h1 above
+   14px h2s — no hierarchy at all. Size now lives here only. */
+h1 { font-size: clamp(30px, 2.4vw, 42px) !important; line-height: 1.08; }
+h2 { font-size: 22px !important; margin-bottom: 12px; }
+h3 { font-size: 17px !important; }
 input, select, label, th, code,
 [class*="font-mono"],
 [class*="tracking-wide"],
@@ -92,11 +106,22 @@ input, select {
   border-color: var(--ol) !important;
   background: var(--op) !important;
 }
+/* Darker border is a supplementary cue only — the focus ring below is
+   what actually signals focus. box-shadow stays suppressed so
+   Tailwind's glow ring does not compete with the outline. */
 input:focus, select:focus {
   border-color: var(--oi2) !important;
   box-shadow: none !important;
-  --tw-ring-shadow: none !important;
-  outline: none;
+}
+
+/* Keyboard focus ring for every interactive element. :where() zeroes
+   the selector list so only :focus-visible carries weight. This sheet
+   loads after tailwind.css, so it also wins the tie against Tailwind's
+   own .outline-none utility. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid #0A0A0B;
+  outline-offset: 3px;
+  border-radius: 0;
 }
 
 /* ── Table heads ────────────────────────────────────────────────── */
@@ -112,7 +137,7 @@ thead th {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 48px;
+  padding: 18px var(--pad-x);
   border-bottom: 1px solid var(--ol);
   background: var(--obg);
   position: sticky;
@@ -189,8 +214,84 @@ thead th {
   .oats-crumb { display: none; }
   .oats-logo { font-size: 15px; gap: 8px; }
   .oats-logo-mark { width: 26px; height: 26px; }
-  .oats-lang, .oats-back { font-size: 11px; }
+  .oats-lang, .oats-back { font-size: 12px; }
   .oats-lang a, .oats-lang span { padding: 3px 5px; gap: 4px; }
+  /* The shell gutter matches the nav's on phones; the desktop
+     var(--pad-x) would eat a quarter of a 390px screen. */
+  .pension-shell { padding-inline: 14px; }
+}
+
+/* ── Page shell & desktop two-column layout ─────────────────────── */
+/* Below 1280 this is one stacked column, exactly as before, just on
+   the shared shell width instead of Tailwind's max-w-4xl. */
+.pension-shell {
+  max-width: var(--shell-max);
+  margin-inline: auto;
+  padding-inline: var(--pad-x);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 1280px) {
+  /* Inputs pinned left, results running right, so the chart and the
+     scenario numbers stay in view while the assumptions are edited. */
+  .pension-shell {
+    display: grid;
+    grid-template-columns: minmax(380px, 420px) minmax(0, 1fr);
+    column-gap: 48px;
+    row-gap: 16px;
+    align-items: start;
+  }
+  .pension-head { grid-column: 1 / -1; }
+  .pension-inputs {
+    position: sticky;
+    top: calc(var(--nav-h) + 24px);
+    /* A sticky box taller than the viewport pins its top and leaves
+       its tail unreachable, which happens as soon as two accordions
+       are open. Cap it and let the column scroll on its own instead.
+       The 112px is 24px above + the 64px bottom bar + 24px below. */
+    max-height: calc(100vh - var(--nav-h) - 112px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+  }
+  /* Without this the canvas' intrinsic width can push the column
+     wider than its share of the grid. */
+  .pension-results { min-width: 0; }
+}
+
+/* Chart box: tall enough to read a 40-year curve, and it grows with
+   the viewport instead of sitting at a fixed 390px. */
+.pension-chart-box { height: clamp(420px, 42vh, 560px); }
+
+/* ── Three-up field row ─────────────────────────────────────────── */
+/* Each cell stacks label, control and hint. The labels wrap to
+   different line counts in the narrow input column ("Dzimšanas gads"
+   fits one line, "Pensionēšanās vecums" needs two), which used to
+   leave the three inputs on different baselines. Subgrid hands the
+   rows back to the parent so all three share them and stay aligned
+   however the labels wrap. */
+.field-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+.field { display: grid; gap: 6px; align-content: start; }
+
+@media (min-width: 768px) {
+  .field-grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto auto auto;   /* label · control · hint */
+    column-gap: 12px;
+    row-gap: 6px;
+  }
+  /* Where subgrid is unsupported this degrades to the old behaviour:
+     the cell still spans three rows, it just stacks inside them. */
+  .field-grid > .field {
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+  }
 }
 
 /* Sticky bottom footer bar: live monthly pension + PDF download.

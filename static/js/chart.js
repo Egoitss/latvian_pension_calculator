@@ -3,11 +3,28 @@
 // Register the annotation plugin (loaded via CDN before this module runs)
 Chart.register(window["chartjs-plugin-annotation"]);
 
+// Keep the chart in step with its own box. Chart.js only reacts to
+// window resizes, so a grid reflow at the 1280px breakpoint or an
+// accordion opening above the chart leaves the canvas drawn at the
+// old size until the next window resize.
+function observeContainer(chart, canvas) {
+  const box = canvas.parentElement;
+  if (!box || typeof ResizeObserver === "undefined") return;
+  let frame = 0;
+  // Coalesce bursts into one resize per frame; resizing inside the
+  // observer callback otherwise re-triggers it.
+  new ResizeObserver(() => {
+    cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(() => chart.resize());
+  }).observe(box);
+}
+
 // Create and return a new Chart.js LineChart instance on the given canvas
 export function initChart(canvasId) {
-  const ctx = document.getElementById(canvasId).getContext("2d");
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext("2d");
 
-  return new Chart(ctx, {
+  const chart = new Chart(ctx, {
     type: "line",
     data: { labels: [], datasets: [] },
     options: {
@@ -65,6 +82,9 @@ export function initChart(canvasId) {
       },
     },
   });
+
+  observeContainer(chart, canvas);
+  return chart;
 }
 
 // Populate chart with combined multi-pillar rows + plan-switch annotations.

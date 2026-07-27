@@ -13,7 +13,7 @@
                    hover:bg-emerald-50">
       <div class="text-xs font-bold">{{ t("Positive") }}</div>
       <div id="rateLabelPositive" class="text-[11px] mt-0.5 opacity-90">—%</div>
-      <div class="text-[9px] mt-0.5 opacity-70">{{ t("optimistic") }}</div>
+      <div class="text-xs mt-0.5 opacity-70">{{ t("optimistic") }}</div>
     </button>
     <div class="pointer-events-none absolute bottom-full left-0 mb-2 w-52
                 rounded-2xl bg-slate-900 px-3 py-2.5 text-[11px] leading-relaxed
@@ -33,7 +33,7 @@
                    transition border-slate-900 bg-slate-900 text-white">
       <div class="text-xs font-bold">{{ t("Moderate") }}</div>
       <div id="rateLabelModerate" class="text-[11px] mt-0.5 opacity-90">—%</div>
-      <div class="text-[9px] mt-0.5 opacity-70">{{ t("realistic") }}</div>
+      <div class="text-xs mt-0.5 opacity-70">{{ t("realistic") }}</div>
     </button>
     <div class="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2
                 mb-2 w-52 rounded-2xl bg-slate-900 px-3 py-2.5 text-[11px]
@@ -54,7 +54,7 @@
                    hover:bg-red-50">
       <div class="text-xs font-bold">{{ t("Negative") }}</div>
       <div id="rateLabelNegative" class="text-[11px] mt-0.5 opacity-90">—%</div>
-      <div class="text-[9px] mt-0.5 opacity-70">{{ t("conservative") }}</div>
+      <div class="text-xs mt-0.5 opacity-70">{{ t("conservative") }}</div>
     </button>
     <div class="pointer-events-none absolute bottom-full right-0 mb-2 w-52
                 rounded-2xl bg-slate-900 px-3 py-2.5 text-[11px] leading-relaxed
@@ -109,16 +109,16 @@
   <div class="px-5 py-3 grid grid-cols-3 gap-3">
     <div>
       <div id="combinedCapitalLabel"
-           class="text-[10px] text-slate-400 mb-0.5">{{ t("Total capital") }}</div>
+           class="text-xs text-slate-400 mb-0.5">{{ t("Total capital") }}</div>
       <div id="combinedTotal" class="text-sm font-bold text-slate-900">—</div>
-      <div id="combinedRealTotal" class="text-[10px] text-slate-400 mt-0.5">—</div>
+      <div id="combinedRealTotal" class="text-xs text-slate-400 mt-0.5">—</div>
     </div>
     <div>
-      <div class="text-[10px] text-slate-400 mb-0.5">{{ t("Investment earnings") }}</div>
+      <div class="text-xs text-slate-400 mb-0.5">{{ t("Investment earnings") }}</div>
       <div id="combinedP2Earnings" class="text-sm font-bold text-slate-900">—</div>
     </div>
     <div>
-      <div class="text-[10px] text-slate-400 mb-0.5">{{ t("Voluntary gains") }}</div>
+      <div class="text-xs text-slate-400 mb-0.5">{{ t("Voluntary gains") }}</div>
       <div id="combinedP3NetGains" class="text-sm font-bold text-slate-900">—</div>
     </div>
   </div>
@@ -126,24 +126,24 @@
   <!-- Per-pillar breakdown strip -->
   <div class="bg-slate-50 px-5 py-2.5 flex gap-1.5">
     <div class="flex-1 text-center">
-      <div class="text-[9px] text-slate-400 uppercase tracking-wide">{{ t("State") }}</div>
+      <div class="text-xs text-slate-400 uppercase tracking-wide">{{ t("State") }}</div>
       <div id="breakdownP1" class="text-xs font-semibold text-slate-700">—</div>
     </div>
     <div class="w-px bg-slate-200"></div>
     <div class="flex-1 text-center">
-      <div class="text-[9px] text-slate-400 uppercase tracking-wide">{{ t("Funded") }}</div>
+      <div class="text-xs text-slate-400 uppercase tracking-wide">{{ t("Funded") }}</div>
       <div id="breakdownP2" class="text-xs font-semibold text-slate-700">—</div>
     </div>
     <div class="w-px bg-slate-200"></div>
     <div class="flex-1 text-center">
-      <div class="text-[9px] text-slate-400 uppercase tracking-wide">{{ t("Voluntary") }}</div>
+      <div class="text-xs text-slate-400 uppercase tracking-wide">{{ t("Voluntary") }}</div>
       <div id="breakdownP3" class="text-xs font-semibold text-slate-700">—</div>
     </div>
     <!-- Property column: hidden until price is entered -->
     <div id="breakdownPropWrapper" class="hidden contents">
       <div class="w-px bg-slate-200"></div>
       <div class="flex-1 text-center">
-        <div class="text-[9px] text-slate-400 uppercase tracking-wide">{{ t("Property") }}</div>
+        <div class="text-xs text-slate-400 uppercase tracking-wide">{{ t("Property") }}</div>
         <div id="breakdownProp"
              class="text-xs font-semibold text-slate-700">—</div>
       </div>
@@ -151,7 +151,7 @@
   </div>
 
   <!-- Footer note -->
-  <div class="px-5 py-2 text-[10px] text-slate-400">
+  <div class="px-5 py-2 text-xs text-slate-400">
     <span id="bootstrapNote">{{ t("Running scenario analysis…") }}</span>
     {{ t("· payout spread over") }}
     <span id="chartPeriod"></span>
@@ -164,7 +164,7 @@
       <path stroke-linecap="round" stroke-linejoin="round"
             d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" />
     </svg>
-    <p class="text-[11px] leading-relaxed text-slate-500">
+    <p class="text-xs leading-relaxed text-slate-500">
       {{ t("Download a full PDF report — including an AI review of your retirement plan with personalised suggestions.") }}
     </p>
   </div>

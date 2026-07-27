@@ -8,9 +8,13 @@ PENSION_TAX_RATE = 0.255       # tax rate on payout above threshold (25.5%)
 
 # External URLs shown as copy-link helpers in the UI
 LATVIJA_LV_P2L_URL = "https://latvija.gov.lv/Services/45686"
-MANAPENSIJA_STATS_URL = (
-    "https://www.manapensija.lv/en/2nd-pension-pillar/statistics/"
-)
+# manapensija.lv was rebuilt as a single-page app in 2026: the old
+# /en/2nd-pension-pillar/statistics/ page (and the whole /en/ and
+# /lv/ tree) now soft-404s — HTTP 200 with a "page not found" body,
+# which is why link checkers miss it. The site no longer publishes a
+# standalone plan-statistics table; this is its current 2nd-pillar
+# landing page, which leads on to the plan chooser.
+MANAPENSIJA_STATS_URL = "https://www.manapensija.lv/pensiju-2-limenis"
 # VISS e-service to check 1st-pillar (State pension) NDC capital
 STATE_PENSION_URL = (
     "https://eservices.viss.gov.lv/eserviceplatform.ep222/eservice/"

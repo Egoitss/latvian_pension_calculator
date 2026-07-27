@@ -9,15 +9,21 @@
      class="hidden fixed left-1/2 bottom-20 z-[110] -translate-x-1/2
             rounded-xl px-3 py-1.5 text-xs font-medium shadow-sm"></div>
 
-<!-- Page wrapper — single column, max-w-4xl for embeddable readable width -->
-<main class="p-3 md:p-6">
-  <div class="mx-auto max-w-4xl space-y-4">
+<!-- Page wrapper. .pension-shell owns the horizontal gutter (see
+     oats-theme.css), so <main> keeps vertical padding only — otherwise
+     the two would compound into a double margin on desktop. -->
+<main class="py-3 md:py-6">
+  <div class="pension-shell">
 
-    <!-- Page header: compact title + disclaimer tooltip -->
-    <div class="flex items-center gap-2">
-      <h1 class="text-base font-semibold text-slate-800">{{ t("Pension Scenario Simulator") }}</h1>
-      <div class="relative group">
-        <span class="cursor-default select-none text-[11px] text-slate-400">ⓘ</span>
+    <!-- Page header: compact title + disclaimer tooltip. Spans both
+         columns — a page title belongs to the page, not to one side. -->
+    <div class="pension-head relative flex items-center gap-2">
+      <h1 class="font-semibold text-slate-800">{{ t("Pension Scenario Simulator") }}</h1>
+      {# The tooltip anchors to this row, not to the ⓘ itself: pinned to
+         the icon it started 256px from wherever the title ended, which
+         ran off the right edge on a phone. #}
+      <div class="group">
+        <span class="cursor-default select-none text-xs text-slate-400">ⓘ</span>
         <div class="pointer-events-none absolute top-full left-0 mt-1.5
                     w-64 rounded-2xl bg-slate-900 px-3 py-2.5 text-[11px]
                     leading-relaxed text-white shadow-lg z-20
@@ -29,41 +35,47 @@
       </div>
     </div>
 
-    <!-- Unified single-column flow: controls → scenarios → hero → pillars → loans → AI → chart -->
-    {% include "_controls.html" %}
-    {% include "_scenarios.html" %}
+    <!-- Left column: everything you fill in. Stacks above the results
+         below 1280px, pins beside them above it. -->
+    <div class="pension-inputs space-y-4">
+      {% include "_controls.html" %}
 
-    <!-- Nudge — matches the page heading style, no frame -->
-    <p class="text-base font-semibold text-slate-800">
-      {{ t("For a more complete report, open the sections below and fill in your details.") }}
-    </p>
+      <!-- Nudge — matches the page heading style, no frame -->
+      <p class="text-base font-semibold text-slate-800">
+        {{ t("For a more complete report, open the sections below and fill in your details.") }}
+      </p>
 
-    {% include "_pension1.html" %}
-    {% include "_pension2.html" %}
-
-    <div class="space-y-4">
+      {% include "_pension1.html" %}
+      {% include "_pension2.html" %}
       {% include "_pension3.html" %}
       {% include "_property.html" %}
     </div>
 
-    {# AI recommendation card — commented out; template kept in _ai_recommend.html
-    {% include "_ai_recommend.html" %}
-    #}
+    <!-- Right column: what comes out — scenario comparison and the
+         projection chart, the pair you watch while editing the left. -->
+    <div class="pension-results space-y-4">
+      {% include "_scenarios.html" %}
 
-    {# Kredītu kalkulators link — commented out; /loans page still exists
-    <div class="text-center py-2">
-      <a id="loansPageLink"
-         href="/loans"
-         class="inline-flex items-center gap-1.5 rounded-2xl border
-                border-slate-200 bg-white px-4 py-2 text-sm font-medium
-                text-slate-600 shadow-sm transition hover:border-slate-400
-                hover:text-slate-900">
-        Kredītu kalkulators →
-      </a>
+      {# AI recommendation card — commented out; template kept in
+         _ai_recommend.html
+      {% include "_ai_recommend.html" %}
+      #}
+
+      {# Kredītu kalkulators link — commented out; /loans page still exists
+      <div class="text-center py-2">
+        <a id="loansPageLink"
+           href="/loans"
+           class="inline-flex items-center gap-1.5 rounded-2xl border
+                  border-slate-200 bg-white px-4 py-2 text-sm font-medium
+                  text-slate-600 shadow-sm transition hover:border-slate-400
+                  hover:text-slate-900">
+          Kredītu kalkulators →
+        </a>
+      </div>
+      #}
+
+      {% include "_chart.html" %}
     </div>
-    #}
-
-    {% include "_chart.html" %}
 
   </div>
 </main>
@@ -75,17 +87,17 @@
 <div class="mobile-bar">
   <div class="flex flex-1 items-center gap-5 md:gap-8 min-w-0">
     <div class="min-w-0 mb-desktop">
-      <div class="text-[9px] text-slate-400 uppercase tracking-wide">{{ t("Monthly at retirement") }}</div>
+      <div class="text-xs text-slate-400 uppercase tracking-wide">{{ t("Monthly at retirement") }}</div>
       <div id="summaryMonthly"
            class="text-xl font-semibold text-slate-600 leading-tight">—</div>
     </div>
     <div class="min-w-0">
-      <div class="text-[9px] text-slate-400 uppercase tracking-wide">{{ t("In today's money") }}</div>
+      <div class="text-xs text-slate-400 uppercase tracking-wide">{{ t("In today's money") }}</div>
       <div id="mobileBarValue"
            class="text-xl font-semibold text-emerald-600 leading-tight">—</div>
     </div>
     <div class="min-w-0 mb-desktop">
-      <div id="summaryCapitalLabel" class="text-[9px] text-slate-400 uppercase tracking-wide">{{ t("Total savings") }}</div>
+      <div id="summaryCapitalLabel" class="text-xs text-slate-400 uppercase tracking-wide">{{ t("Total savings") }}</div>
       <div id="summaryCapital"
            class="text-xl font-semibold text-slate-600 leading-tight">—</div>
     </div>

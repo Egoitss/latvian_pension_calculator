@@ -6,13 +6,13 @@
   <button type="button"
           class="accordion-header w-full p-4 flex items-center justify-between gap-3 text-left">
     <div class="min-w-0">
-      <h2 class="text-sm font-semibold text-slate-900">{{ t("How your savings grow") }}</h2>
-      <p class="text-[11px] text-slate-500 mt-0.5">
+      <h2 class="font-semibold text-slate-900">{{ t("How your savings grow") }}</h2>
+      <p class="text-xs text-slate-500 mt-0.5">
         {{ t("All sources over time — in today's purchasing power") }}
       </p>
     </div>
     <div class="flex items-center gap-2 shrink-0">
-      <span class="text-[11px] text-slate-500">
+      <span class="text-xs text-slate-500">
         {{ t("Period:") }} {{ projection.years }} {{ t("years") }}
       </span>
       <svg class="accordion-chevron h-4 w-4 text-slate-500" viewBox="0 0 24 24"
@@ -25,8 +25,9 @@
 
   <div class="accordion-body px-4 pb-4">
 
-    <!-- Canvas target for Chart.js — chart.js reads this id -->
-    <div class="h-[390px] w-full">
+    <!-- Canvas target for Chart.js — chart.js reads this id. Height
+         comes from .pension-chart-box so it scales with the viewport. -->
+    <div class="pension-chart-box w-full">
       <canvas id="projectionChart"></canvas>
     </div>
 

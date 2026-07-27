@@ -7,13 +7,13 @@
   <button type="button"
           class="accordion-header w-full p-4 flex items-start justify-between gap-3 text-left">
     <div class="min-w-0">
-      <h2 class="text-sm font-semibold text-slate-900">{{ t("Voluntary savings") }}</h2>
-      <p class="text-[11px] text-slate-500 mt-0.5">
+      <h2 class="font-semibold text-slate-900">{{ t("Voluntary savings") }}</h2>
+      <p class="text-xs text-slate-500 mt-0.5">
         {{ t("Your own contribution — with tax relief up to €1,020/year") }}
       </p>
     </div>
     <div class="flex items-center gap-2 shrink-0">
-      <span class="accordion-preview text-[11px] text-slate-400">
+      <span class="accordion-preview text-xs text-slate-400">
         {{ t("Enter balance →") }}
       </span>
       <svg class="accordion-chevron h-4 w-4 text-slate-500" viewBox="0 0 24 24"
@@ -28,7 +28,7 @@
 
     <!-- Plan selector -->
     <div class="mt-3 space-y-1">
-      <label class="text-[10px] font-medium text-slate-500" for="p3PlanName">{{ t("Fund") }}</label>
+      <label class="text-xs font-medium text-slate-500" for="p3PlanName">{{ t("Fund") }}</label>
       <select id="p3PlanName"
               class="w-full rounded-2xl border border-slate-200 bg-white px-3 py-2
                      text-sm outline-none transition focus:border-slate-500
@@ -41,13 +41,13 @@
         </option>
         {% endfor %}
       </select>
-      <div class="text-[10px] text-slate-400">{{ t("5-yr return / annual fee") }}</div>
+      <div class="text-xs text-slate-400">{{ t("5-yr return / annual fee") }}</div>
     </div>
 
     <!-- Inputs: balance + monthly contribution -->
     <div class="mt-3 grid grid-cols-2 gap-2">
       <div class="space-y-1">
-        <label class="text-[10px] font-medium text-slate-500" for="p3Balance">
+        <label class="text-xs font-medium text-slate-500" for="p3Balance">
           {{ t("Accumulated balance (€)") }}
         </label>
         <input id="p3Balance" type="number" step="1" min="0"
@@ -58,7 +58,7 @@
                       focus:ring-2 focus:ring-slate-200" />
       </div>
       <div class="space-y-1">
-        <label class="text-[10px] font-medium text-slate-500" for="p3Monthly">
+        <label class="text-xs font-medium text-slate-500" for="p3Monthly">
           {{ t("Monthly contribution (€)") }}
         </label>
         <input id="p3Monthly" type="number" step="1" min="0"
@@ -81,7 +81,7 @@
       <input id="p3ContribGrowth" type="range" min="0" max="15" step="0.5"
              value="{{ defaults.p3_contribution_growth }}"
              class="w-full accent-slate-900" />
-      <div class="text-[10px] text-slate-400">
+      <div class="text-xs text-slate-400">
         {{ t("To keep the same share of salary: ~9% per year · Conservative: 2–5%") }}
       </div>
     </div>
@@ -98,21 +98,21 @@
       <!-- Three metric tiles -->
       <div class="grid grid-cols-3 gap-2">
         <div class="rounded-2xl bg-slate-50 px-3 py-3 text-center">
-          <div class="text-[10px] text-slate-400 mb-1">{{ t("Balance at retirement") }}</div>
+          <div class="text-xs text-slate-400 mb-1">{{ t("Balance at retirement") }}</div>
           <div id="p3FinalBalance" class="text-base font-bold text-slate-900">—</div>
         </div>
         <div class="rounded-2xl bg-emerald-50 border border-emerald-100 px-3 py-3 text-center">
-          <div class="text-[10px] text-slate-400 mb-1">{{ t("Monthly payout") }}</div>
+          <div class="text-xs text-slate-400 mb-1">{{ t("Monthly payout") }}</div>
           <div id="p3MonthlyDisplay" class="text-xl font-bold text-emerald-800">—</div>
         </div>
         <div class="rounded-2xl bg-slate-50 px-3 py-3 text-center">
-          <div class="text-[10px] text-slate-400 mb-1">{{ t("In today's money") }}</div>
+          <div class="text-xs text-slate-400 mb-1">{{ t("In today's money") }}</div>
           <div id="p3RealMonthlyDisplay" class="text-base font-bold text-slate-600">—</div>
         </div>
       </div>
 
       <!-- Tax breakdown footnote -->
-      <div class="text-[10px] text-slate-400">
+      <div class="text-xs text-slate-400">
         {{ t("On contributions: 0% income tax · On gains: 25.5% income tax.") }}
         {{ t("After tax:") }} <span id="p3NetPayout">—</span> ·
         {{ t("In today's money (total):") }} <span id="p3RealBalance">—</span> ·

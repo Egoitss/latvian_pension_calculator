@@ -76,10 +76,10 @@ function updateEligibilityHint(totalMonths) {
   const label = months > 0 ? `${years} ${t("yrs")} ${months} ${t("mo.")}` : `${years} ${t("yrs")}`;
   if (totalMonths >= 20 * 12) {
     hint.textContent = `${t("Service record:")} ${label} ✓ (${t("min. 20 yrs")})`;
-    hint.className = "text-[10px] text-emerald-600";
+    hint.className = "text-xs text-emerald-600";
   } else if (totalMonths > 0) {
     hint.textContent = `${t("Service record:")} ${label} — ${t("insufficient (min. 20 yrs)")}`;
-    hint.className = "text-[10px] text-amber-600";
+    hint.className = "text-xs text-amber-600";
   } else {
     hint.textContent = "";
   }

@@ -98,7 +98,7 @@ function updateScenarioBadge() {
   const badge = g("propScenarioBadge");
   if (!badge) return;
   const { cls, label } = SCENARIO_BADGE[activeScenario];
-  badge.className = `rounded-full px-1.5 py-0.5 text-[10px] font-medium ${cls}`;
+  badge.className = `rounded-full px-1.5 py-0.5 text-xs font-medium ${cls}`;
   badge.textContent = label;
 }
 
