@@ -18,6 +18,57 @@
 @media (min-width: 1680px) { :root { --shell-max: 1360px; --pad-x: 64px; } }
 @media (min-width: 1920px) { :root { --shell-max: 1440px; --pad-x: 72px; } }
 
+/* Skip link: off-screen until focused, then pinned over the nav. */
+.c-skip { position: absolute; left: -9999px; }
+.c-skip:focus {
+  left: var(--pad-x); top: 12px; z-index: 100; background: #0A0A0B;
+  color: #fff; padding: 12px 20px;
+  font-family: "IBM Plex Mono", monospace; font-size: 13px;
+}
+
+/* ── Site footer ────────────────────────────────────────────────── */
+/* Mirrors the oats.lv .c-foot: brand lockup left, links right, rows
+   aligned to the brand's text lines rather than the lockup. */
+.oats-foot {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 32px; padding: 40px var(--pad-x);
+  border-top: 1px solid var(--ol); background: var(--obg);
+}
+.oats-foot-brand {
+  display: flex; flex-direction: column; gap: 4px; flex: none;
+  white-space: nowrap;
+}
+.oats-foot-lock { display: flex; align-items: center; gap: 10px; }
+.oats-foot-mark { color: var(--ob); display: grid; place-items: center; }
+.oats-foot-mark svg { display: block; }
+.oats-foot-brand .co {
+  font-family: "Space Grotesk", sans-serif; font-weight: 600;
+  font-size: 17px; letter-spacing: -.01em; color: var(--oi);
+}
+.oats-foot-brand .struct, .oats-foot-brand .legal {
+  font-family: "IBM Plex Mono", monospace; font-size: 12px;
+  color: var(--om);
+}
+.oats-foot-brand .struct { letter-spacing: .04em; }
+.oats-foot-brand .legal { margin-top: 12px; letter-spacing: .06em; }
+.oats-foot-links {
+  display: flex; flex-wrap: wrap; column-gap: 28px; row-gap: 15.2px;
+  padding-top: 34px;
+}
+.oats-foot-links a {
+  font-family: "IBM Plex Mono", monospace; font-size: 12.5px;
+  letter-spacing: .03em; color: var(--oi2); display: inline-flex;
+  align-items: center; gap: 7px; transition: color .16s ease;
+}
+.oats-foot-links a svg {
+  width: 11px; height: 11px; color: #8A8C94;
+  transition: transform .2s ease, color .16s ease;
+}
+.oats-foot-links a:hover { color: var(--ob); }
+.oats-foot-links a:hover svg {
+  color: var(--ob); transform: translate(2px, -2px);
+}
+
 /* ── Typography ─────────────────────────────────────────────────── */
 body {
   font-family: "IBM Plex Sans", system-ui, sans-serif;
@@ -231,6 +282,11 @@ thead th {
   /* The shell gutter matches the nav's on phones; the desktop
      var(--pad-x) would eat a quarter of a 390px screen. */
   .pension-shell { padding-inline: 14px; }
+  /* Footer stacks: no brand line to align to, and the copyright
+     cannot hold one line in a phone column. */
+  .oats-foot { flex-direction: column; gap: 24px; }
+  .oats-foot-brand { white-space: normal; }
+  .oats-foot-links { padding-top: 0; gap: 16px 22px; }
 }
 
 /* ── Page shell & desktop two-column layout ─────────────────────── */
@@ -350,7 +406,9 @@ thead th {
 .scenario-chip.is-moderate { background: #0f172a; }     /* navy */
 .scenario-chip.is-negative { background: #dc2626; }     /* red-600 */
 
-body { padding-bottom: 72px; }   /* keep content clear of the footer bar */
+/* Clear the fixed 64px bottom bar. Raised from 72px now that a
+   real footer sits above it, so its last row is not covered. */
+body { padding-bottom: 96px; }
 
 /* "Advanced assumptions" native <details> disclosure */
 .adv-section > summary { list-style: none; display: inline-flex;

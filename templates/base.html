@@ -4,7 +4,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{ t("Pension Scenario Simulator") }} — OATS</title>
+  <title>{% block page_title %}{{ t("Pension Scenario Simulator") }}{% endblock %} — OATS</title>
+  {# Per-page description; /loans overrides it so the two routes
+     are not metadata duplicates of each other. #}
+  {% set _desc %}{% block page_desc %}{{ t("Monte Carlo scenarios for your Latvian 2nd & 3rd pillar pension, with a downloadable PDF report and AI review.") }}{% endblock %}{% endset %}
+  <meta name="description" content="{{ _desc }}" />
 
   {# Canonical + language alternates. Latvian is the bare path, English
      lives under /en, so the two variants are distinct URLs and each
@@ -28,8 +32,7 @@
         content="{{ 'lv_LV' if lang == 'lv' else 'en_US' }}" />
   <meta property="og:title"
         content="{{ t('Pension Scenario Simulator') }} — OATS" />
-  <meta property="og:description"
-        content="{{ t('Monte Carlo scenarios for your Latvian 2nd & 3rd pillar pension, with a downloadable PDF report and AI review.') }}" />
+  <meta property="og:description" content="{{ _desc }}" />
   <meta property="og:url"
         content="https://pension.oats.lv{{ request.path }}" />
   <meta property="og:image"
@@ -41,8 +44,7 @@
   <meta name="twitter:creator" content="@Egoitss" />
   <meta name="twitter:title"
         content="{{ t('Pension Scenario Simulator') }} — OATS" />
-  <meta name="twitter:description"
-        content="{{ t('Monte Carlo scenarios for your Latvian 2nd & 3rd pillar pension, with a downloadable PDF report and AI review.') }}" />
+  <meta name="twitter:description" content="{{ _desc }}" />
   <meta name="twitter:image"
         content="https://pension.oats.lv/static/og.png" />
 
@@ -84,8 +86,12 @@
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900 font-sans antialiased">
 
+  {# Skip link: the first focusable thing on the page, so keyboard
+     users can jump past the nav. Off-screen until focused. #}
+  <a class="c-skip" href="#main">{{ t("Skip to content") }}</a>
+
   <!-- OATS brand nav — update href attrs for production deployment -->
-  <nav class="oats-nav">
+  <header class="oats-nav">
     <a class="oats-logo" href="https://oats.lv">
       <svg class="oats-logo-mark" viewBox="0 0 100 100"
            role="img" aria-label="OATS">
@@ -106,20 +112,22 @@
     {% set _tame = "https://oats.lv/tame/?lang=en" if lang == "en"
        else "https://oats.lv/tame/" %}
     <div class="oats-nav-r">
-      <div class="oats-navlinks">
+      <nav class="oats-navlinks" aria-label="OATS">
         <a href="{{ _site }}">{{ t("Home") }}</a>
         <a href="{{ _site }}services.html">{{ t("Services") }}</a>
         <a href="{{ _tame }}">{{ t("Calculator") }}</a>
         <a href="{{ _site }}work.html">{{ t("Work") }}</a>
         <a href="{{ _site }}writing.html">{{ t("Writing") }}</a>
         <a href="{{ _site }}contact.html">{{ t("Contact") }}</a>
-      </div>
+      </nav>
       {# Language switch (EN/LV) — same page in the other language. #}
       {% include "_lang.html" %}
     </div>
-  </nav>
+  </header>
 
   {% block content %}{% endblock %}
+
+  {% include "_footer.html" %}
 
   <!-- i18n bridge to JS: current language + LV override map.
        Emitted as inert JSON data blocks; globals.js hydrates them

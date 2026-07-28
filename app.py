@@ -100,6 +100,7 @@ def inject_i18n():
         "lang": lang,
         "alt_path": _alt_path(request.path, lang),
         "js_i18n": js_catalog(lang),
+        "current_year": _date.today().year,
     }
 
 

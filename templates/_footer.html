@@ -1,0 +1,48 @@
+{# _footer.html — site footer mirroring the oats.lv .c-foot: brand
+   lockup and copyright left, OATS property links right. Every link
+   leaves pension.oats.lv, so they are absolute, language-aware and
+   carry the external-link rel. #}
+
+{% macro arr() %}<svg width="11" height="11" viewBox="0 0 24 24"
+  fill="none" stroke="currentColor" stroke-width="2"
+  stroke-linecap="square" aria-hidden="true"><path
+  d="M5 12h14M13 6l6 6-6 6"/></svg>{% endmacro %}
+
+{% set _s = "https://oats.lv/en/" if lang == "en" else "https://oats.lv/" %}
+{# The same eight the other properties carry. The calculator, BMX and
+   pension links are the header's job, not the footer's. #}
+{% set foot_links = [
+   (_s ~ "services.html", t("Services")),
+   (_s ~ "work.html",     t("Work")),
+   (_s ~ "writing.html",  t("Writing")),
+   (_s ~ "contact.html",  t("Contact")),
+   ("mailto:info@oats.lv", t("Email")),
+   ("https://www.linkedin.com/in/arnis-a-7a77a0155/", "LinkedIn"),
+   ("https://github.com/Egoitss", "GitHub"),
+   ("https://x.com/Egoitss",      "Twitter")] %}
+
+<footer class="oats-foot">
+  <div class="oats-foot-brand">
+    <div class="oats-foot-lock">
+      <span class="oats-foot-mark"><svg width="30" height="30"
+        viewBox="0 0 100 100" role="img" aria-label="OATS"><path
+        fill="currentColor" fill-rule="evenodd"
+        d="M0 0H100V100H0Z M76 50A26 26 0 1 1 24 50A26 26 0 1 1 76 50Z
+           M62 50A12 12 0 1 1 38 50A12 12 0 1 1 62 50Z"/></svg></span>
+      <span class="co">SIA &#34;OATS&#34;</span>
+    </div>
+    <span class="struct">{{ t("Latvian Limited Liability Company") }}</span>
+    <span class="legal">
+      © {{ current_year }} SIA &#34;OATS&#34; —
+      {{ t("All rights reserved") }}
+    </span>
+  </div>
+
+  <nav class="oats-foot-links" aria-label="OATS">
+    {% for href, label in foot_links %}
+    <a href="{{ href }}"
+       {%- if href.startswith("http") %} rel="noopener noreferrer"{% endif %}>{{
+      label }} {{ arr() }}</a>
+    {% endfor %}
+  </nav>
+</footer>
