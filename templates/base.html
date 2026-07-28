@@ -6,6 +6,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{ t("Pension Scenario Simulator") }} — OATS</title>
 
+  {# Canonical + language alternates. Latvian is the bare path, English
+     lives under /en, so the two variants are distinct URLs and each
+     canonicalises to itself. alt_path is the other language's path,
+     supplied by the inject_i18n context processor. #}
+  {% set _origin = "https://pension.oats.lv" %}
+  {% set _lv_path = request.path if lang == "lv" else alt_path %}
+  {% set _en_path = alt_path if lang == "lv" else request.path %}
+  <link rel="canonical" href="{{ _origin }}{{ request.path }}" />
+  <link rel="alternate" hreflang="lv"
+        href="{{ _origin }}{{ _lv_path }}" />
+  <link rel="alternate" hreflang="en"
+        href="{{ _origin }}{{ _en_path }}" />
+  <link rel="alternate" hreflang="x-default"
+        href="{{ _origin }}{{ _lv_path }}" />
+
   <!-- Open Graph + Twitter Card: rich link previews on X / LinkedIn -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="OATS" />
@@ -82,15 +97,26 @@
       OATS SIA
     </a>
     <span class="oats-crumb">[ {{ t("Pension Scenario Simulator") }} ]</span>
-    {# Language switch (EN/LV) — links to the same page in the other
-       language. Active language is a static span. #}
-    {% include "_lang.html" %}
-    {# Return to wherever the visitor came from; behaviour lives in
-       static/js/nav.js (CSP: no inline handlers). The href is the
-       fallback when opened with no history (direct load / fresh tab). #}
-    <a class="oats-back" href="https://oats.lv">
-      ← {{ t("Portfolio") }}
-    </a>
+    {# The shared oats.lv site nav, ported from that repo's
+       macros/nav.html. Hrefs are absolute because this is a separate
+       app on its own subdomain, and language-aware: the EN homepage
+       lives under /en/, while the estimator takes ?lang=en. #}
+    {% set _site = "https://oats.lv/en/" if lang == "en"
+       else "https://oats.lv/" %}
+    {% set _tame = "https://oats.lv/tame/?lang=en" if lang == "en"
+       else "https://oats.lv/tame/" %}
+    <div class="oats-nav-r">
+      <div class="oats-navlinks">
+        <a href="{{ _site }}">{{ t("Home") }}</a>
+        <a href="{{ _site }}services.html">{{ t("Services") }}</a>
+        <a href="{{ _tame }}">{{ t("Calculator") }}</a>
+        <a href="{{ _site }}work.html">{{ t("Work") }}</a>
+        <a href="{{ _site }}writing.html">{{ t("Writing") }}</a>
+        <a href="{{ _site }}contact.html">{{ t("Contact") }}</a>
+      </div>
+      {# Language switch (EN/LV) — same page in the other language. #}
+      {% include "_lang.html" %}
+    </div>
   </nav>
 
   {% block content %}{% endblock %}
@@ -104,7 +130,6 @@
           data-global="I18N">{{ js_i18n | tojson }}</script>
   <script src="{{ url_for('static', filename='js/globals.js', v=js_v) }}"></script>
   <script src="{{ url_for('static', filename='js/i18n.js', v=js_v) }}"></script>
-  <script src="{{ url_for('static', filename='js/nav.js', v=js_v) }}"></script>
 
   <!-- JS modules loaded after DOM is ready -->
   {% block scripts %}{% endblock %}
