@@ -18,10 +18,14 @@
   color: #626974;
 }
 
-/* Some markers sit in flex cells that collapse to about 33px on a
-   phone, narrower than a single Latvian word. Breaking is better than
-   spilling out of the cell. */
-.o-mark { overflow-wrap: anywhere; }
+/* Some markers sit in flex cells narrower than a single Latvian word.
+   Truncate rather than break: breaking mid-word stacked the label one
+   character per line when a cell collapsed to zero width. */
+.o-mark {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 @media (max-width: 480px) {
   /* The tracking costs more width than it buys at this size. */

@@ -6,15 +6,12 @@
    The email shows the address and opens the contact form on oats.lv
    rather than a mail client, matching the rest of the estate. #}
 {% set _site = "https://oats.lv/en/" if lang == "en" else "https://oats.lv/" %}
-{% set _priv = "https://oats.lv/en/tame/privacy" if lang == "en"
-   else "https://oats.lv/tame/privatums" %}
 
 <footer class="o-foot">
   <div class="o-foot-base">
     <span class="o-foot-word">SIA &#34;OATS&#34;</span>
     <span>{{ t("Reg. No. 40203754767") }}</span>
-    <a href="{{ _priv }}"
-       rel="noopener noreferrer">{{ t("Privacy policy") }}</a>
+
     <a href="{{ _site }}contact.html#write"
        rel="noopener noreferrer">info@oats.lv</a>
     <span class="o-foot-copy">
