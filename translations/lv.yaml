@@ -1,10 +1,10 @@
-AI recommendation — 2nd and 3rd pillar withdrawal: AI rekomendācija — 2. un 3. līmeņa izmaksa
+AI recommendation — 2nd and 3rd pillar withdrawal: MI rekomendācija — 2. un 3. līmeņa izmaksa
 Lump sum, programmed pension, or lifetime annuity?: Vai izņemt, saņemt programmēto pensiju vai pirkt mūža pensiju?
 Creativity (temperature): Radošums (temperatūra)
 0 = strictly factual, 1 = more creative: 0 = stingri faktisks, 1 = brīvāks
 0 = conservative · 1 = creative: 0 = konservatīvs · 1 = radošs
 Get recommendation: Saņemt rekomendāciju
-AI is thinking… (Claude Sonnet 4.6): AI domā… (Claude Sonnet 4.6)
+AI is thinking… (Claude Sonnet 4.6): MI domā… (Claude Sonnet 4.6)
 ? This is NOT financial advice — for educational purposes only. Consult a certified financial planner before making any decision.
 : Šis NAV finanšu padoms — tikai izglītojoša informācija. Konsultējies ar sertificētu finanšu plānotāju pirms pieņem lēmumu.
 How your savings grow: Uzkrājuma sadalījums laikā
@@ -21,7 +21,7 @@ Change anything — results update instantly: Personīgie parametri visam aprē�
 Birth month and year: Dzimšanas gads un mēnesis
 Birth year: Dzimšanas gads
 Advanced assumptions: Papildu pieņēmumi
-'For a more complete report, open the sections below and fill in your details.': Pilnīgākam pārskatam atveriet zemāk esošās sadaļas un aizpildiet savus datus.
+'For a more complete report, open the sections below and fill in your details.': Pilnīgākam pārskatam atver zemāk esošās sadaļas un aizpildi savus datus.
 'Age:': 'Vecums:'
 Retirement age: Pensionēšanās vecums
 'Retiring:': 'Pensijā:'
@@ -144,7 +144,7 @@ Monthly payout: Mēneša izmaksa
 'Taxable gains:': 'Apliekamā peļņa:'
 'Total contributed:': 'Kopā iemaksāts:'
 Property value forecast: Nekustamā īpašuma prognoze
-Moderate: Mērenais
+Moderate: Mērens
 Enter value →: Ievadi vērtību →
 Riga / city: Rīga / pilsēta
 Rural: Lauki
@@ -154,12 +154,12 @@ Size (m²): Platība (m²)
 Forecast at retirement: Prognoze pensijai
 Value: Vērtība
 ⚠ Includes a 2007–2010-style crash (−60%) applied to the starting value.: ⚠ Ietver 2007–2010 tipa krīzi (−60%) sākotnējā vērtībā.
-Positive: Pozitīvais
+Positive: Pozitīvs
 optimistic: optimistisks
 Markets grow fast — favourable decades. Only 1 in 10 simulations sees markets performing this well or better.: Tirgus aug ātri — labvēlīgas desmitgades. Tikai 1 no 10 simulācijām tirgus aug tikpat labi vai labāk.
 realistic: reālistisks
 The most likely outcome — plan around this. Half of simulated futures end better, half worse.: Visbūtiskākā prognoze — plāno ar šo. Puse simulēto nākotnes scenāriju beidzas labāk, puse sliktāk.
-Negative: Negatīvais
+Negative: Negatīvs
 conservative: piesardzīgs
 'Markets stagnate or a crisis has hit. 9 out of 10 scenarios end better. Test: can you survive financially?': 'Tirgus stagnē vai bijusi krīze. 9 no 10 scenārijiem beidzas labāk. Pamēģini: vai finansiāli spēsi izdzīvot.'
 Your retirement income: Kopējā pensija · 1. + 2. + 3. līmenis
@@ -176,7 +176,7 @@ Running scenario analysis…: Monte Carlo aprēķins notiek…
 · payout spread over: · 2.+3. līm. izmaksa pa
 Pension Scenario Simulator: Pensijas kalkulators
 Outcome: Pensija
-Monthly at retirement: Nominālā / mēn.
+Monthly at retirement: Mēnesī pensijā
 Total savings: Kopējais kapitāls
 Simulation model — not financial advice. Adjust the assumptions to see how they affect your retirement outcome.: Aptuvens modelis. Nav finanšu padoms. Vēsturiskais ienesīgums negarantē nākotnes rezultātus.
 Loan Calculator: Kredītu kalkulators
@@ -252,7 +252,7 @@ Voluntary pension: Brīvprātīgā pensija (3. līmenis)
 Gross monthly: Bruto mēnesī
 Simulation model — not financial advice.: Simulācijas modelis — nav finanšu padoms.
 Preparing…: Sagatavo…
-Download failed — try again: Lejupielāde neizdevās — mēģiniet vēlreiz
+Download failed — try again: Lejupielāde neizdevās — mēģini vēlreiz
 per month, in today's money: mēnesī, šodienas naudā
 nominal — future euros, before inflation: nominālā vērtība — nākotnes eiro, pirms inflācijas
 in today's money: šodienas naudā
@@ -282,10 +282,10 @@ Higher: Augstāks
 Lower: Zemāks
 Download report (.pdf): Lejupielādēt pārskatu (.pdf)
 Download PDF: Lejupielādēt PDF
-Download report PDF: Lejupielādēt pārskatu PDF
+Download report PDF: Lejupielādēt PDF pārskatu
 incl. AI review: ietver MI ieskatu
 "Monte Carlo scenarios for your Latvian 2nd & 3rd pillar pension, with a downloadable PDF report and AI review.": "Montekarlo scenāriji tavai 2. un 3. līmeņa pensijai Latvijā, ar lejupielādējamu PDF pārskatu un MI ieskatu."
-Download a full PDF report — including an AI review of your retirement plan with personalised suggestions.: Lejupielādējiet pilnu PDF pārskatu — tajā iekļauts MI veikts jūsu pensijas plāna izvērtējums ar personalizētiem ieteikumiem.
+Download a full PDF report — including an AI review of your retirement plan with personalised suggestions.: Lejupielādē pilnu PDF pārskatu — tajā iekļauts MI veikts tavas pensijas plāna izvērtējums ar personalizētiem ieteikumiem.
 Comfortably ahead — your pension is set to exceed typical retirement needs.: Ar rezervi — pensija pārsniegs tipiskās pensionāru vajadzības.
 On track — your pension covers a strong share of your salary at retirement.: Uz pareizā ceļa — pensija sedz būtisku daļu no algas pensionējoties.
 Reasonable — there is room to strengthen your pension.: Pieņemami — ir iespēja nostiprināt pensiju.
@@ -298,8 +298,10 @@ Calculator: Kalkulators
 Work: Portfolio
 Writing: Emuāri
 Contact: Kontakti
-Compare loan and mortgage repayment scenarios alongside your Latvian pension projection.: Salīdziniet kredītu un hipotēkas atmaksas scenārijus līdzās savai Latvijas pensijas prognozei.
+Compare loan and mortgage repayment scenarios alongside your Latvian pension projection.: Salīdzini kredītu un hipotēkas atmaksas scenārijus līdzās savai Latvijas pensijas prognozei.
 Email: E-pasts
 Latvian Limited Liability Company: Sabiedrība ar ierobežotu atbildību
 All rights reserved: Visas tiesības aizsargātas
 Skip to content: Pāriet uz saturu
+Pension simulator: Pensiju simulators
+BMX statistics: BMX statistika

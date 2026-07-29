@@ -1,0 +1,244 @@
+/* o-header.css — the shared OATS header. Byte-identical on oats.lv,
+   oats.lv/tame/, pension.oats.lv and bmx.oats.lv; only the link list
+   inside it differs, because bmx and the estimator navigate their own
+   pages from here and have nowhere else to do it.
+
+   56px sticky bar. Below 768px the hamburger opens a right-side
+   drawer; at 768px and above the links sit inline and the hamburger
+   is redundant, so it goes. The language switcher follows the links:
+   inline above the breakpoint, pinned to the drawer's bottom below
+   it, so the bar itself is only ever a wordmark and a button. */
+
+.o-hdr {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 56px;
+  background: #fff;
+  border-bottom: 1px solid #e5e5e5;
+  /* env() falls back to 0 off-notch, so max() keeps the 24px floor. */
+  padding-left: max(24px, env(safe-area-inset-left));
+  padding-right: max(24px, env(safe-area-inset-right));
+  box-sizing: border-box;
+}
+
+.o-hdr-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  color: #0a0a0b;
+  text-decoration: none;
+}
+.o-hdr-brand svg {
+  display: block;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  color: #9d2235;
+}
+.o-hdr-word {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.o-hdr-r {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+}
+
+/* Inline links, 768px and up. Below that the drawer takes over. */
+.o-hdr-links {
+  display: none;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+.o-hdr-links a {
+  color: #2d3138;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.o-hdr-links a:hover { color: #9d2235; }
+
+.o-hdr-burger {
+  /* flex, not grid: grid stretches its auto rows to fill the 44px box,
+     which pushed the bars 16px apart and left the close-state X open.
+     flex sizes to content, so the pitch is the 2px bar + 4px gap the
+     transforms below are tuned for. */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.o-hdr-burger span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: #0a0a0b;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+body.o-drawer-open .o-hdr-burger span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+body.o-drawer-open .o-hdr-burger span:nth-child(2) { opacity: 0; }
+body.o-drawer-open .o-hdr-burger span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+@media (min-width: 768px) {
+  .o-hdr-links { display: flex; gap: 22px; }
+  .o-hdr-burger { display: none; }
+  .o-hdr-r { gap: 18px; }
+  /* Above the breakpoint the switcher returns to the bar; below it,
+     it is pinned to the drawer's bottom instead. */
+  .o-hdr .c-lang,
+  .o-hdr .oats-lang {
+    display: inline-flex;
+    margin-left: 0;
+    flex: none;
+  }
+}
+
+/* Each property ships its own language-switcher markup. Neutralise the
+   layout hooks they inherited from their old headers so the bar sits
+   the same regardless of which switcher is inside it. */
+.o-hdr .c-lang,
+.o-hdr .oats-lang {
+  display: none;
+}
+
+
+/* ---- Drawer ------------------------------------------------------
+   Right-side panel below 768px. It sits outside .o-hdr so the header's
+   own stacking context cannot trap it, and so a sticky header that
+   scrolls cannot drag the drawer with it. */
+
+.o-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-out;
+}
+body.o-drawer-open .o-drawer-backdrop {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.o-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 61;
+  display: flex;
+  flex-direction: column;
+  width: 280px;
+  /* 280px is wider than the smallest phones once the safe area is
+     taken out, so cap it and let the backdrop stay tappable. */
+  max-width: 86vw;
+  height: 100dvh;
+  background: #fff;
+  transform: translateX(100%);
+  transition: transform 0.2s ease-out;
+  /* Keeps a scroll gesture inside the panel from chaining to the page
+     underneath once the list hits its end. */
+  overscroll-behavior: contain;
+  box-sizing: border-box;
+}
+body.o-drawer-open .o-drawer { transform: translateX(0); }
+
+/* The panel is display:none until first open so its links stay out of
+   the tab order and the accessibility tree without needing inert. */
+.o-drawer[hidden],
+.o-drawer-backdrop[hidden] { display: none; }
+
+.o-drawer-nav {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding-top: max(0px, env(safe-area-inset-top));
+}
+.o-drawer-nav a {
+  display: flex;
+  align-items: center;
+  height: 52px;
+  padding: 0 24px;
+  padding-right: max(24px, env(safe-area-inset-right));
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-size: 18px;
+  color: #0a0a0b;
+  text-decoration: none;
+  border-bottom: 0.5px solid #e5e5e5;
+  box-sizing: border-box;
+}
+.o-drawer-nav a[aria-current] { color: #9d2235; }
+
+/* Group break. The rule above it is the previous row's own border, so
+   this is pure space: two lines stacked 8px apart would read as a
+   mistake rather than a section. */
+.o-drawer-sep { height: 8px; }
+
+.o-drawer-foot {
+  flex: none;
+  border-top: 0.5px solid #e5e5e5;
+  padding: 12px max(24px, env(safe-area-inset-right)) 12px 24px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+}
+
+/* LV/EN pill. Each property builds the two children from its own
+   routing (links here, buttons in the estimator), so the styling
+   targets any child rather than a fixed tag. */
+.o-drawer-lang {
+  display: inline-flex;
+  border: 1px solid #e5e5e5;
+}
+.o-drawer-lang > * {
+  display: flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 15px;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: #626974;
+  text-decoration: none;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.o-drawer-lang > .is-on {
+  color: #fff;
+  background: #0a0a0b;
+}
+
+@media (min-width: 768px) {
+  .o-drawer,
+  .o-drawer-backdrop { display: none; }
+}
+
+/* Reduced motion: the panel still appears and still dims the page, it
+   just arrives without the slide. */
+@media (prefers-reduced-motion: reduce) {
+  .o-drawer,
+  .o-drawer-backdrop,
+  .o-hdr-burger span { transition: none; }
+}

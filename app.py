@@ -21,6 +21,7 @@ from calculator import (
     build_plan_schedule, should_apply_vsaoi_ceiling,
     calculate_projection,
 )
+import langpath
 from i18n import (
     lang_from_path, make_t, js_catalog,
 )
@@ -71,9 +72,21 @@ _CSP = (
 )
 
 
+@app.before_request
+def _language_entry():
+    # Honour a language chosen on another OATS property, but only for
+    # a visitor landing on the root from elsewhere. See langpath.
+    return langpath.entry_redirect()
+
+
 @app.after_request
 def _security_headers(resp):
     # Set hardening headers without clobbering route-set ones.
+    # The path decides the language; the cookie only remembers it so
+    # the other OATS subdomains can open in the same one.
+    if resp.content_type.startswith("text/html"):
+        langpath.remember(resp, lang_from_path(request.path))
+    resp.headers.setdefault("Vary", "Cookie, Sec-Fetch-Site")
     resp.headers.setdefault("X-Frame-Options", "DENY")
     resp.headers.setdefault("X-Content-Type-Options", "nosniff")
     resp.headers.setdefault(

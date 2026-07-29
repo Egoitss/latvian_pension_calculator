@@ -10,9 +10,9 @@
   --ol:  #E3E4E8; --ol2: #EDEEF1;
   /* Desktop shell scale — column and gutter widen together so the
      grid keeps its proportions on large displays. --nav-h is the
-     sticky brand nav's rendered height, measured in the browser at
-     desktop widths; anything pinned below it offsets by this. */
-  --shell-max: 1140px; --pad-x: 48px; --nav-h: 71px;
+     shared OATS header's height; anything pinned below it offsets
+     by this. */
+  --shell-max: 1140px; --pad-x: 48px; --nav-h: 56px;
 }
 @media (min-width: 1440px) { :root { --shell-max: 1280px; --pad-x: 56px; } }
 @media (min-width: 1680px) { :root { --shell-max: 1360px; --pad-x: 64px; } }
@@ -24,6 +24,34 @@
   left: var(--pad-x); top: 12px; z-index: 100; background: #0A0A0B;
   color: #fff; padding: 12px 20px;
   font-family: "IBM Plex Mono", monospace; font-size: 13px;
+}
+
+/* ── Section markers ────────────────────────────────────────────── */
+/* Matches oats.lv's .c-lbl: mono, uppercase, widely tracked. The
+   markers here were uppercase but set in the body sans, which read as
+   a different family beside the same labels on oats.lv. Colour stays
+   with each element's own utility class. */
+.oats-lbl {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  /* Some of these labels sit in flex cells that collapse to ~33px on a
+     phone, narrower than a single Latvian word. That squeeze predates
+     this rule; mono plus tracking made it worse, so the text breaks
+     rather than spilling out of its cell. */
+  overflow-wrap: anywhere;
+}
+
+/* Below the phone breakpoint the tracking costs more width than it
+   buys in legibility, so it steps down to about what the sans it
+   replaced occupied. */
+@media (max-width: 480px) {
+  .oats-lbl {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+  }
 }
 
 /* ── Site footer ────────────────────────────────────────────────── */

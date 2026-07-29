@@ -79,6 +79,8 @@
 
   <!-- Base custom styles -->
   <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/o-header.css', v=js_v) }}" />
+  <link rel="stylesheet"
         href="{{ url_for('static', filename='css/style.css', v=js_v) }}" />
   <!-- OATS theme — loaded after Tailwind to override design tokens -->
   <link rel="stylesheet"
@@ -91,28 +93,20 @@
   <a class="c-skip" href="#main">{{ t("Skip to content") }}</a>
 
   <!-- OATS brand nav — update href attrs for production deployment -->
-  <header class="oats-nav">
-    <a class="oats-logo" href="https://oats.lv">
-      <svg class="oats-logo-mark" viewBox="0 0 100 100"
-           role="img" aria-label="OATS">
-        <path fill="currentColor" fill-rule="evenodd"
-              d="M0 0H100V100H0Z
-                 M76 50A26 26 0 1 1 24 50A26 26 0 1 1 76 50Z
-                 M62 50A12 12 0 1 1 38 50A12 12 0 1 1 62 50Z"/>
-      </svg>
-      OATS SIA
+  <header class="o-hdr">
+    <a class="o-hdr-brand" href="https://oats.lv/">
+      <svg width="22" height="22" viewBox="0 0 100 100" role="img"
+           aria-label="OATS"><path fill="currentColor" fill-rule="evenodd"
+        d="M0 0H100V100H0Z M76 50A26 26 0 1 1 24 50A26 26 0 1 1 76 50Z
+           M62 50A12 12 0 1 1 38 50A12 12 0 1 1 62 50Z"/></svg>
+      <span class="o-hdr-word">SIA OATS</span>
     </a>
-    <span class="oats-crumb">[ {{ t("Pension Scenario Simulator") }} ]</span>
-    {# The shared oats.lv site nav, ported from that repo's
-       macros/nav.html. Hrefs are absolute because this is a separate
-       app on its own subdomain, and language-aware: the EN homepage
-       lives under /en/, while the estimator takes ?lang=en. #}
     {% set _site = "https://oats.lv/en/" if lang == "en"
        else "https://oats.lv/" %}
-    {% set _tame = "https://oats.lv/tame/?lang=en" if lang == "en"
+    {% set _tame = "https://oats.lv/en/tame/" if lang == "en"
        else "https://oats.lv/tame/" %}
-    <div class="oats-nav-r">
-      <nav class="oats-navlinks" aria-label="OATS">
+    <div class="o-hdr-r">
+      <nav class="o-hdr-links" aria-label="OATS">
         <a href="{{ _site }}">{{ t("Home") }}</a>
         <a href="{{ _site }}services.html">{{ t("Services") }}</a>
         <a href="{{ _tame }}">{{ t("Calculator") }}</a>
@@ -120,10 +114,48 @@
         <a href="{{ _site }}writing.html">{{ t("Writing") }}</a>
         <a href="{{ _site }}contact.html">{{ t("Contact") }}</a>
       </nav>
-      {# Language switch (EN/LV) — same page in the other language. #}
       {% include "_lang.html" %}
+      <button class="o-hdr-burger" type="button" aria-label="Menu"
+              aria-controls="o-drawer" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </header>
+
+  {# Drawer, below 768px. Sibling of <header> so the sticky bar's
+     stacking context cannot trap it. This site has no sections of its
+     own in the bar, so the list is the shared one exactly, with the
+     pension entry marking the current property. #}
+  {% set _bmx = "https://bmx.oats.lv/en" if lang == "en"
+     else "https://bmx.oats.lv/" %}
+  <div class="o-drawer-backdrop" hidden></div>
+  <aside class="o-drawer" id="o-drawer" hidden aria-hidden="true"
+         aria-label="OATS">
+    <nav class="o-drawer-nav">
+      <a href="{{ _site }}">{{ t("Home") }}</a>
+      <a href="{{ _site }}services.html">{{ t("Services") }}</a>
+      <a href="{{ _tame }}">{{ t("Calculator") }}</a>
+      <a href="{{ _site }}work.html">{{ t("Work") }}</a>
+      <a href="{{ _site }}writing.html">{{ t("Writing") }}</a>
+      <a href="{{ _site }}contact.html">{{ t("Contact") }}</a>
+      <div class="o-drawer-sep"></div>
+      <a href="{{ url_for('index') }}"
+         aria-current="page">{{ t("Pension simulator") }}</a>
+      <a href="{{ _bmx }}"
+         rel="noopener noreferrer">{{ t("BMX statistics") }}</a>
+    </nav>
+    <div class="o-drawer-foot">
+      <div class="o-drawer-lang" role="group" aria-label="Language">
+        {% if lang == "en" %}
+        <span class="is-on">EN</span>
+        <a href="{{ alt_path }}">LV</a>
+        {% else %}
+        <a href="{{ alt_path }}">EN</a>
+        <span class="is-on">LV</span>
+        {% endif %}
+      </div>
+    </div>
+  </aside>
 
   {% block content %}{% endblock %}
 
@@ -136,6 +168,7 @@
           data-global="LANG">{{ lang | tojson }}</script>
   <script type="application/json"
           data-global="I18N">{{ js_i18n | tojson }}</script>
+  <script src="{{ url_for('static', filename='js/o-header.js', v=js_v) }}"></script>
   <script src="{{ url_for('static', filename='js/globals.js', v=js_v) }}"></script>
   <script src="{{ url_for('static', filename='js/i18n.js', v=js_v) }}"></script>
 
