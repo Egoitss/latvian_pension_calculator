@@ -1,0 +1,113 @@
+/* o-buttons.css — the three OATS button variants. Byte-identical on
+   oats.lv, oats.lv/tame/, pension.oats.lv and bmx.oats.lv, so a button
+   looks and behaves the same whichever property a visitor is on.
+
+   There are exactly three. Anything that is not one of them is not a
+   button in this system: segmented toggles (the language pill, the
+   scenario switch), tabs, the header burger and filter chips are
+   controls with their own affordances and keep their own styling.
+
+   Colours are literal rather than tokens because the four properties
+   name their variables differently and this file has to be identical
+   on all of them. #9d2235 is the brand red, #7a1a29 its dark shade. */
+
+.o-btn,
+.o-btn-2 {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  height: 52px;
+  /* Symmetric padding keeps the label optically centred despite the
+     arrow sitting inside the right edge. */
+  padding: 0 44px;
+  border: 1px solid transparent;
+  border-radius: 0;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.o-btn {
+  background: #9d2235;
+  border-color: #9d2235;
+  color: #fff;
+}
+.o-btn:hover:not(:disabled) {
+  background: #7a1a29;
+  border-color: #7a1a29;
+}
+
+.o-btn-2 {
+  background: transparent;
+  border-color: #9d2235;
+  color: #9d2235;
+}
+.o-btn-2:hover:not(:disabled) { background: rgba(157, 34, 53, 0.06); }
+
+.o-btn:disabled,
+.o-btn-2:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Trailing arrow, inset 20px from the right edge. Drawn from borders
+   rather than shipped as an icon so the two variants can take it from
+   currentColor and no call site has to carry markup for it. */
+.o-btn::after,
+.o-btn-2::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  width: 7px;
+  height: 7px;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+/* Tertiary: a text link, not a box. Colour is inherited so it reads
+   correctly wherever it sits. */
+.o-btn-3 {
+  font-size: 14px;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+/* Element-qualified duplicates of the two inherited properties.
+   oats.lv carries `.c-root a { color: inherit; text-decoration: none }`
+   at (0,1,1), which outranks a bare `.o-btn` at (0,1,0) whatever the
+   load order: it rendered the hero CTA's label in ink on red and ate
+   the tertiary underline. These match that specificity, and this file
+   loads after each property's own stylesheet, so ties go to the
+   component. */
+a.o-btn,
+button.o-btn { color: #fff; text-decoration: none; }
+a.o-btn-2,
+button.o-btn-2 { color: #9d2235; text-decoration: none; }
+a.o-btn-3,
+button.o-btn-3 {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .o-btn,
+  .o-btn-2 { transition: none; }
+}
