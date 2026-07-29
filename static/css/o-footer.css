@@ -1,0 +1,117 @@
+/* o-footer.css — the shared OATS footer. Byte-identical on oats.lv,
+   oats.lv/tame/, pension.oats.lv and bmx.oats.lv.
+
+   Two tiers. The base tier carries the company identity and ships on
+   every property. The expanded tier above it carries the section links
+   and social handles, and only oats.lv renders it: the other three are
+   single-purpose apps with nothing to list there.
+
+   Colours are literal rather than tokens because the four properties
+   name their variables differently and this file has to be identical
+   on all of them. #626974 on #fff is 5.5:1, above the 4.5:1 floor. */
+
+.o-foot {
+  border-top: 1px solid #e5e5e5;
+  background: #fff;
+  padding-left: max(24px, env(safe-area-inset-left));
+  padding-right: max(24px, env(safe-area-inset-right));
+  padding-top: 32px;
+  /* Clears the home indicator on a gesture-navigation phone without
+     collapsing the padding to nothing on everything else. */
+  padding-bottom: max(32px, env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+
+/* ---- Base tier: every property ---------------------------------- */
+
+.o-foot-base {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 18px;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #626974;
+}
+.o-foot-base a {
+  color: #626974;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.o-foot-base a:hover { color: #9d2235; }
+
+/* The wordmark is the one item set in the display face. */
+.o-foot-word {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #0a0a0b;
+  white-space: nowrap;
+}
+
+/* The copyright closes the row, pushed to its own line on a phone
+   where the row wraps anyway. */
+.o-foot-copy { flex: 1 1 100%; }
+
+/* ---- Expanded tier: oats.lv only -------------------------------- */
+
+.o-foot-x {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #e5e5e5;
+}
+.o-foot-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 22px;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+.o-foot-nav a {
+  display: flex;
+  align-items: center;
+  /* 44px of height for the tap target while the text keeps its own
+     size; the row is centred so the extra height reads as spacing. */
+  min-height: 44px;
+  color: #2d3138;
+  text-decoration: none;
+}
+.o-foot-nav a:hover { color: #9d2235; }
+
+.o-foot-social {
+  display: flex;
+  gap: 8px;
+}
+.o-foot-social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border: 1px solid #e5e5e5;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: #626974;
+  text-decoration: none;
+}
+.o-foot-social a:hover {
+  border-color: #9d2235;
+  color: #9d2235;
+}
+
+@media (min-width: 768px) {
+  .o-foot { padding-left: max(48px, env(safe-area-inset-left)); }
+  .o-foot { padding-right: max(48px, env(safe-area-inset-right)); }
+  .o-foot-copy { flex: 0 0 auto; margin-left: auto; }
+}

@@ -1,0 +1,29 @@
+/* o-marker.css — the OATS section marker. Byte-identical on the
+   properties that use it.
+
+   A numbered eyebrow above a section heading: [ 02 / KOPVĒRTĒJUMS ].
+   The brackets and the index belong to the component; the label comes
+   from each property's locale file, so it turns over with the language
+   toggle rather than being baked into the markup.
+
+   #626974 on #fff is 5.5:1, above the 4.5:1 floor. */
+
+.o-mark {
+  margin: 0 0 8px;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #626974;
+}
+
+/* Some markers sit in flex cells that collapse to about 33px on a
+   phone, narrower than a single Latvian word. Breaking is better than
+   spilling out of the cell. */
+.o-mark { overflow-wrap: anywhere; }
+
+@media (max-width: 480px) {
+  /* The tracking costs more width than it buys at this size. */
+  .o-mark { letter-spacing: 0.06em; }
+}

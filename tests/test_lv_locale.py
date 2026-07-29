@@ -94,17 +94,20 @@ def test_no_visible_english_on_the_latvian_pages():
         assert not leaks, (path, leaks[:5])
 
 
-def test_section_markers_are_mono_uppercase():
-    # Matches oats.lv's .c-lbl. The markers were uppercase but set in
-    # the body sans, which read as a different family beside oats.lv.
-    css = open("static/css/oats-theme.css").read()
-    block = css[css.index(".oats-lbl {"):css.index("@media (max-width: 480px)")]
+def test_section_markers_use_the_shared_component():
+    """The marker moved from a per-property class to the shared
+    o-marker.css, so the styling is asserted there and the page only
+    has to be using it."""
+    css = open("static/css/o-marker.css").read()
+    block = css[css.index(".o-mark {"):css.index("}")]
     assert "IBM Plex Mono" in block
+    assert "font-size: 11px" in block
+    assert "letter-spacing: 0.1em" in block
     assert "text-transform: uppercase" in block
-    assert "letter-spacing: 0.14em" in block
-    # Several markers sit in flex cells narrower than one Latvian word.
-    assert "overflow-wrap: anywhere" in block
-    assert _page("/").count("oats-lbl") >= 8
+    assert "margin: 0 0 8px" in block
+    assert "color: #626974" in block          # 5.5:1 on white
+    assert "oats-lbl" not in open("static/css/oats-theme.css").read()
+    assert _page("/").count("o-mark") >= 3
 
 
 def test_headings_are_sentence_case():
