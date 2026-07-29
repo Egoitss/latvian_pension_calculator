@@ -145,15 +145,7 @@
          rel="noopener noreferrer">{{ t("BMX statistics") }}</a>
     </nav>
     <div class="o-drawer-foot">
-      <div class="o-drawer-lang" role="group" aria-label="Language">
-        {% if lang == "en" %}
-        <span class="is-on">EN</span>
-        <a href="{{ alt_path }}">LV</a>
-        {% else %}
-        <a href="{{ alt_path }}">EN</a>
-        <span class="is-on">LV</span>
-        {% endif %}
-      </div>
+      {% include "_lang.html" %}
     </div>
   </aside>
 

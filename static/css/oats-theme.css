@@ -267,32 +267,6 @@ thead th {
 }
 .oats-navlinks a:hover { color: var(--ob); }
 
-/* Language switcher (EN/LV) — mirrors HOME_PAGE .c-lang */
-.oats-lang {
-  display: inline-flex;
-  gap: 4px;
-  align-items: center;
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 12px;
-  font-weight: 500;
-}
-.oats-lang a,
-.oats-lang span {
-  display: inline-flex;
-  gap: 5px;
-  align-items: center;
-  padding: 4px 7px;
-  border-radius: 6px;
-  text-decoration: none;
-  color: var(--om);
-}
-.oats-lang a:hover { color: var(--oi); }
-.oats-lang .is-active {
-  color: var(--oi);
-  background: rgba(0, 0, 0, .06);
-}
-.oats-flag { border-radius: 2px; display: block; }
-
 /* Mobile: the brand nav must not overflow on phones. Hide the long
    simulator title, shrink padding/logo, and allow wrapping. */
 @media (max-width: 640px) {
@@ -300,8 +274,6 @@ thead th {
   .oats-crumb { display: none; }
   .oats-logo { font-size: 15px; gap: 8px; }
   .oats-logo-mark { width: 26px; height: 26px; }
-  .oats-lang { font-size: 12px; }
-  .oats-lang a, .oats-lang span { padding: 3px 5px; gap: 4px; }
   /* Six links cannot share a phone row with the logo, so the cluster
      drops to its own full-width line and the links wrap inside it. */
   .oats-nav-r { margin-left: 0; width: 100%; gap: 12px; }
