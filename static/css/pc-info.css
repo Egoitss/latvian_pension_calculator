@@ -1,0 +1,117 @@
+/* pc-info.css — the ⓘ footnote disclosure and the survival chip grid.
+
+   Both exist for the same reason: the assumptions panel carried five
+   permanent lines of small grey source text plus a wrapping run of
+   survival percentages, which on a phone pushed the sliders they
+   described below the fold.
+
+   Kept out of oats-theme.css, which is near its size limit. */
+
+/* ── ⓘ disclosure ───────────────────────────────────────────────── */
+
+/* The label and its button share one inline box so the flex rows they
+   sit in still push the value hard right. */
+.pc-lbl {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+/* 18px glyph in a 44x44 target.
+   The vertical negative margins let the target overhang the row rather
+   than setting the row's height to 44px, which would space the
+   assumptions panel out by roughly 130px.
+   Horizontally only the left is pulled in, closing the gap the centred
+   glyph leaves against its label. The right side keeps its full width
+   in the flow: with a negative right margin the row reserved less space
+   than the button paints, and at 320px, where the salary label wraps,
+   the value slid underneath the glyph. */
+.pc-info {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: -13px 0 -13px -12px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--om, #626974);
+  cursor: pointer;
+  border-radius: 8px;
+}
+.pc-info:hover { color: var(--oi, #0A0A0B); }
+.pc-info:focus-visible {
+  outline: 2px solid var(--oi, #0A0A0B);
+  outline-offset: -10px;
+}
+.pc-info svg { width: 18px; height: 18px; }
+
+/* The panel animates between 0 and a measured pixel height, so it is
+   clipped rather than removed. visibility keeps the collapsed text out
+   of the tab order and out of a screen reader's reach; its transition
+   is delayed so it does not blank the panel mid-collapse. */
+.pc-note {
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  transition: height 150ms ease, visibility 0s linear 150ms;
+}
+.pc-note[data-open="true"] {
+  visibility: visible;
+  transition: height 150ms ease, visibility 0s;
+}
+.pc-note-in {
+  margin-top: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--ol2, #EDEEF1);
+  color: var(--om, #626974);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+/* ── Survival chips ─────────────────────────────────────────────── */
+
+/* Two columns at every width the calculator is used at. Four chips in
+   one row would put the longest label ("Sasniegt pensiju") on three
+   lines at 320px. */
+.pc-chips {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+/* Grid rows stretch to the tallest chip, so pinning the value to the
+   bottom keeps the two numbers in a row on one line even when only one
+   of the labels wraps ("Sasniegt pensiju" does at 375px, "+5 g." does
+   not). */
+.pc-chip {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--ol2, #EDEEF1);
+  min-width: 0;
+}
+.pc-chip-lbl {
+  display: block;
+  font-size: 11px;
+  line-height: 1.3;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--om, #626974);
+}
+.pc-chip-val {
+  display: block;
+  margin-top: 2px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--oi, #0A0A0B);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pc-note { transition: none; }
+}

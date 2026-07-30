@@ -1,3 +1,4 @@
+{% from "_info.html" import info_button, info_note %}
 <!-- Shared assumptions used by all three pillars (formerly left panel) -->
 <div class="rounded-3xl border border-slate-200 bg-white shadow-sm is-expanded"
      data-accordion>
@@ -96,7 +97,12 @@
         <!-- Salary growth — shared: P1 NDC + P2 projection -->
         <div class="space-y-1">
           <div class="flex items-center justify-between">
-            <label class="text-xs font-semibold text-slate-600">{{ t("Annual salary growth") }}</label>
+            <span class="pc-lbl">
+              <label for="salaryGrowth"
+                     class="text-xs font-semibold text-slate-600">
+                {{ t("Annual salary growth") }}</label>
+              {{ info_button("note-salary", t("What this is based on")) }}
+            </span>
             <span id="salaryGrowthDisplay" class="text-xs font-semibold text-slate-900">
               {{ "%.2f"|format(defaults.salary_growth) }}%
             </span>
@@ -104,15 +110,21 @@
           <input id="salaryGrowth" type="range" min="0" max="12" step="0.1"
                  value="{{ defaults.salary_growth }}"
                  class="w-full accent-slate-900" />
-          <div class="text-xs text-slate-400">
-            {{ t("Latvia nominal salary growth 2016–2026: ~8% per year (CSB stat.gov.lv) · forward default lower as catch-up fades") }}
-          </div>
+        {% call info_note("note-salary") %}
+          {{ t("Latvia nominal salary growth 2016–2026: ~8% per year (CSB stat.gov.lv) ·
+                forward default lower as catch-up fades") }}
+        {% endcall %}
         </div>
 
         <!-- Inflation — real-value calculations for all three pillars -->
         <div class="space-y-1">
           <div class="flex items-center justify-between">
-            <label class="text-xs font-semibold text-slate-600">{{ t("Inflation") }}</label>
+            <span class="pc-lbl">
+              <label for="inflation"
+                     class="text-xs font-semibold text-slate-600">
+                {{ t("Inflation") }}</label>
+              {{ info_button("note-inflation", t("What this is based on")) }}
+            </span>
             <span id="inflationDisplay" class="text-xs font-semibold text-slate-900">
               {{ "%.2f"|format(defaults.inflation) }}%
             </span>
@@ -120,9 +132,10 @@
           <input id="inflation" type="range" min="0" max="8" step="0.01"
                  value="{{ defaults.inflation }}"
                  class="w-full accent-slate-900" />
-          <div class="text-xs text-slate-400">
-            {{ t("Latvia avg 2016–2026: ~4% (CSP/Eurostat) · ECB long-term target 2% · used for purchasing-power calculations") }}
-          </div>
+        {% call info_note("note-inflation") %}
+          {{ t("Latvia avg 2016–2026: ~4% (CSP/Eurostat) · ECB long-term target 2% ·
+                used for purchasing-power calculations") }}
+        {% endcall %}
         </div>
 
         <!-- Payout period + survival context -->
@@ -136,13 +149,25 @@
                         text-sm outline-none transition focus:border-slate-500
                         focus:ring-2 focus:ring-slate-200" />
           <div class="text-xs text-slate-400">{{ t("payout years") }}</div>
-          <div class="space-y-0.5 text-xs text-slate-400">
-            <div>{{ t("Latvian statistics (CSP, 2023):") }}</div>
-            <div class="flex flex-wrap gap-x-3">
-              <span>{{ t("Reach retirement:") }} <span id="survivalToPension" class="font-semibold text-slate-600">—</span></span>
-              <span>{{ t("+5 yrs:") }} <span id="survivalAt5" class="font-semibold text-slate-600">—</span></span>
-              <span>{{ t("+10 yrs:") }} <span id="survivalAt10" class="font-semibold text-slate-600">—</span></span>
-              <span>{{ t("End of payout:") }} <span id="survivalPct" class="font-semibold text-slate-600">—</span></span>
+          {#- Survival odds. These were one wrapping line of "label: value"
+              pairs, which on a phone broke mid-pair and read as prose. Four
+              chips in a 2x2 grid keep each label with its own number. The
+              ids are what static/js writes into, so they stay. -#}
+          <div class="space-y-1.5 text-slate-400">
+            <div class="text-xs">
+              {{ t("Latvian statistics (CSP, 2023):") }}
+            </div>
+            <div class="pc-chips">
+              {% for id, label in [
+                   ("survivalToPension", "Reach retirement"),
+                   ("survivalAt5",       "+5 yrs"),
+                   ("survivalAt10",      "+10 yrs"),
+                   ("survivalPct",       "End of payout")] %}
+              <div class="pc-chip">
+                <span class="pc-chip-lbl">{{ t(label) }}</span>
+                <span class="pc-chip-val" id="{{ id }}">—</span>
+              </div>
+              {% endfor %}
             </div>
           </div>
         </div>

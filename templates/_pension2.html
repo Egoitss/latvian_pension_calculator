@@ -1,3 +1,4 @@
+{% from "_info.html" import info_button, info_note %}
 <!-- 2nd-pillar funded pension card — inputs + outputs in the right panel -->
 <div class="rounded-3xl border border-slate-200 bg-white shadow-sm"
      data-accordion data-accordion-collapsed
@@ -113,7 +114,8 @@
     <!-- Manual return slider — visible only when "Manual assumption" selected -->
     <div id="manualReturnField" class="space-y-1 hidden">
       <div class="flex justify-between text-xs">
-        <span class="text-slate-500">{{ t("Manual annual return") }}</span>
+        <span class="pc-lbl text-slate-500">{{ t("Manual annual return") }}
+          {{ info_button("note-p2l", t("What this is based on")) }}</span>
         <span id="manualReturnDisplay" class="font-semibold text-slate-900">
           {{ "%.2f"|format(defaults.manual_return) }}%
         </span>
@@ -121,9 +123,10 @@
       <input id="manualReturn" type="range" min="0" max="15" step="0.1"
              value="{{ defaults.manual_return }}"
              class="w-full accent-slate-900" />
-      <div class="text-xs text-slate-400">
-        {{ t("Latvia P2L funds historical: ~6–9% (manapensija.lv) · Global equity markets: ~8–10% nominal") }}
-      </div>
+    {% call info_note("note-p2l") %}
+      {{ t("Latvia P2L funds historical: ~6–9% (manapensija.lv) ·
+            Global equity markets: ~8–10% nominal") }}
+    {% endcall %}
     </div>
 
     <!-- P2L contribution rate slider -->

@@ -1,0 +1,39 @@
+{# _info.html — the ⓘ disclosure used for statistical footnotes.
+
+   Every footnote (salary growth, inflation, indexation, P2L history,
+   property appreciation) used to sit permanently under its field as a
+   line of small grey text. Five of them on one screen buried the
+   controls they belonged to. They are collapsed behind an icon now.
+
+   Two macros so the button can sit on the label row while the panel it
+   opens stays where the note belongs, beneath the field. The pairing
+   is by id: aria-controls on the button, the same id on the panel. #}
+
+{# info_button: 18px icon in a 44x44 target. Placed beside a label. #}
+{% macro info_button(target, label) %}
+<button type="button" class="pc-info" aria-expanded="false"
+        aria-controls="{{ target }}"
+        aria-label="{{ label }}">
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+       stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+    <circle cx="12" cy="12" r="9"/>
+    <path d="M12 11v5" stroke-linecap="round"/>
+    <circle cx="12" cy="7.6" r="1" fill="currentColor" stroke="none"/>
+  </svg>
+</button>
+{% endmacro %}
+
+{# info_note: the panel. Collapsed by default; the height animation
+   needs a measurable box, so it stays in the layout at zero height
+   rather than being display:none.
+
+   body_id names the inner element for scripts that rewrite the note.
+   The property note is one: static/js/property.js restates the rate for
+   the selected scenario and location, so its id has to survive on the
+   element holding the text, not on the clipped outer box. #}
+{% macro info_note(target, body_id=none) %}
+<div class="pc-note" id="{{ target }}" data-open="false">
+  <div class="pc-note-in"
+       {%- if body_id %} id="{{ body_id }}"{% endif %}>{{ caller() }}</div>
+</div>
+{% endmacro %}

@@ -1,3 +1,4 @@
+{% from "_info.html" import info_button, info_note %}
 <!-- Property value estimator — pure client-side, reads main calculator + loan widget values -->
 <div class="rounded-3xl border border-slate-200 bg-white shadow-sm"
      data-prop-type="{{ defaults.get('prop_type', 'city') }}"
@@ -49,20 +50,21 @@
         {{ t("Rural") }}
       </button>
     </div>
-    <div id="propRateNote" class="mt-0.5 text-xs text-slate-400">
-      {{ t("~6.2% per year nominal (Riga, 2010–2024 · Arco Real Estate / Latio)") }}
-    </div>
 
     <!-- Annual appreciation rate slider (location/scenario set it;
          the user can fine-tune) -->
     <div class="mt-2 space-y-1">
       <div class="flex justify-between text-xs">
-        <span class="text-slate-500">{{ t("Annual appreciation") }}</span>
+        <span class="pc-lbl text-slate-500">{{ t("Annual appreciation") }}
+          {{ info_button("note-property", t("What this is based on")) }}</span>
         <span id="propRateDisplay"
               class="font-semibold text-slate-900">—</span>
       </div>
       <input id="propRate" type="range" min="0" max="12" step="0.1"
              class="w-full accent-slate-900" />
+    {% call info_note("note-property", body_id="propRateNote") %}
+      {{ t("~6.2% per year nominal (Riga, 2010–2024 · Arco Real Estate / Latio)") }}
+    {% endcall %}
     </div>
 
     <!-- Price + size inputs -->
