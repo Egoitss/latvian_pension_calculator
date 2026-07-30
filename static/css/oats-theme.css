@@ -355,3 +355,83 @@ body { padding-bottom: 96px; }
      the stats strip; the note is the least load-bearing of the three. */
   .mobile-bar .mb-dl-note { display: none; }
 }
+
+/* ── Pension cards, 320–520px ────────────────────────────────────────
+   The header used to be a single flex row: title on the left, hint and
+   chevron on the right with shrink-0. That gave the title 104px of a
+   292px header and wrapped a 22px heading onto three lines.
+
+   Stacked instead: name and level badge on the first row, description
+   under it, and the call to action as its own full-width row. */
+@media (max-width: 520px) {
+  .accordion-header {
+    display: block;
+    padding: 16px;
+  }
+
+  /* Row 1: name and badge. The name holds one line; the badge never
+     shrinks below its text. */
+  /* The name always keeps one line. If the badge cannot fit beside it
+     the badge wraps under it, rather than the name being truncated. */
+  .ac-row {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    min-width: 0;
+  }
+  .ac-name {
+    /* The base rule is `h2 { font-size: 22px !important }`, which it
+       needs to beat Tailwind's preflight. Matching that weight is the
+       only way to set a card-specific size. */
+    font-size: 18px !important;
+    line-height: 1.25;
+    font-weight: 600;
+    white-space: nowrap;
+    color: #0F172A;
+  }
+  .ac-lvl {
+    flex: none;
+    padding: 3px 8px;
+    border: 1px solid #E3E4E8;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: .04em;
+    white-space: nowrap;
+    color: #626974;              /* 5.5:1 on white */
+  }
+
+  /* Row 2: description. */
+  .accordion-header .ac-desc {
+    margin: 12px 0 0;
+    line-height: 1.5;
+  }
+
+  /* Row 3: the call to action, full width, arrow to the right. The
+     44px floor makes the row itself the tap target. */
+  .accordion-header > :last-child {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    min-height: 44px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #EDEEF1;
+  }
+  .accordion-header .accordion-preview {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #626974;
+  }
+  .accordion-header .accordion-chevron {
+    flex: none;
+    height: 20px;
+    width: 20px;
+  }
+}
+
+
+}
