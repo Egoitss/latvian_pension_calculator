@@ -98,3 +98,37 @@ bmx.oats.lv {
 
 	reverse_proxy bmx-web:8000
 }
+# The estimator. Netlify proxies oats.lv/tame/* here with the /tame
+# prefix intact; handle_path strips it so uvicorn sees /api/... and SPA
+# paths.
+#
+# This block was applied by hand on the VPS and lived only there, which
+# meant a rebuild or a stray checkout would have dropped the estimator's
+# routing. It is in the repo now; edit here and redeploy.
+tame.oats.lv {
+	header {
+		-Server
+		-Via
+	}
+	header Strict-Transport-Security "max-age=63072000; includeSubDomains"
+
+	@badMethod not method GET HEAD POST
+	handle @badMethod {
+		header Allow "GET, HEAD, POST"
+		respond "Method Not Allowed" 405
+	}
+
+	# English tree. handle_path strips /en/tame, then the rewrite
+	# puts /en back so the app can still tell the trees apart:
+	# both roots would otherwise arrive as a bare "/".
+	handle_path /en/tame/* {
+		rewrite * /en{uri}
+		reverse_proxy tame-web:8000
+	}
+
+	handle_path /tame/* {
+		reverse_proxy tame-web:8000
+	}
+	# Anything outside /tame goes to the canonical URL.
+	redir / https://oats.lv/tame/ permanent
+}
