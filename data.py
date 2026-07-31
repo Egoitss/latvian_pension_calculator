@@ -255,14 +255,6 @@ P3_PLANS = [
 ]
 
 
-def get_p3_plan_by_name(name):
-    # Return plan dict matching name, or first plan as fallback
-    for p in P3_PLANS:
-        if p["name"] == name:
-            return p
-    return P3_PLANS[0]
-
-
 # Personal series — loaded from local_config.py if present.
 # Falls back to empty list so bootstrap returns fixed fallback rates.
 _DINAMIKA_PRICES_LOCAL: list = []

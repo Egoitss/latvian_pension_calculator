@@ -139,76 +139,8 @@ thead th {
   letter-spacing: .12em !important;
   text-transform: uppercase !important;
 }
-
-/* ── OATS nav (custom, not Tailwind overrides) ──────────────────── */
-.oats-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px var(--pad-x);
-  border-bottom: 1px solid var(--ol);
-  background: var(--obg);
-  position: sticky;
-  top: 0;
-  z-index: 60;
-}
-.oats-logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-family: "Space Grotesk", sans-serif;
-  font-weight: 600;
-  font-size: 17px;
-  color: var(--oi);
-  text-decoration: none;
-}
-.oats-logo-mark {
-  color: var(--ob);
-  width: 32px;
-  height: 32px;
-  flex: none;
-  display: block;
-}
-.oats-crumb {
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 11px;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--ob);
-}
-/* Right cluster: the shared oats.lv page links plus the language
-   toggle, mirroring that site's .c-nav-r. */
-.oats-nav-r {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  margin-left: auto;
-}
-.oats-navlinks { display: flex; gap: 22px; }
-.oats-navlinks a {
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 13px;
-  letter-spacing: .02em;
-  color: var(--oi2);
-  text-decoration: none;
-  white-space: nowrap;
-  transition: color .16s ease;
-}
-.oats-navlinks a:hover { color: var(--ob); }
-
-/* Mobile: the brand nav must not overflow on phones. Hide the long
-   simulator title, shrink padding/logo, and allow wrapping. */
 @media (max-width: 640px) {
-  .oats-nav { padding: 10px 14px; gap: 8px 10px; flex-wrap: wrap; }
-  .oats-crumb { display: none; }
-  .oats-logo { font-size: 15px; gap: 8px; }
-  .oats-logo-mark { width: 26px; height: 26px; }
-  /* Six links cannot share a phone row with the logo, so the cluster
-     drops to its own full-width line and the links wrap inside it. */
-  .oats-nav-r { margin-left: 0; width: 100%; gap: 12px; }
-  .oats-navlinks { flex-wrap: wrap; gap: 8px 14px; }
-  .oats-navlinks a { font-size: 12px; }
-  /* The shell gutter matches the nav's on phones; the desktop
+  /* The shell gutter matches the header's on phones; the desktop
      var(--pad-x) would eat a quarter of a 390px screen. */
   .pension-shell { padding-inline: 14px; }
 }
@@ -437,7 +369,4 @@ body { padding-bottom: 96px; }
     height: 20px;
     width: 20px;
   }
-}
-
-
 }
