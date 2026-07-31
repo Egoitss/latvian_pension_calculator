@@ -5,14 +5,34 @@
 
    56px sticky bar. Below 768px the hamburger opens a right-side
    drawer; at 768px and above the links sit inline and the hamburger
-   is redundant, so it goes. The language switcher follows the links:
-   inline above the breakpoint, pinned to the drawer's bottom below
-   it, so the bar itself is only ever a wordmark and a button. */
+   is redundant, so it goes.
+
+   The language pill stays in the bar at every width, immediately left
+   of the hamburger, and is repeated at the drawer's bottom. It used to
+   live only in the drawer below 768px, which put a language switch two
+   taps away on exactly the devices where switching is most common. */
+
+/* One z-index scale for every OATS property. Layering used to be
+   decided per file: pension's sticky result bar sat at 100 and drew its
+   "Download report PDF" button straight over the drawer's backdrop.
+   Fixed chrome shares tier 40 because the top bar and a bottom result
+   bar never overlap each other; both must sit under the backdrop.
+
+   Above 60 sit only things that must clear an open drawer, and there
+   are two: the skip link (100), which is the keyboard escape hatch,
+   and pension's copy toast (110), which can only be triggered from the
+   page behind the drawer and so never coincides with one. Nothing else
+   may go above 60. */
+:root {
+  --z-bar: 40;
+  --z-drawer-backdrop: 50;
+  --z-drawer: 60;
+}
 
 .o-hdr {
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: var(--z-bar);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -103,19 +123,10 @@ body.o-drawer-open .o-hdr-burger span:nth-child(3) {
   transform: translateY(-6px) rotate(-45deg);
 }
 
-/* Below the breakpoint the bar carries only the wordmark and the
-   burger; the pill is pinned to the drawer's bottom instead. This must
-   stay ABOVE the media query that restores it: the two selectors have
-   equal specificity, so whichever comes last wins. */
-.o-hdr .o-lang { display: none; }
-
 @media (min-width: 768px) {
   .o-hdr-links { display: flex; gap: 22px; }
   .o-hdr-burger { display: none; }
   .o-hdr-r { gap: 18px; }
-  /* Above the breakpoint the switcher returns to the bar; below it,
-     it is pinned to the drawer's bottom instead. */
-  .o-hdr .o-lang { display: inline-flex; }
 }
 
 
@@ -124,15 +135,30 @@ body.o-drawer-open .o-hdr-burger span:nth-child(3) {
    own stacking context cannot trap it, and so a sticky header that
    scrolls cannot drag the drawer with it. */
 
+/* The backdrop covers the whole visual viewport, safe areas included.
+   dvw/dvh rather than vw/vh so it still reaches the bottom edge while
+   a mobile browser's toolbar is retracting; inset stays as the
+   fallback for engines without the dynamic units. */
 .o-drawer-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 60;
+  top: 0;
+  left: 0;
+  width: 100dvw;
+  height: 100dvh;
+  z-index: var(--z-drawer-backdrop);
   background: rgba(0, 0, 0, 0.4);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease-out;
 }
+
+/* Fixed page chrome a property wants the drawer to cover. Hidden
+   rather than restacked: a bar left visible under a 40% backdrop still
+   reads as a live control and invites a tap that lands on the
+   backdrop. visibility keeps its space, so nothing reflows. */
+.o-bar { z-index: var(--z-bar); }
+body.o-drawer-open .o-bar { visibility: hidden; }
 body.o-drawer-open .o-drawer-backdrop {
   opacity: 1;
   pointer-events: auto;
@@ -142,7 +168,7 @@ body.o-drawer-open .o-drawer-backdrop {
   position: fixed;
   top: 0;
   right: 0;
-  z-index: 61;
+  z-index: var(--z-drawer);
   display: flex;
   flex-direction: column;
   width: 280px;
@@ -193,8 +219,12 @@ body.o-drawer-open .o-drawer { transform: translateX(0); }
 .o-drawer-foot {
   flex: none;
   border-top: 0.5px solid #e5e5e5;
-  padding: 12px max(24px, env(safe-area-inset-right)) 12px 24px;
-  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  padding: 16px max(24px, env(safe-area-inset-right)) 16px 24px;
+  /* max(), not 12px + inset: on a phone with a home indicator the sum
+     pushed the pill further from the edge than the rest of the panel's
+     spacing, and off-notch the inset is 0 so a bare inset would leave
+     the pill flush against the bottom. */
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
 }
 
 /* LV/EN pill. One component, used both in the bar (768px and up) and

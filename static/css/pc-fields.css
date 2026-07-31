@@ -1,0 +1,80 @@
+/* pc-fields.css — side-by-side input pairs.
+
+   The paired fields were laid out with flex and per-field widths
+   (flex-[2] against flex-1, flex-1 against a fixed w-24), and the label
+   sat above the input with a plain margin. When one label wrapped to two
+   lines and its partner did not, the two inputs ended up on different
+   baselines, and Latvian wraps at different widths than English, so a
+   pair that looked right in one language stepped in the other.
+
+   The pair is a two-column grid now, each field a flex column that
+   pushes its input to the bottom, so the inputs share a baseline
+   whatever the labels do. Under 400px the pair stacks.
+
+   Loaded after Tailwind, so .pc-field input (0,1,1) outranks the utility
+   classes (0,1,0) still on the elements. */
+
+.pc-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 16px;
+  align-items: stretch;
+}
+
+.pc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+/* Two halves of a pair are display:none and exist only to carry a
+   stored value (p1RecordMonths, p2AlreadyEarned). Tailwind's .hidden
+   has the same specificity as .pc-field, and this file loads later, so
+   without this the class would un-hide them. */
+.pc-field.hidden,
+.pc-pair > .hidden {
+  display: none;
+}
+
+/* The utilities on these elements set their own spacing (space-y-*,
+   mb-1). Left alone they would stack with the flex gap and reintroduce
+   the mismatch the gap exists to remove. */
+.pc-field > * {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Two lines, then ellipsis. A third line would push one input down
+   again, which is the whole failure being fixed; the full text stays
+   available as the title. */
+.pc-field > label,
+.pc-field > .pc-field-lbl {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+/* margin-top:auto is what pins the inputs to a shared bottom edge: the
+   label above it takes one line or two, and the free space collects
+   above the input rather than below the label. */
+.pc-field input,
+.pc-field select {
+  margin-top: auto;
+  width: 100%;
+  height: 48px;
+  /* 16px is also the threshold below which iOS Safari zooms the page on
+     focus, which the 14px text-sm utility was tripping. */
+  font-size: 16px;
+}
+
+/* One column below 400px. Two 48px inputs plus a 16px gutter leave
+   under 130px each at 320px, which is not enough for a euro amount. */
+@media (max-width: 399.98px) {
+  .pc-pair {
+    grid-template-columns: 1fr;
+    row-gap: 12px;
+  }
+}

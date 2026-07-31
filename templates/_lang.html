@@ -1,7 +1,8 @@
 {# _lang.html — the LV/EN pill, shared with the other OATS
-   properties (see .o-lang in o-header.css). Used in the header bar at
-   768px and up and pinned to the drawer's bottom below that. The
-   active language is a static span; the other links to alt_path. #}
+   properties (see .o-lang in o-header.css). Rendered twice: in the
+   header bar at every width, immediately left of the hamburger, and
+   again at the drawer's bottom. The active language is a static span;
+   the other links to alt_path. #}
 
 <div class="o-lang" role="group" aria-label="Language">
   {% if lang == "lv" %}

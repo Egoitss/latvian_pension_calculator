@@ -84,7 +84,9 @@
      summary numbers (today's money in red) + the chosen-scenario chip +
      the report download with its AI review. Mobile keeps only the
      pension (today's money) and the download button. -->
-<div class="mobile-bar">
+{# o-bar is the shared hook: the drawer hides tagged chrome while it is
+   open (see o-header.css). #}
+<div class="mobile-bar o-bar">
   <div class="flex flex-1 items-center gap-5 md:gap-8 min-w-0">
     <div class="min-w-0 mb-desktop">
       <div class="o-mark text-xs text-slate-400 uppercase tracking-wide">{{ t("Monthly at retirement") }}</div>

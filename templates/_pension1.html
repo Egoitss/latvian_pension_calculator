@@ -50,10 +50,12 @@
       </div>
     </div>
 
-    <!-- Inputs: capital + stāžs fields in one row -->
-    <div class="flex gap-2 items-start">
+    <!-- Inputs: capital + stāžs fields in one row. pc-pair keeps the two
+         inputs on one baseline when only one label wraps; see
+         static/css/pc-fields.css. -->
+    <div class="pc-pair">
 
-      <div class="flex-[2] space-y-1">
+      <div class="pc-field">
         <label class="text-xs font-medium text-slate-500" for="p1Capital">
           {{ t("Accumulated capital (€)") }}
         </label>
@@ -68,7 +70,7 @@
         />
       </div>
 
-      <div class="flex-1 space-y-1">
+      <div class="pc-field">
         <label class="text-xs font-medium text-slate-500" for="p1RecordYears">
           {{ t("Service record (yrs)") }}
         </label>

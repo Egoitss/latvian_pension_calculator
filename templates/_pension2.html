@@ -53,9 +53,15 @@
           </button>
         </div>
       </div>
+      {# Total and "already earned" are a pair in the data model, but the
+         second is display:none and only carries a stored value, so this
+         stays one column: a two-column grid would leave the total at
+         half width beside an empty cell. #}
       <div class="grid grid-cols-1 gap-2">
-        <div>
-          <div class="mb-0.5 text-xs text-slate-400">{{ t("Total (€)") }}</div>
+        <div class="pc-field">
+          <div class="pc-field-lbl text-xs text-slate-400">
+            {{ t("Total (€)") }}
+          </div>
           <input id="balance" type="number" step="1"
                  value="{{ defaults.balance }}"
                  class="w-full rounded-2xl border border-slate-200 bg-white px-3 py-2
