@@ -11,6 +11,11 @@
   <div class="o-foot-base">
     <span class="o-foot-word">SIA &#34;OATS&#34;</span>
     <span>{{ t("Reg. No. 40203754767") }}</span>
+    {# The site-wide policy on oats.lv, which covers this calculator's
+       PDF export and AI insight. Absolute because it lives on the
+       parent domain. #}
+    <a href="https://oats.lv/{{ 'privacy' if lang == 'en' else 'privatums' }}"
+       rel="noopener noreferrer">{{ t("Privacy policy") }}</a>
 
     <a href="{{ _site }}contact.html#write"
        rel="noopener noreferrer">info@oats.lv</a>
