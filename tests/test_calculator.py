@@ -62,16 +62,30 @@ class TestCalculateProjection:
     # Tests for year-by-year accumulation logic
 
     def test_one_year_zero_return(self):
-        # 1000 balance + 6% of 1000*12 annual gross = 1000 + 720 = 1720
+        # 1000 balance + one year at the 2029 statutory 6% of
+        # 1000*12 gross = 1000 + 720. start_year pins the schedule so
+        # the expected figure does not move with the wall clock.
         result = calculate_projection(
             age=64, retirement_age=65, balance=1000,
             gross_monthly=1000, salary_growth=0,
             inflation=0, payout_years=10,
             apply_ceiling=True,
             plan_schedule=SIMPLE_SCHEDULE,
-            manual_return=0,
+            manual_return=0, start_year=2029,
         )
         assert result["final"]["total"] == 1720
+
+    def test_one_year_during_the_transitional_cut(self):
+        # The same year run inside 2025-2028 credits 5%, not 6%.
+        result = calculate_projection(
+            age=64, retirement_age=65, balance=1000,
+            gross_monthly=1000, salary_growth=0,
+            inflation=0, payout_years=10,
+            apply_ceiling=True,
+            plan_schedule=SIMPLE_SCHEDULE,
+            manual_return=0, start_year=2026,
+        )
+        assert result["final"]["total"] == 1600
 
     def test_vsaoi_ceiling_caps_contribution(self):
         # Gross 20000/mo far exceeds ceiling — contribution capped at ceiling*rate
@@ -81,7 +95,7 @@ class TestCalculateProjection:
             inflation=0, payout_years=10,
             apply_ceiling=True,
             plan_schedule=SIMPLE_SCHEDULE,
-            manual_return=0,
+            manual_return=0, start_year=2029,
         )
         expected = round(VSAOI_CEILING * P2L_RATE)
         assert result["final"]["total"] == expected

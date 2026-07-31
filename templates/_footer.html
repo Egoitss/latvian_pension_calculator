@@ -14,6 +14,9 @@
 
     <a href="{{ _site }}contact.html#write"
        rel="noopener noreferrer">info@oats.lv</a>
+    {# Rates and plan data change by statute and by provider, so the
+       page says when they were last checked. #}
+    <span>{{ t("Data updated:") }} {{ data_updated }}</span>
     <span class="o-foot-copy">
       © {{ current_year }} SIA &#34;OATS&#34; —
       {{ t("All rights reserved") }}

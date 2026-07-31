@@ -1,5 +1,7 @@
+from datetime import date as _date
+
 from data import (
-    DEFAULT_RETURN, P2L_RATE, VSAOI_CEILING,
+    DEFAULT_RETURN, P2L_RATE, P1_RATE, VSAOI_CEILING, contribution_rates,
     PENSION_TAX_FREE_THRESHOLD, PENSION_TAX_RATE,
     PLANS, get_plan_by_name, historical_p2l_rate, HISTORICAL_INFLATION,
     G_TABLE, get_g_coefficient,
@@ -95,8 +97,12 @@ def calculate_projection(
     age, retirement_age, balance, gross_monthly,
     salary_growth, inflation, payout_years,
     apply_ceiling, plan_schedule, manual_return,
-    p2l_rate=P2L_RATE,
+    p2l_rate=None, start_year=None,
 ):
+    # p2l_rate=None follows the statutory schedule year by year, so the
+    # 2025-2028 transitional 5% steps back up to 6% in 2029 mid-
+    # projection. An explicit rate overrides every year, which is what
+    # the UI slider sends once the visitor moves it.
     # Year-by-year accumulation from current age to retirement
     safe_age = max(0, round(float(age)))
     safe_ret = max(safe_age, round(float(retirement_age)))
@@ -106,6 +112,7 @@ def calculate_projection(
     infl = float(inflation) / 100
     safe_payout_yrs = max(1, float(payout_years))
     years = max(0, safe_ret - safe_age)
+    base_year = int(start_year) if start_year else _date.today().year
 
     # Seed the first row (year 0) with the opening balance
     cumulative_contributions = current_balance
@@ -136,7 +143,9 @@ def calculate_projection(
             min(annual_gross, VSAOI_CEILING) if apply_ceiling
             else annual_gross
         )
-        annual_contribution = max(0.0, contrib_base * p2l_rate)
+        year_rate = (contribution_rates(base_year + i - 1)[1]
+                     if p2l_rate is None else p2l_rate)
+        annual_contribution = max(0.0, contrib_base * year_rate)
         cumulative_contributions += annual_contribution
 
         # Compound balance for the year
@@ -201,9 +210,12 @@ def monthly_p1_pension(final_capital, g_coefficient):
 def calculate_p1_projection(
     age, retirement_age, current_capital,
     gross_monthly, salary_growth, revaluation_rate,
-    p1_rate=0.14,
+    p1_rate=None, start_year=None,
 ):
-    # Year-by-year 1st-pillar NDC capital from current age to retirement
+    # Year-by-year 1st-pillar NDC capital from current age to retirement.
+    # p1_rate=None follows the statutory schedule, which credits 15% for
+    # contribution years 2025-2028 and 14% from 2029; an explicit rate
+    # overrides every year.
     safe_age = max(0, round(float(age)))
     safe_ret = max(safe_age, round(float(retirement_age)))
     capital = max(0.0, float(current_capital))
@@ -211,12 +223,15 @@ def calculate_p1_projection(
     growth = float(salary_growth) / 100
     reval = float(revaluation_rate) / 100
     years = max(0, safe_ret - safe_age)
+    base_year = int(start_year) if start_year else _date.today().year
 
-    for _ in range(years):
+    for i in range(years):
         # Revalue accumulated capital at year start, then credit contribution
         capital *= (1 + reval)
         contrib_base = min(annual_gross, VSAOI_CEILING)
-        capital += contrib_base * p1_rate
+        year_rate = (contribution_rates(base_year + i)[0]
+                     if p1_rate is None else p1_rate)
+        capital += contrib_base * year_rate
         annual_gross *= (1 + growth)
 
     return {"final_capital": round(capital), "years": years}

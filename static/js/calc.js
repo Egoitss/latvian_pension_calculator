@@ -1,6 +1,7 @@
 // Pure calculation functions — mirrors calculator.py, no DOM access
 import {
   CONSTANTS, getPlanByName, historicalP2lRate, HISTORICAL_INFLATION,
+  contributionRates,
   SURVIVAL_FROM_67, SURVIVAL_TO_67,
   DINAMIKA_MONTHLY_RETURNS,
 } from "./data.js";
@@ -93,7 +94,11 @@ export function calculateProjection({
   age, retirementAge, balance, grossMonthly,
   salaryGrowth, inflation, payoutYears,
   applyCeiling, planSchedule, manualReturn,
-  p2lRate = P2L_RATE,
+  // null follows the statutory schedule year by year, so the 2025-2028
+  // transitional 5% steps back up to 6% in 2029 mid-projection. A
+  // number overrides every year, which is what the slider sends once
+  // the visitor moves it. Mirrors calculator.py:calculate_projection.
+  p2lRate = null, startYear = null,
 }) {
   const safeAge = Math.max(0, Math.round(toNumber(age, 35)));
   const safeRet = Math.max(safeAge, Math.round(toNumber(retirementAge, 65)));
@@ -103,6 +108,7 @@ export function calculateProjection({
   const infl = toNumber(inflation, 0) / 100;
   const safePayoutYrs = Math.max(1, toNumber(payoutYears, 18));
   const years = Math.max(0, safeRet - safeAge);
+  const baseYear = startYear ? Number(startYear) : new Date().getFullYear();
 
   // Seed year-0 row with the opening balance
   let cumulativeContributions = currentBalance;
@@ -126,7 +132,10 @@ export function calculateProjection({
     // Cap contribution base at VSAOI ceiling if applicable
     const contribBase = applyCeiling
       ? Math.min(annualGross, VSAOI_CEILING) : annualGross;
-    const annualContribution = Math.max(0, contribBase * p2lRate);
+    const yearRate = p2lRate === null || p2lRate === undefined
+      ? contributionRates(baseYear + i - 1)[1]
+      : p2lRate;
+    const annualContribution = Math.max(0, contribBase * yearRate);
     cumulativeContributions += annualContribution;
 
     // Compound for the year

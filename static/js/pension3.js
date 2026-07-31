@@ -15,16 +15,25 @@ function ageFromBirth(birthYear, birthMonth) {
   return Math.max(0, age);
 }
 
-// Mirrors calculator.py:calculate_p3_annual_refund
+// Mirrors calculator.py:calculate_p3_annual_refund.
+//
+// Returns the refund and which of the three limits produced it, so the
+// panel can say why the number is what it is. Below €40 000 gross a
+// year the 10% share bites before the €4 000 ceiling, and the refund
+// lands well under the €1 020 headline.
 function calcAnnualRefund(grossMonthly, monthlyContrib) {
   const annualGross = Math.max(0, grossMonthly) * 12;
   const annualContrib = Math.max(0, monthlyContrib) * 12;
-  const eligibleCap = Math.min(
-    annualGross * P3_CONSTANTS.TAX_DEDUCTION_RATE,
-    P3_CONSTANTS.TAX_DEDUCTION_CAP,
-  );
+  const shareCap = annualGross * P3_CONSTANTS.TAX_DEDUCTION_RATE;
+  const eligibleCap = Math.min(shareCap, P3_CONSTANTS.TAX_DEDUCTION_CAP);
   const eligible = Math.min(annualContrib, eligibleCap);
-  return Math.round(eligible * P3_CONSTANTS.IIN_RATE * 100) / 100;
+  const binding = eligible === annualContrib && annualContrib < eligibleCap
+    ? "contribution"
+    : (shareCap < P3_CONSTANTS.TAX_DEDUCTION_CAP ? "share" : "ceiling");
+  return {
+    refund: Math.round(eligible * P3_CONSTANTS.IIN_RATE * 100) / 100,
+    eligible, shareCap, binding,
+  };
 }
 
 // Mirrors calculator.py:calculate_p3_projection
@@ -77,11 +86,23 @@ function recalc() {
   const gross   = parseFloat(g("grossMonthly")?.value) || 0;
 
   // Always update refund display when contribution and gross are available
+  const bindingNote = g("p3RefundBinding");
   if (monthly > 0 && gross > 0) {
-    const refund = calcAnnualRefund(gross, monthly);
+    const { refund, eligible, shareCap, binding } = calcAnnualRefund(gross, monthly);
     g("p3AnnualRefund").textContent = fmtEurDecimal(refund);
+    if (bindingNote) {
+      // Name the limit that produced the figure, with its value, so the
+      // number is checkable rather than asserted.
+      const label = {
+        share: `${t("Limited by 10% of gross salary:")} ${fmtEurDecimal(shareCap)}`,
+        ceiling: `${t("Limited by the €4,000 annual cap")}`,
+        contribution: `${t("Your full contribution qualifies:")} ${fmtEurDecimal(eligible)}`,
+      }[binding];
+      bindingNote.textContent = label || "";
+    }
   } else {
     g("p3AnnualRefund").textContent = "—";
+    if (bindingNote) bindingNote.textContent = "";
   }
 
   if (balance <= 0 && monthly <= 0) {

@@ -1,10 +1,43 @@
 # Domain constants used across calculator and app layers
 
 VSAOI_CEILING = 105_300        # annual gross cap for P2L contributions (EUR)
-P2L_RATE = 0.06                # employee contribution rate to 2nd pillar
+
+# The social contribution is split between the funded (2nd) and the
+# notional (1st) pillar. The split is not constant: contribution years
+# 2025-2028 divert one point from the funded pillar to the NDC one,
+# under Valsts fondēto pensiju likums, pārejas noteikumu 40. punkts.
+# The statutory base resumes in 2029.
+#
+# Both pillars read the same schedule so their rates can never drift
+# apart; static/js/data.js mirrors it.
+CONTRIBUTION_TRANSITION_YEARS = (2025, 2028)
+P2L_RATE = 0.06                # statutory base, 2nd pillar
+P1_RATE = 0.14                 # statutory base, 1st pillar
+P2L_RATE_TRANSITIONAL = 0.05   # 2025-2028
+P1_RATE_TRANSITIONAL = 0.15    # 2025-2028
+
+
+def contribution_rates(year):
+    """(1st pillar, 2nd pillar) contribution rates for a given year."""
+    first, last = CONTRIBUTION_TRANSITION_YEARS
+    if first <= int(year) <= last:
+        return P1_RATE_TRANSITIONAL, P2L_RATE_TRANSITIONAL
+    return P1_RATE, P2L_RATE
+
+
 DEFAULT_RETURN = 8.0           # fallback annual return when no plan data (%)
 PENSION_TAX_FREE_THRESHOLD = 1_000  # monthly payout exempt from tax (EUR)
 PENSION_TAX_RATE = 0.255       # tax rate on payout above threshold (25.5%)
+
+# Statute the contribution schedule comes from, linked from the rate
+# control so the number can be checked rather than taken on trust.
+STATUTES = {
+    "p2l_transition": "https://likumi.lv/ta/id/2341-valsts-fondeto-pensiju-likums",
+}
+
+# The day the rate schedule and plan data were last checked against
+# their sources. Shown in the footer.
+DATA_UPDATED = "2026-07-31"
 
 # External URLs shown as copy-link helpers in the UI
 LATVIJA_LV_P2L_URL = "https://latvija.gov.lv/Services/45686"
@@ -191,14 +224,17 @@ HISTORICAL_INFLATION = {
 
 
 def historical_p2l_rate(year):
-    # Return the P2L contribution rate (fraction of gross) for the given year
+    # P2L contribution rate (fraction of gross) for a given year. Years
+    # from 2016 defer to contribution_rates() so the reconstruction of
+    # past contributions and the forward projection cannot disagree
+    # about the 2025-2028 transitional cut.
     if year <= 2006: return 0.02   # 2001–2006: 2 %
     if year == 2007: return 0.04   # 2007: 4 %
     if year == 2008: return 0.08   # 2008: 8 %
     if year <= 2012: return 0.02   # 2009–2012: 2 %
     if year <= 2014: return 0.04   # 2013–2014: 4 %
     if year == 2015: return 0.05   # 2015: 5 %
-    return 0.06                    # 2016–present: 6 %
+    return contribution_rates(year)[1]
 
 
 # G coefficient (years) by retirement age — Latvia 2025

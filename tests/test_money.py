@@ -104,8 +104,18 @@ def test_the_english_page_uses_english_grouping():
 
 
 def test_no_module_pins_a_locale_by_hand():
-    """Six modules each carried their own Intl.NumberFormat("lv-LV")."""
-    out = subprocess.run(
+    """Six modules each carried their own Intl.NumberFormat("lv-LV").
+
+    Comments are stripped first: money.js names the old call in its own
+    header to explain what it replaced.
+    """
+    files = subprocess.run(
         ["git", "grep", "-l", "-E", "lv-LV|en-US", "--", "static/js"],
         capture_output=True, text=True).stdout.split()
-    assert out == [], out
+    offenders = []
+    for path in files:
+        src = open(path, encoding="utf-8").read()
+        code = re.sub(r"//[^\n]*|/\*.*?\*/", "", src, flags=re.S)
+        if re.search(r"lv-LV|en-US", code):
+            offenders.append(path)
+    assert offenders == [], offenders

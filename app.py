@@ -15,7 +15,7 @@ from data import (
     PLANS, VSAOI_CEILING, P2L_RATE, DEFAULT_RETURN,
     PENSION_TAX_FREE_THRESHOLD, PENSION_TAX_RATE,
     LATVIJA_LV_P2L_URL, MANAPENSIJA_STATS_URL, STATE_PENSION_URL,
-    P3_PLANS,
+    P3_PLANS, contribution_rates, STATUTES, DATA_UPDATED,
 )
 from calculator import (
     build_plan_schedule, should_apply_vsaoi_ceiling,
@@ -118,6 +118,8 @@ def inject_i18n():
         # Bound to this request's language so templates never format
         # money by hand; see money.py and its mirror static/js/money.js.
         "eur": lambda value, decimals=0: format_eur(value, lang, decimals),
+        "statutes": STATUTES,
+        "data_updated": DATA_UPDATED,
     }
 
 
@@ -186,7 +188,9 @@ DEFAULTS = {
     "p2l_start_year": "",
     "p2l_start_salary": "",
     "p2l_actual_contributions": "",
-    "p2l_rate": 6.0,
+    # Follows the statutory schedule: 5% while the 2025-2028
+    # transitional cut applies, 6% from 2029.
+    "p2l_rate": round(contribution_rates(_date.today().year)[1] * 100, 1),
     # 1st-pillar NDC inputs — set via browser localStorage, empty by default
     "p1_capital": "",
     "p1_record_years": "",

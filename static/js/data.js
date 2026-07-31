@@ -2,10 +2,28 @@
 export const CONSTANTS = {
   VSAOI_CEILING: 105_300,
   P2L_RATE: 0.06,
+  P1_RATE: 0.14,
   DEFAULT_RETURN: 8.0,
   PENSION_TAX_FREE_THRESHOLD: 1_000,
   PENSION_TAX_RATE: 0.255,
 };
+
+// The social contribution is split between the funded (2nd) and the
+// notional (1st) pillar. Contribution years 2025-2028 divert one point
+// from the funded pillar to the NDC one, under Valsts fondēto pensiju
+// likums, pārejas noteikumu 40. punkts. The statutory base resumes in
+// 2029. Mirrors data.py:contribution_rates.
+export const CONTRIBUTION_TRANSITION_YEARS = [2025, 2028];
+export const P2L_RATE_TRANSITIONAL = 0.05;
+export const P1_RATE_TRANSITIONAL = 0.15;
+
+// [1st pillar, 2nd pillar] contribution rates for a given year.
+export function contributionRates(year) {
+  const [first, last] = CONTRIBUTION_TRANSITION_YEARS;
+  return Number(year) >= first && Number(year) <= last
+    ? [P1_RATE_TRANSITIONAL, P2L_RATE_TRANSITIONAL]
+    : [CONSTANTS.P1_RATE, CONSTANTS.P2L_RATE];
+}
 
 // Latvia 2023 — cumulative survival probability from age 67
 // [years_elapsed, probability] — source: CSP Latvia IRP020 / Eurostat demo_mlexpec
@@ -127,7 +145,10 @@ export function getGCoefficient(retirementAge) {
   return G_BY_AGE[age];
 }
 
-// Historical P2L contribution rates (% of gross) by calendar year
+// P2L contribution rate (fraction of gross) by calendar year. Years
+// from 2016 defer to contributionRates() so the reconstruction of past
+// contributions and the forward projection cannot disagree about the
+// 2025-2028 transitional cut.
 export function historicalP2lRate(year) {
   if (year <= 2006) return 0.02;   // 2001–2006: 2 %
   if (year === 2007) return 0.04;  // 2007: 4 %
@@ -135,7 +156,7 @@ export function historicalP2lRate(year) {
   if (year <= 2012) return 0.02;   // 2009–2012: 2 %
   if (year <= 2014) return 0.04;   // 2013–2014: 4 %
   if (year === 2015) return 0.05;  // 2015: 5 %
-  return 0.06;                     // 2016–present: 6 %
+  return contributionRates(year)[1];
 }
 
 // 3rd-pillar IIN tax relief constants — mirrors data.py P3_* constants

@@ -139,7 +139,7 @@
     <div class="space-y-1">
       <div class="flex justify-between text-xs">
         <span class="text-slate-500">{{ t("P2L contribution rate") }}</span>
-        <span class="text-slate-400">{{ t("current: 6% | historical avg: 4.3%") }}</span>
+        <span class="text-slate-400">{{ t("current: 5% | historical avg: 4.3%") }}</span>
       </div>
       <input id="p2lRate" type="range" min="0" max="8" step="0.1"
              value="{{ defaults.p2l_rate }}"
@@ -148,8 +148,16 @@
         {{ "%.1f"|format(defaults.p2l_rate) }}%
       </div>
       <div class="text-xs text-slate-400">
-        {{ t("Current rate: 6% (since 2021) · Historical range: 2–8% · Set by law") }}
+        {{ t("Current rate: 5% (transitional 2025-2028; statutory base 6%)") }}
       </div>
+      {# The rate is not a house assumption: it is set in law, and the
+         2025-2028 cut is a transitional provision. Cite it so the
+         number can be checked rather than taken on trust. #}
+      <p class="text-xs text-slate-400">
+        {{ t("Source: Valsts fondēto pensiju likums, pārejas noteikumu 40. punkts.") }}
+        <a class="underline" href="{{ statutes.p2l_transition }}"
+           target="_blank" rel="noopener noreferrer">likumi.lv</a>
+      </p>
     </div>
 
     <!-- Plan-switching section: up to 2 switches during accumulation -->

@@ -1,14 +1,15 @@
 // 1st-pillar NDC pension estimator
 // Own inputs: p1Capital, p1RecordYears, p1RecordMonths, p1RevalRate
 // Shared inputs: grossMonthly, salaryGrowth, inflation, retirementAge, birthYear, birthMonth
-import { CONSTANTS, getGCoefficient } from "./data.js";
+import { CONSTANTS, getGCoefficient, contributionRates } from "./data.js";
 import { formatEur as fmtEur } from './money.js';
 
 const { VSAOI_CEILING } = CONSTANTS;
 
-// Long-run 1st-pillar contribution rate (14% of gross credited to NDC).
-// Note: temporarily 15% in 2025–2028 by legislation; reverts to 14% in 2029.
-const P1_RATE = 0.14;
+// The 1st-pillar rate is not constant: contribution years 2025-2028
+// credit 15% of gross to the NDC account and 2029 onward 14%, under
+// Valsts fondēto pensiju likums, pārejas noteikumu 40. punkts. The
+// schedule lives in data.js so both pillars read the same source.
 
 // Scenario adjustment to the wage-linked NDC revaluation (pp): a
 // weak/strong economy dampens/boosts indexation. Moderate is the
@@ -51,12 +52,14 @@ function calculateP1Projection({
   const growth = salaryGrowth / 100;
   const reval = revaluationRate / 100;
   const years = Math.max(0, safeRet - safeAge);
+  const baseYear = new Date().getFullYear();
 
   const rows = [];
   for (let i = 0; i < years; i++) {
     // Revalue at year start, then credit this year's contributions
     capital *= (1 + reval);
-    capital += Math.min(annualGross, VSAOI_CEILING) * P1_RATE;
+    capital += Math.min(annualGross, VSAOI_CEILING)
+               * contributionRates(baseYear + i)[0];
     annualGross *= (1 + growth);
     rows.push({ age: safeAge + i + 1, balance: Math.round(capital) });
   }
@@ -115,7 +118,8 @@ function recalc() {
 
   // Annual 1st-pillar contribution at current gross
   const annualGross = Math.max(0, gross) * 12;
-  const annualP1 = Math.min(annualGross, VSAOI_CEILING) * P1_RATE;
+  const annualP1 = Math.min(annualGross, VSAOI_CEILING)
+                   * contributionRates(new Date().getFullYear())[0];
   g("p1AnnualContrib").textContent = fmtEur(annualP1);
 
   const { finalCapital, years, rows } = calculateP1Projection({

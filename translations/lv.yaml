@@ -113,9 +113,9 @@ no data: nav datu
 Manual annual return: Manuālais gada ienesīgums
 'Latvia P2L funds historical: ~6–9% (manapensija.lv) · Global equity markets: ~8–10% nominal': 'Latvijas P2L fondi vēst.: ~6–9% (manapensija.lv) · Pasaules akciju tirgi: ~8–10% nominālais'
 P2L contribution rate: Iemaksu likme P2L
-'current: 6% | historical avg: 4.3%': 'pašreizējā: 6% | vēst. vidējā: 4,3%'
+'current: 5% | historical avg: 4.3%': 'pašreizējā: 6% | vēst. vidējā: 4,3%'
 Annual appreciation: Gada vērtības pieaugums
-'Current rate: 6% (since 2021) · Historical range: 2–8% · Set by law': 'Spēkā esošā: 6% (no 2021. g.) · Vēsturiski: 2–8% · Maina ar likumu'
+'Current rate: 5% (transitional 2025-2028; statutory base 6%)': 'Spēkā esošā: 5% (pārejas periods 2025.–2028. g.; likumā noteiktā bāze 6%)'
 Add plan switches over your lifetime: Pievienot plāna maiņu dzīves laikā
 Model a more aggressive plan early on and a more conservative one near retirement.: Modelē agresīvāku plānu sākumā un konservatīvāku tuvāk pensijai.
 Switch 1 — age: Maiņa 1 — vecums
@@ -308,3 +308,10 @@ Pension simulator: Pensiju simulators
 BMX statistics: BMX statistika
 Reg. No. 40203754767: Reģ. Nr. 40203754767
 Privacy policy: Privātuma politika
+
+'Source: Valsts fondēto pensiju likums, pārejas noteikumu 40. punkts.': 'Avots: Valsts fondēto pensiju likums, pārejas noteikumu 40. punkts.'
+'Data updated:': 'Dati atjaunoti:'
+'Eligible contributions are capped at the lower of 10% of your annual gross salary and €4,000. The refund is 25.5% of that amount.': 'Atmaksai der iemaksas, kas nepārsniedz mazāko no diviem lielumiem: 10% no bruto algas gadā vai 4000 €. Atmaksā 25,5% no šīs summas.'
+'Limited by 10% of gross salary:': 'Ierobežo 10% no bruto algas:'
+'Limited by the €4,000 annual cap': 'Ierobežo 4000 € gada griesti'
+'Your full contribution qualifies:': 'Der visa tava iemaksa:'
