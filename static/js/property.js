@@ -2,6 +2,7 @@
 // CAGR source: Arco Real Estate / Latio market reviews 2010–2024
 import { PROPERTY_SCENARIO_RATES } from "./data.js";
 import { savePropType, loadPropType } from "./storage.js";
+import { formatEur as fmtEur } from './money.js';
 
 const CRASH_RATE = 0.60; // Latvia 2007–2010 worst case
 
@@ -10,11 +11,6 @@ let activeScenario = "moderate";
 
 function g(id) { return document.getElementById(id); }
 
-function fmtEur(v) {
-  return new Intl.NumberFormat("lv-LV", {
-    style: "currency", currency: "EUR", maximumFractionDigits: 0,
-  }).format(v);
-}
 
 function projectProp(price, rate, t) {
   return price * Math.pow(1 + rate, t);

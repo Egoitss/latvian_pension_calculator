@@ -2,20 +2,11 @@
 // Own inputs: p3PlanName, p3Balance, p3Monthly, p3ContribGrowth
 // Shared inputs: grossMonthly, inflation, retirementAge, birthYear, birthMonth
 import { P3_CONSTANTS, getP3PlanByName, P3_COST_BASIS } from "./data.js";
+import { formatEur as fmtEur, formatEurDecimal as fmtEurDecimal } from './money.js';
 
 function g(id) { return document.getElementById(id); }
 
-function fmtEur(v) {
-  return new Intl.NumberFormat("lv-LV", {
-    style: "currency", currency: "EUR", maximumFractionDigits: 0,
-  }).format(v);
-}
 
-function fmtEurDecimal(v) {
-  return new Intl.NumberFormat("lv-LV", {
-    style: "currency", currency: "EUR", maximumFractionDigits: 2,
-  }).format(v);
-}
 
 function ageFromBirth(birthYear, birthMonth) {
   const now = new Date();

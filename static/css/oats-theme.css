@@ -231,6 +231,15 @@ thead th {
   border-top: 1px solid #e5e5e5; padding: 0 24px; gap: 12px;
   z-index: var(--z-bar);
 }
+
+/* Three independent guards, because this bar is the one element that
+   can reach over an open drawer and it carries the download button:
+   the z-index above keeps it under the backdrop, the shared
+   body.o-drawer-open .o-bar rule hides it, and this repeats that hide
+   without depending on a future page remembering the o-bar class.
+   Hiding the whole bar rather than .mb-desktop and .mb-right
+   separately means a new child is covered the day it is added. */
+body.o-drawer-open .mobile-bar { visibility: hidden; }
 .mobile-bar .mb-right {
   display: flex; align-items: center; gap: 16px; margin-left: auto;
 }

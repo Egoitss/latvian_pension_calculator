@@ -53,6 +53,20 @@ def test_the_bar_is_tagged_for_the_drawer_to_hide():
         open(SHARED).read(), "body.o-drawer-open .o-bar")
 
 
+def test_the_bar_is_hidden_even_without_the_shared_hook():
+    """Three independent guards, because this is the one element that can
+    reach over an open drawer and it carries the download button: the
+    z-index keeps it under the backdrop, the shared
+    body.o-drawer-open .o-bar rule hides it, and this one repeats the
+    hide without depending on a page remembering the o-bar class.
+
+    Hiding the whole bar rather than .mb-desktop and .mb-right in turn
+    means a child added later is covered from the day it appears.
+    """
+    theme = open(THEME).read()
+    assert "visibility: hidden;" in _rule(theme, "body.o-drawer-open .mobile-bar")
+
+
 def test_the_shared_sheet_loads_before_the_theme():
     """Both set z-index at the same specificity, so the theme has to be
     able to override; the scale itself is custom properties, which

@@ -22,6 +22,7 @@ from calculator import (
     calculate_projection,
 )
 import langpath
+from money import format_eur
 from i18n import (
     lang_from_path, make_t, js_catalog,
 )
@@ -114,6 +115,9 @@ def inject_i18n():
         "alt_path": _alt_path(request.path, lang),
         "js_i18n": js_catalog(lang),
         "current_year": _date.today().year,
+        # Bound to this request's language so templates never format
+        # money by hand; see money.py and its mirror static/js/money.js.
+        "eur": lambda value, decimals=0: format_eur(value, lang, decimals),
     }
 
 

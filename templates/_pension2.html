@@ -237,10 +237,13 @@
     <!-- Current annual P2 contribution — updated by ui.js -->
     <div class="rounded-2xl bg-slate-50 px-3 py-2.5 text-sm text-slate-600">
       {{ t("Current annual contribution to Pillar 2:") }}
+      {# eur() is the server half of the shared formatter; ui.js
+         recomputes this same figure through static/js/money.js, so both
+         must agree. "{:,.0f}" here rendered "1,260 €" on the Latvian
+         page, where the comma reads as a decimal separator. #}
       <span id="annualContribution" class="font-semibold text-slate-900">
-        {% if defaults.gross_monthly %}
-          {{ "{:,.0f}".format((defaults.gross_monthly * 12 * constants.P2L_RATE)|round|int) }} €
-        {% else %}0 €{% endif %}
+        {{ eur(defaults.gross_monthly * 12 * constants.P2L_RATE
+               if defaults.gross_monthly else 0) }}
       </span>
     </div>
 

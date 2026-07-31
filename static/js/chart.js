@@ -1,4 +1,5 @@
 // Chart.js wrapper for the accumulation line chart
+import { formatEur } from "./money.js";
 
 // Register the annotation plugin (loaded via CDN before this module runs)
 Chart.register(window["chartjs-plugin-annotation"]);
@@ -46,10 +47,7 @@ export function initChart(canvasId) {
                 : `Vecums: ${items[0].label}`;
             },
             label(item) {
-              const fmt = (v) => new Intl.NumberFormat("lv-LV", {
-                style: "currency", currency: "EUR",
-                maximumFractionDigits: 0,
-              }).format(v);
+              const fmt = formatEur;
               const ds  = item.chart.data.datasets;
               const idx = item.dataIndex;
               // Datasets 1-3 are cumulative; subtract previous to get pillar value

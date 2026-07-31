@@ -1,6 +1,7 @@
 // Scenario engine: Monte Carlo bootstrap, scenario button state,
 // pillarResult accumulator, combined 3-pillar display.
 import { bootstrapScenarioReturns } from "./calc.js";
+import { formatEur as fmtEur } from './money.js';
 
 function g(id) { return document.getElementById(id); }
 
@@ -14,11 +15,6 @@ function setMobileBarValue(text) {
   el.classList.add("mb-flash");
 }
 
-function fmtEur(v) {
-  return new Intl.NumberFormat("lv-LV", {
-    style: "currency", currency: "EUR", maximumFractionDigits: 0,
-  }).format(v);
-}
 
 // Cached bootstrap results and active scenario name
 let scenarioRates = { positive: null, moderate: null, negative: null };

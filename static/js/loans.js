@@ -1,4 +1,5 @@
 // Loan widget logic — mortgage and consumer credit
+import { formatEur as fmtEur, formatEurDecimal as fmtEurDec } from './money.js';
 // Primary inputs: balance + end year + bank margin + EURIBOR
 // Monthly payment is derived. P2L allocation cascades: smallest balance first.
 
@@ -42,17 +43,7 @@ function fmtMonths(months) {
   return m > 0 ? `${y} ${t("yr")} ${m} ${t("mo.")}` : `${y} ${t("yr")}`;
 }
 
-function fmtEur(v) {
-  return new Intl.NumberFormat("lv-LV", {
-    style: "currency", currency: "EUR", maximumFractionDigits: 0,
-  }).format(v);
-}
 
-function fmtEurDec(v) {
-  return new Intl.NumberFormat("lv-LV", {
-    style: "currency", currency: "EUR", maximumFractionDigits: 2,
-  }).format(v);
-}
 
 function scenarioShorterTerm(balance, annualRate, payment, p2lAmt, origMonths) {
   const newBalance = balance - p2lAmt;

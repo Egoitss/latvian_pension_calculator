@@ -21,12 +21,9 @@ export function formatPct(value) {
   return `${toNumber(value, 0).toFixed(2)}%`;
 }
 
-// Format a number as a locale EUR currency string (no decimals)
-export function formatEur(value) {
-  return new Intl.NumberFormat("lv-LV", {
-    style: "currency", currency: "EUR", maximumFractionDigits: 0,
-  }).format(value);
-}
+// Re-exported so the modules that already import formatting from here
+// keep working; the rule itself lives in money.js, mirrored by money.py.
+export { formatEur } from "./money.js";
 
 // Resolve the annual return % for a plan object
 export function getAnnualReturn(plan, manualReturn) {

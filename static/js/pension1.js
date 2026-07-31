@@ -2,6 +2,7 @@
 // Own inputs: p1Capital, p1RecordYears, p1RecordMonths, p1RevalRate
 // Shared inputs: grossMonthly, salaryGrowth, inflation, retirementAge, birthYear, birthMonth
 import { CONSTANTS, getGCoefficient } from "./data.js";
+import { formatEur as fmtEur } from './money.js';
 
 const { VSAOI_CEILING } = CONSTANTS;
 
@@ -30,11 +31,6 @@ function syncRevalDisplay() {
   if (d) d.textContent = `${effectiveReval().toFixed(2)}%`;
 }
 
-function fmtEur(v) {
-  return new Intl.NumberFormat("lv-LV", {
-    style: "currency", currency: "EUR", maximumFractionDigits: 0,
-  }).format(v);
-}
 
 function ageFromBirth(birthYear, birthMonth) {
   const now = new Date();
