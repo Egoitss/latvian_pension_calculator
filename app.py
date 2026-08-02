@@ -21,7 +21,10 @@ from calculator import (
     build_plan_schedule, should_apply_vsaoi_ceiling,
     calculate_projection,
 )
+import delivery
+import jsonld
 import langpath
+import seo
 from money import format_eur
 from i18n import (
     lang_from_path, make_t, js_catalog,
@@ -73,6 +76,11 @@ _CSP = (
 )
 
 
+
+delivery.init_app(app)
+app.register_blueprint(seo.bp)
+
+
 @app.before_request
 def _language_entry():
     # Honour a language chosen on another OATS property, but only for
@@ -87,7 +95,13 @@ def _security_headers(resp):
     # the other OATS subdomains can open in the same one.
     if resp.content_type.startswith("text/html"):
         langpath.remember(resp, lang_from_path(request.path))
-    resp.headers.setdefault("Vary", "Cookie, Sec-Fetch-Site")
+    # Added token by token rather than assigned: Flask-Compress adds
+    # Accept-Encoding to the same header, and a plain setdefault would
+    # let whichever handler ran first silently drop the other's
+    # values. Losing Cookie here would let a shared cache serve one
+    # visitor's language to another.
+    for token in ("Cookie", "Sec-Fetch-Site"):
+        resp.vary.add(token)
     resp.headers.setdefault("X-Frame-Options", "DENY")
     resp.headers.setdefault("X-Content-Type-Options", "nosniff")
     resp.headers.setdefault(
@@ -109,8 +123,9 @@ def inject_i18n():
     # Expose t(), lang, the alt-language path and the JS override map
     # to every template, derived from the current request path.
     lang = lang_from_path(request.path)
+    t = make_t(lang)
     return {
-        "t": make_t(lang),
+        "t": t,
         "lang": lang,
         "alt_path": _alt_path(request.path, lang),
         "js_i18n": js_catalog(lang),
@@ -120,6 +135,14 @@ def inject_i18n():
         "eur": lambda value, decimals=0: format_eur(value, lang, decimals),
         "statutes": STATUTES,
         "data_updated": DATA_UPDATED,
+        # Structured data for this route, already serialised. The name
+        # and description are the page's own, so the machine-readable
+        # copy says what the visible page says.
+        "jsonld": jsonld.blocks_for(
+            request.path, lang, t("Pension Scenario Simulator"),
+            t("Monte Carlo scenarios for your Latvian 2nd & 3rd "
+              "pillar pension, with a downloadable PDF report and "
+              "AI review.")),
     }
 
 
@@ -292,7 +315,6 @@ def index():
         apply_ceiling=apply_ceiling,
         local_data=LOCAL_DATA,
     ))
-    resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     return resp
 
 
@@ -303,7 +325,6 @@ def loans():
         "loans.html",
         defaults=DEFAULTS,
     ))
-    resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     return resp
 
 

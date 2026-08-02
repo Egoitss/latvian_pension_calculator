@@ -101,7 +101,11 @@ def test_the_animation_matches_the_spec():
 
 def test_the_toggle_script_is_loaded():
     # CSP here is script-src 'self', so it has to be a vendored file.
-    assert 'filename=\'js/info.js\'' in open("templates/index.html").read()
+    # info.js reaches the page inside the bundle now, or through the
+    # no-bundle fallback; either way it is in the one list that
+    # decides what the simulator page loads.
+    import delivery
+    assert "info" in delivery.INDEX_MODULES
     assert "pc-info.css" in open("templates/base.html").read()
 
 

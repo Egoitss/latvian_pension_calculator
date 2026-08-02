@@ -156,19 +156,16 @@
 </script>
 #}
 
-<!-- JS modules: data and calculation layer -->
-<script src="{{ url_for('static', filename='js/data.js', v=js_v) }}" type="module"></script>
-<script src="{{ url_for('static', filename='js/calc.js', v=js_v) }}" type="module"></script>
-<script src="{{ url_for('static', filename='js/chart.js', v=js_v) }}" type="module"></script>
-<script src="{{ url_for('static', filename='js/scenarios.js', v=js_v) }}" type="module"></script>
-<script src="{{ url_for('static', filename='js/ui.js', v=js_v) }}" type="module"></script>
-<script src="{{ url_for('static', filename='js/pension1.js', v=js_v) }}" type="module"></script>
-<script src="{{ url_for('static', filename='js/pension3.js', v=js_v) }}" type="module"></script>
-{# loans.js belongs to /loans only — its loan-card elements don't
-   exist here, so loading it just threw a TypeError on every visit. #}
-<script src="{{ url_for('static', filename='js/property.js', v=js_v) }}" type="module"></script>
-<script src="{{ url_for('static', filename='js/export.js', v=js_v) }}" type="module"></script>
-{# <script src="{{ url_for('static', filename='js/ai_recommend.js', v=js_v) }}" type="module"></script> #}
-<script src="{{ url_for('static', filename='js/accordion.js', v=js_v) }}" type="module"></script>
-<script src="{{ url_for('static', filename='js/info.js', v=js_v) }}" type="module"></script>
+<!-- JS: one bundle in production (tools/build-js.sh), the separate
+     ES modules when no bundle has been built. Same modules, same
+     order either way. -->
+{% if has_index_bundle %}
+<script src="{{ url_for('static', filename='js/bundle/index.js',
+                        v=js_v) }}" type="module"></script>
+{% else %}
+{% for name in index_modules %}
+<script src="{{ url_for('static', filename='js/' ~ name ~ '.js',
+                        v=js_v) }}" type="module"></script>
+{% endfor %}
+{% endif %}
 {% endblock %}

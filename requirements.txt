@@ -8,6 +8,10 @@ pytest==8.4.2
 PyYAML==6.0.3
 deep-translator==1.11.4
 weasyprint==66.0
+# Response compression. Caddy 2 has no built-in brotli, so the
+# app compresses: gzip and brotli, chosen per Accept-Encoding.
+Flask-Compress==1.19
+Brotli==1.2.0
 # Transitive deps pinned to patched versions (flagged by osv-scanner):
 Pillow==11.3.0
 idna==3.18

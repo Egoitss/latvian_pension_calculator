@@ -25,6 +25,15 @@
   <link rel="alternate" hreflang="x-default"
         href="{{ _origin }}{{ _lv_path }}" />
 
+  {# JSON-LD, one <script> per type so a parser that rejects one still
+     reads the rest. Built in jsonld.py; `<` is escaped there, so
+     `safe` cannot break out of the tag. #}
+  {% for block in jsonld | default([], true) %}
+  <script type="application/ld+json">
+{{ block | safe }}
+  </script>
+  {% endfor %}
+
   <!-- Open Graph + Twitter Card: rich link previews on X / LinkedIn -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="OATS" />

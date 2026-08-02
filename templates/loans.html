@@ -60,9 +60,15 @@
                         v=js_v) }}"></script>
 {# type="module" because loans.js imports the shared euro formatter.
    It initialises on DOMContentLoaded, which modules still run before,
-   so the deferred execution changes nothing. #}
+   so the deferred execution changes nothing. Bundled in production;
+   the raw module is the fallback (see inject_bundle). #}
+{% if has_loans_bundle %}
+<script src="{{ url_for('static', filename='js/bundle/loans.js',
+                        v=js_v) }}" type="module"></script>
+{% else %}
 <script src="{{ url_for('static', filename='js/loans.js',
                         v=js_v) }}" type="module"></script>
+{% endif %}
 <script src="{{ url_for('static', filename='js/accordion.js',
                         v=js_v) }}"></script>
 {% endblock %}
