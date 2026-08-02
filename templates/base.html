@@ -120,6 +120,9 @@
            M62 50A12 12 0 1 1 38 50A12 12 0 1 1 62 50Z"/></svg>
       <span class="o-hdr-word">SIA OATS</span>
     </a>
+    {# oats.lv canonicalises to the bare path. The .html twins answer
+       200 but are the copy nothing else links, so a cross-property
+       link there spends the visit on a duplicate. #}
     {% set _site = "https://oats.lv/en/" if lang == "en"
        else "https://oats.lv/" %}
     {% set _tame = "https://oats.lv/en/tame" if lang == "en"
@@ -127,11 +130,11 @@
     <div class="o-hdr-r">
       <nav class="o-hdr-links" aria-label="OATS">
         <a href="{{ _site }}">{{ t("Home") }}</a>
-        <a href="{{ _site }}services.html">{{ t("Services") }}</a>
+        <a href="{{ _site }}services">{{ t("Services") }}</a>
         <a href="{{ _tame }}">{{ t("Calculator") }}</a>
-        <a href="{{ _site }}work.html">{{ t("Work") }}</a>
-        <a href="{{ _site }}writing.html">{{ t("Writing") }}</a>
-        <a href="{{ _site }}contact.html">{{ t("Contact") }}</a>
+        <a href="{{ _site }}work">{{ t("Work") }}</a>
+        <a href="{{ _site }}writing">{{ t("Writing") }}</a>
+        <a href="{{ _site }}contact">{{ t("Contact") }}</a>
       </nav>
       {% include "_lang.html" %}
       <button class="o-hdr-burger" type="button" aria-label="Menu"
@@ -152,11 +155,11 @@
          aria-label="OATS">
     <nav class="o-drawer-nav">
       <a href="{{ _site }}">{{ t("Home") }}</a>
-      <a href="{{ _site }}services.html">{{ t("Services") }}</a>
+      <a href="{{ _site }}services">{{ t("Services") }}</a>
       <a href="{{ _tame }}">{{ t("Calculator") }}</a>
-      <a href="{{ _site }}work.html">{{ t("Work") }}</a>
-      <a href="{{ _site }}writing.html">{{ t("Writing") }}</a>
-      <a href="{{ _site }}contact.html">{{ t("Contact") }}</a>
+      <a href="{{ _site }}work">{{ t("Work") }}</a>
+      <a href="{{ _site }}writing">{{ t("Writing") }}</a>
+      <a href="{{ _site }}contact">{{ t("Contact") }}</a>
       <div class="o-drawer-sep"></div>
       <a href="{{ url_for('index') }}"
          aria-current="page">{{ t("Pension simulator") }}</a>
