@@ -1,6 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
-  <path fill="#9D2235" fill-rule="evenodd"
-        d="M0 0H100V100H0Z
-           M76 50A26 26 0 1 1 24 50A26 26 0 1 1 76 50Z
-           M62 50A12 12 0 1 1 38 50A12 12 0 1 1 62 50Z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="OATS">
+  <rect width="100" height="100" fill="#9D2235"/>
+  <g fill="#FFFFFF">
+    <path d="M48 14H52V90H48Z"/>
+    <path transform="translate(55.5 22.5) rotate(30)" d="M0 -11A14.6 14.6 0 0 1 0 11A14.6 14.6 0 0 1 0 -11Z"/>
+    <path transform="translate(44.5 22.5) rotate(-30)" d="M0 -11A14.6 14.6 0 0 1 0 11A14.6 14.6 0 0 1 0 -11Z"/>
+    <path transform="translate(55.5 40.5) rotate(30)" d="M0 -11A14.6 14.6 0 0 1 0 11A14.6 14.6 0 0 1 0 -11Z"/>
+    <path transform="translate(44.5 40.5) rotate(-30)" d="M0 -11A14.6 14.6 0 0 1 0 11A14.6 14.6 0 0 1 0 -11Z"/>
+    <path transform="translate(55.5 58.5) rotate(30)" d="M0 -11A14.6 14.6 0 0 1 0 11A14.6 14.6 0 0 1 0 -11Z"/>
+    <path transform="translate(44.5 58.5) rotate(-30)" d="M0 -11A14.6 14.6 0 0 1 0 11A14.6 14.6 0 0 1 0 -11Z"/>
+  </g>
 </svg>

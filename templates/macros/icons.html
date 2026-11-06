@@ -1,0 +1,18 @@
+{# oats_mark: the OATS brand mark. A square in the surrounding text
+   colour (currentColor) holding a white oat spikelet: one bare stem
+   and three pairs of grains rising from it. Approved by the owner on
+   6 Nov 2026. Source: handoff/logo/oats-mark.svg in oats-scan. #}
+{% macro oats_mark(size=38) %}
+{% set grain = "M0 -11A14.6 14.6 0 0 1 0 11A14.6 14.6 0 0 1 0 -11Z" %}
+<svg width="{{ size }}" height="{{ size }}"
+     viewBox="0 0 100 100" role="img" aria-label="OATS">
+  <rect width="100" height="100" fill="currentColor"/>
+  <g fill="#FFFFFF">
+    <path d="M48 14H52V90H48Z"/>
+    {% for y in (22.5, 40.5, 58.5) %}
+    <path transform="translate(55.5 {{ y }}) rotate(30)" d="{{ grain }}"/>
+    <path transform="translate(44.5 {{ y }}) rotate(-30)" d="{{ grain }}"/>
+    {% endfor %}
+  </g>
+</svg>
+{% endmacro %}
