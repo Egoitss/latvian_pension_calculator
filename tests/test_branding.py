@@ -43,3 +43,14 @@ def test_icon_links_carry_version_four(path):
     assert len(icon_links) == 6
     for link in icon_links:
         assert "?v=4" in link
+
+
+@pytest.mark.parametrize("path", PAGE_PATHS)
+def test_footer_line_and_title_have_no_dash(path):
+    html = _page(path)
+    footer_copy = re.search(r'class="o-foot-copy">(.*?)</span>', html, re.S)
+    text = " ".join(footer_copy.group(1).split())
+    assert not re.search(r"[—–]| - ", text)
+    assert re.fullmatch(r"© \d{4} SIA &#34;OATS&#34;\. .+\.", text)
+    title = re.search(r"<title>(.*?)</title>", html, re.S).group(1)
+    assert "—" not in title and title.endswith(" | OATS")
