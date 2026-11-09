@@ -50,8 +50,11 @@ body {
 .accent { color: #8B0000; }
 
 /* ── Brand lockup ───────────────────────────────────────────── */
-.brand { display: flex; align-items: center; gap: 8px; }
+/* The shared oats_mark macro fills its square with currentColor, so
+   the brand's fixed ink colour lives here, not in the template. */
+.brand { display: flex; align-items: center; gap: 8px; color: #14110E; }
 .brand .mark { width: 18px; height: 18px; display: block; }
+.brand .mark svg { width: 100%; height: 100%; display: block; }
 .brand .word {
   font-weight: 700; font-size: 12pt; letter-spacing: 0.02em;
 }

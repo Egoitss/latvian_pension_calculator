@@ -2,23 +2,14 @@
 <!-- OATS PDF retirement report — single page, rendered by WeasyPrint -->
 <html>
 <head><meta charset="utf-8"></head>
-{% set grain = "M0 -11A14.6 14.6 0 0 1 0 11A14.6 14.6 0 0 1 0 -11Z" %}
+{% from "_oat_mark.html" import oats_mark %}
 <body>
 
   <!-- ── Header: brand + title (left), hero metric (right) ───── -->
   <div class="brand">
-    {# Same geometry as macros/icons.html. Inlined because the PDF
-       styles target .mark and the square is a fixed ink colour. #}
-    <svg class="mark" viewBox="0 0 100 100" role="img" aria-label="OATS">
-      <rect width="100" height="100" fill="#14110E"/>
-      <g fill="#FFFFFF">
-        <path d="M48 14H52V90H48Z"/>
-        {% for y in (22.5, 40.5, 58.5) %}
-        <path transform="translate(55.5 {{ y }}) rotate(30)" d="{{ grain }}"/>
-        <path transform="translate(44.5 {{ y }}) rotate(-30)" d="{{ grain }}"/>
-        {% endfor %}
-      </g>
-    </svg>
+    {# The shared macro draws the square in currentColor, so the fixed
+       ink colour of the PDF comes from .brand in report.css. #}
+    <span class="mark">{{ oats_mark(18) }}</span>
     <span class="word">OATS SIA</span>
   </div>
   <div class="head">
