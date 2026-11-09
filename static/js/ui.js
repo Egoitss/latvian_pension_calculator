@@ -210,7 +210,7 @@ async function copyToClipboard(text) {
   } else {
     feedback.classList.add("bg-amber-50", "text-amber-700");
     feedback.textContent =
-      t("Copying not allowed in this context — select the link and copy manually");
+      t("Copying not allowed in this context. Select the link and copy manually");
   }
   setTimeout(() => feedback.classList.add("hidden"), copied ? 1800 : 3500);
 }

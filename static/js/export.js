@@ -150,7 +150,7 @@ async function downloadDocx(btn) {
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     saveBlob(await resp.blob(), "pension-report.pdf");
   } catch (err) {
-    label.textContent = t("Download failed — try again");
+    label.textContent = t("Download failed. Try again");
     setTimeout(() => { label.textContent = original; }, 2500);
     return;
   } finally {

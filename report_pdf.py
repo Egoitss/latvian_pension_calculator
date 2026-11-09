@@ -36,15 +36,15 @@ _SCN_ORDER = [("negative", "Negative"), ("moderate", "Moderate"),
               ("positive", "Positive")]
 _VERDICT = {
     "excellent":
-        "Comfortably ahead — your pension is set to exceed typical "
+        "Comfortably ahead. Your pension is set to exceed typical "
         "retirement needs.",
     "strong":
-        "On track — your pension covers a strong share of your "
+        "On track. Your pension covers a strong share of your "
         "salary at retirement.",
     "moderate":
-        "Reasonable — there is room to strengthen your pension.",
+        "Reasonable. There is room to strengthen your pension.",
     "weak":
-        "Below target — extra voluntary saving would help "
+        "Below target. Extra voluntary saving would help "
         "significantly.",
 }
 

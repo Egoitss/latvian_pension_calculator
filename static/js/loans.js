@@ -56,7 +56,7 @@ function scenarioShorterTerm(balance, annualRate, payment, p2lAmt, origMonths) {
     newMonths = newBalance / payment;
   } else {
     const inner = 1 - (newBalance * r / payment);
-    if (inner <= 0) return t("Cannot calculate — payment too low.");
+    if (inner <= 0) return t("Cannot calculate. Payment too low.");
     newMonths = -Math.log(inner) / Math.log(1 + r);
   }
   const savedMonths   = origMonths - newMonths;
