@@ -41,14 +41,9 @@ pension.oats.lv {
 	header Cross-Origin-Embedder-Policy "require-corp"
 	header Cross-Origin-Resource-Policy "same-origin"
 
-	# Access log (JSON) for visit counts. Rotated so it can't fill
-	# the disk; persisted via the caddy_logs volume in compose.
-	log {
-		output file /var/log/caddy/access.log {
-			roll_size 10MiB
-			roll_keep 5
-		}
-	}
+	# No access log: the shared Caddy keeps no visitor IP addresses,
+	# which is what the oats.lv privacy policy says. The download
+	# counter in the app is the visit count.
 	# Reject methods the app doesn't use. POST must stay: the PDF
 	# export (/export/pdf) and AI review (/api/recommend) are POST.
 	# NOTE: this also rejects CORS preflight (OPTIONS) — if the API
@@ -131,4 +126,10 @@ tame.oats.lv {
 	}
 	# Anything outside /tame goes to the canonical URL.
 	redir / https://oats.lv/tame/ permanent
+}
+
+# oats-scan. Netlify proxies oats.lv/scan/* here, signed.
+# Source: oats-scan deploy/Caddyfile.snippet.
+scan.oats.lv {
+	reverse_proxy scan-web:8000
 }
