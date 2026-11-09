@@ -1,0 +1,61 @@
+<!-- og-source.html: rebuilds static/og.png, the share card every page of
+     pension.oats.lv points at (og:image in base.html). Same layout as the OATS site
+     card (oats_home_page tools/og-source.html): crimson spine, blueprint
+     grid, the oat mark from favicon.svg, a headline with a crimson tail
+     and a mono footer. Render with headless Chrome at 1200x630, device
+     scale 1, and copy the screenshot over static/og.png.
+     Fonts are vendored in tools/fonts (SIL OFL) so the render is
+     reproducible offline; latin-ext covers the Latvian diacritics. -->
+<!doctype html>
+<html lang="lv"><head><meta charset="utf-8">
+<style>
+@font-face{font-family:"Space Grotesk";font-weight:400 700;
+  src:url("fonts/space-grotesk-latin-ext.woff2") format("woff2");
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,
+    U+0304,U+0308,U+0329,
+    U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,
+    U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Space Grotesk";font-weight:400 700;
+  src:url("fonts/space-grotesk-latin.woff2") format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,
+    U+0304,U+0308,U+0329,
+    U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;
+  src:url("fonts/ibm-plex-mono-400-latin-ext.woff2") format("woff2");
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,
+    U+0304,U+0308,U+0329,
+    U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,
+    U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;
+  src:url("fonts/ibm-plex-mono-400-latin.woff2") format("woff2");
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,
+    U+0304,U+0308,U+0329,
+    U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+html,body{margin:0;width:1200px;height:630px;overflow:hidden}
+body{position:relative;background:#FCFCFD;
+  background-image:linear-gradient(#EEEFF2 1px,transparent 1px),
+    linear-gradient(90deg,#EEEFF2 1px,transparent 1px);
+  background-size:60px 60px;background-position:0 0;
+  font-family:"Space Grotesk",sans-serif;color:#0A0A0B}
+.bar{position:absolute;left:0;top:0;width:16px;height:630px;background:#9D2235}
+.brand{position:absolute;left:90px;top:84px;display:flex;align-items:center;gap:22px}
+.brand img{width:80px;height:80px;display:block}
+.brand span{font-weight:700;font-size:36px;letter-spacing:-.02em}
+h1{position:absolute;left:90px;top:236px;width:1030px;margin:0;
+  font-weight:700;font-size:68px;line-height:1.08;letter-spacing:-.025em}
+h1 em{font-style:normal;color:#9D2235}
+.foot{position:absolute;left:90px;right:90px;top:518px;display:flex;justify-content:space-between;
+  font-family:"IBM Plex Mono",monospace;font-size:22px}
+.foot .l{color:#626974}.foot .r{color:#0A0A0B}
+</style></head><body>
+<div class="bar"></div>
+<div class="brand">
+  <img src="../static/favicon.svg" alt=""><span>OATS</span>
+</div>
+<h1>Pensijas kalkulators:
+  <em>Montekarlo scenāriji tavai 2. un 3. līmeņa pensijai.</em></h1>
+<div class="foot">
+  <span class="l">1., 2. un 3. līmenis · PDF pārskats</span>
+  <span class="r">pension.oats.lv</span>
+</div>
+</body></html>
